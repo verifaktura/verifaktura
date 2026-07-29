@@ -58,7 +58,7 @@ jobs:
 
       - name: Cache SEF fajlova
         id: sef-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             packages/core/sef
