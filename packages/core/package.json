@@ -1,0 +1,37 @@
+{
+  "name": "verifaktura",
+  "version": "0.1.0",
+  "description": "EN 16931 e-invoice validation for UBL and CII, with national CIUS profiles (HR, RS/SEF, BA/FBiH) and localized rule messages.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "sef"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "keywords": [
+    "en16931",
+    "e-invoice",
+    "ubl",
+    "cii",
+    "peppol",
+    "schematron",
+    "fiskalizacija",
+    "eracun",
+    "cius"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "saxon-js": "^2.7.0",
+    "@xmldom/xmldom": "^0.9.0"
+  }
+}
