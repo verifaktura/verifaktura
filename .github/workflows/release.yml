@@ -104,7 +104,15 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           VISIBILITY: ${{ github.event.repository.visibility }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Rezervni upit: kod nekih okidača payload ne nosi visibility, a prazna
+          # vrijednost bi tiho ugasila provenance umjesto da to primijetimo.
+          if [ -z "$VISIBILITY" ]; then
+            VISIBILITY="$(gh api "repos/${GITHUB_REPOSITORY}" --jq .visibility 2>/dev/null || echo unknown)"
+          fi
+          echo "Vidljivost repozitorija: $VISIBILITY"
+
           if [ -n "$NPM_TOKEN" ]; then
             echo "mode=token" >> "$GITHUB_OUTPUT"
             echo "::warning title=Bootstrap objava::Koristi se NPM_TOKEN. Nakon uspjeha podesi trusted publishing, obriši secret i opozovi token."
