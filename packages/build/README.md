@@ -1,12 +1,17 @@
 # @verifaktura/build
 
-Gradi EN 16931 e-fakture (UBL 2.1) iz tipiziranog modela. Izlaz je provučen kroz
-`verifaktura` validator u CI-u — to je razlika između generatora XML-a i
-generatora *validnog* XML-a.
+Builds EN 16931 e-invoices (UBL 2.1) from a typed model. The output is run
+through the `verifaktura` validator in CI — that is the difference between an
+XML generator and a generator of *valid* XML.
 
-## Dva nivoa
+```bash
+npm install @verifaktura/build
+```
 
-**`simpleInvoice`** — tipičan račun: jedna PDV stopa, bez popusta na dokumentu.
+## Two levels
+
+**`simpleInvoice`** — the ordinary case: one VAT rate, no document-level
+allowances.
 
 ```ts
 import { buildUbl, simpleInvoice } from "@verifaktura/build";
@@ -15,66 +20,74 @@ const xml = buildUbl(simpleInvoice({
   id: "2026-001",
   issueDate: "2026-07-29",
   dueDate: "2026-08-28",
-  currency: "BAM",
-  vatRate: "17",
-  iban: "BA391941051193401279",
+  currency: "EUR",
+  vatRate: "25",
+  iban: "HR1210010051863000160",
   seller: {
-    name: "Moja firma d.o.o.",
-    vatId: "BA210300400000",      // prefiks države je obavezan (BR-CO-09)
-    address: { street: "Ulica 1", city: "Mostar", postalCode: "88000", country: "BA" },
+    name: "My Company Ltd",
+    vatId: "HR12345678903",        // country prefix is required (BR-CO-09)
+    address: { street: "Ilica 1", city: "Zagreb", postalCode: "10000", country: "HR" },
   },
   buyer: {
-    name: "Kupac d.o.o.",
-    address: { street: "Ulica 2", city: "Sarajevo", postalCode: "71000", country: "BA" },
+    name: "Customer Ltd",
+    address: { street: "Riva 2", city: "Split", postalCode: "21000", country: "HR" },
   },
-  lines: [{ name: "Razvoj softvera", quantity: 10, unitPrice: "80.00" }],
+  lines: [{ name: "Software development", quantity: 10, unitPrice: "80.00" }],
 }));
 ```
 
-**Puni `Invoice` model** — više PDV stopa, popusti i troškovi na razini
-dokumenta i stavke, odobrenja (CreditNote), oslobođenja s razlogom.
-`simpleInvoice` je tanak sloj iznad njega, ne zaseban put — možeš početi
-jednostavno i dograđivati.
+**The full `Invoice` model** — multiple VAT rates, document- and line-level
+allowances and charges, credit notes, exemptions with a reason.
+`simpleInvoice` is a thin layer over it, not a separate path: start simple and
+grow into it without rewriting.
 
 ```ts
 const xml = buildUbl({
   id: "2026-003", issueDate: "2026-07-29", currency: "EUR",
   seller, buyer,
   lines: [
-    { name: "Usluga A", quantity: "1", unitPrice: "100.00", vatCategory: "S", vatRate: "25" },
-    { name: "Usluga B", quantity: "2", unitPrice: "50.00",  vatCategory: "S", vatRate: "13" },
+    { name: "Service A", quantity: "1", unitPrice: "100.00", vatCategory: "S", vatRate: "25" },
+    { name: "Service B", quantity: "2", unitPrice: "50.00",  vatCategory: "S", vatRate: "13" },
   ],
-  allowances: [{ amount: "10.00", reason: "Rabat",   vatCategory: "S", vatRate: "25" }],
-  charges:    [{ amount: "5.00",  reason: "Dostava", vatCategory: "S", vatRate: "25" }],
+  allowances: [{ amount: "10.00", reason: "Discount", vatCategory: "S", vatRate: "25" }],
+  charges:    [{ amount: "5.00",  reason: "Shipping", vatCategory: "S", vatRate: "25" }],
 });
 ```
 
-## Šta se računa automatski
+## What is computed for you
 
-Ako izostaviš `vatBreakdown` i `totals`, računaju se iz stavki:
+Omit `vatBreakdown` and `totals` and they are derived from the lines:
 
-- rekapitulacija PDV-a grupisana po kategoriji i stopi (BG-23)
-- osnovica po grupi = Σ stavke + Σ troškovi − Σ popusti (BR-S-08 i srodna)
-- iznos PDV-a = osnovica × stopa / 100, half-up na 2 decimale (BR-CO-17)
-- PDV = 0 za AE, K, G, O kategorije (BR-AE-09 i srodna)
-- svi ukupni iznosi (BR-CO-10 do BR-CO-16)
+- VAT breakdown grouped by category and rate (BG-23)
+- taxable base per group = Σ lines + Σ charges − Σ allowances (BR-S-08 and friends)
+- tax amount = base × rate / 100, half-up to 2 decimals (BR-CO-17)
+- VAT of 0 for the AE, K, G and O categories (BR-AE-09 and friends)
+- all document totals (BR-CO-10 through BR-CO-16)
 
-Možeš ih i navesti eksplicitno — korisno kad preslikavaš postojeći dokument i
-želiš zadržati original čak i ako se ne slaže s izračunom.
+You can also supply them explicitly — useful when mirroring an existing document
+and you want to keep the original even where it disagrees with the arithmetic.
 
-## Novac
+## Money
 
-Sve se drži kao `bigint` u stotinkama, nigdje `number`. Float bi značio da
-`0.1 + 0.2 !== 0.3` obara dokument na BR-CO-15 ili BR-CO-17 — a takav bug se
-pojavi tek kod klijenta, na desetoj fakturi.
+Everything is held as `bigint` in minor units; `number` is never used. Floating
+point would mean `0.1 + 0.2 !== 0.3` failing a document on BR-CO-15 or
+BR-CO-17 — a bug that shows up at a customer, on the thirtieth invoice, not in
+your tests.
 
-Iznosi su stringovi (`"1234.56"`); prihvata se i zarez (`"1234,56"`).
+Amounts are strings (`"1234.56"`); a comma is accepted too (`"1234,56"`).
 
-## Model prati BT/BG oznake
+## The model follows BT/BG
 
-Svako polje je dokumentovano svojim EN 16931 terminom. Kad validator prijavi
-`BT-31`, znaš da je to `seller.vatId` — bez traženja po specifikaciji.
+Every field is documented with its EN 16931 business term. When the validator
+reports `BT-31`, you know it means `seller.vatId` — no digging through the
+specification.
 
-## Licenca
+## Croatian invoices
+
+`isValidOib` checks the OIB checksum (ISO 7064 MOD 11,10) before you build.
+For the Croatian profile fields — issue time, operator, KPD classification —
+see [`@verifaktura/cius-hr`](https://www.npmjs.com/package/@verifaktura/cius-hr).
+
+## Licence
 
 Apache-2.0

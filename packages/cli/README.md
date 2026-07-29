@@ -1,9 +1,9 @@
 # @verifaktura/cli
 
-CLI za validaciju e-faktura prema EN 16931.
+Command line validation of EN 16931 e-invoices.
 
 ```bash
-npx @verifaktura/cli racun.xml --lang hr
+npx @verifaktura/cli invoice.xml --lang hr
 ```
 
 ```
@@ -17,24 +17,25 @@ GREŠKA  BR-02        Račun mora sadržavati broj računa (BT-1).
 NEVALIDNO - 1 grešaka, 0 upozorenja (211 pravila, 272 ms)
 ```
 
-## Opcije
+## Options
 
 | | |
 |---|---|
-| `--lang <en\|hr\|bs\|sr>` | jezik poruka (default `en`) |
-| `--format <text\|json>` | format izlaza (default `text`) |
-| `--quiet` | samo izlazni kod |
-| `-h`, `--help` | pomoć |
+| `--lang <en\|hr\|bs\|sr>` | message language (default `en`) |
+| `--format <text\|json>` | output format (default `text`) |
+| `--quiet` | exit code only |
+| `-h`, `--help` | help |
 
-Izlazni kod: `0` validno, `1` ima fatalnih grešaka, `2` greška u radu — pa se
-može koristiti u CI-u:
+Exit codes: `0` valid, `1` fatal findings, `2` execution error — so it works in
+CI:
 
 ```bash
-npx @verifaktura/cli racuni/*.xml --quiet || echo "neispravan racun"
+npx @verifaktura/cli invoices/*.xml --quiet || echo "invalid invoice"
 ```
 
-Detalji i programsko korištenje: [verifaktura](https://www.npmjs.com/package/verifaktura).
+Programmatic use and report format:
+[`verifaktura`](https://www.npmjs.com/package/verifaktura).
 
-## Licenca
+## Licence
 
 Apache-2.0

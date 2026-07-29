@@ -1,15 +1,15 @@
 # verifaktura
 
 [![npm](https://img.shields.io/npm/v/verifaktura)](https://www.npmjs.com/package/verifaktura)
-[![license](https://img.shields.io/npm/l/verifaktura)](https://github.com/verifaktura/verifaktura/blob/main/LICENSE)
+[![licence](https://img.shields.io/npm/l/verifaktura)](https://github.com/verifaktura/verifaktura/blob/main/LICENSE)
 
-Validacija e-faktura prema **EN 16931** — UBL 2.1 i CII D16B — s nacionalnim CIUS
-profilima i **porukama pravila na hrvatskom, bosanskom i srpskom**.
+**EN 16931** e-invoice validation for UBL 2.1 and CII D16B, with national CIUS
+profiles and rule messages in Croatian, Bosnian and Serbian.
 
-Referentni validatori vrate `[BR-02]-An Invoice shall have an Invoice number (BT-1).`
-i XPath. Ovo vrati strukturiran nalaz s ID-em pravila, business termovima,
-lokacijom i porukom na jeziku korisnika — razlika između „nešto ne valja" i
-„dodaj broj računa".
+Reference validators return `[BR-02]-An Invoice shall have an Invoice number
+(BT-1).` and an XPath. This returns a structured finding with the rule id, the
+business terms it concerns, a location and a message in the user's language —
+the difference between "something is wrong" and "add the invoice number".
 
 ```bash
 npm install verifaktura
@@ -28,49 +28,46 @@ if (!report.valid) {
 }
 ```
 
-CLI:
+Command line: [`@verifaktura/cli`](https://www.npmjs.com/package/@verifaktura/cli).
 
-```bash
-npx @verifaktura/cli racun.xml --lang hr
-```
+## Why not hard-coded rules
 
-## Zašto ovo, a ne zakucana pravila
+Validation rules change mid-mandate. The Croatian Tax Administration shipped a
+revised validator in March 2026, effective the 15th. Anyone who copied the rules
+into their own code went stale that day — and finds out when an invoice gets
+rejected.
 
-Validacijska pravila se mijenjaju usred mandata. Hrvatska Porezna uprava je
-objavila dorađenu verziju validatora u martu 2026, u primjeni od 15.3. Svako ko
-je pravila prepisao u kod je od tada zastario — i ne zna to dok mu račun ne bude
-odbijen.
+verifaktura does not copy rules. It pulls the official artefacts (CEN/TC 434,
+Croatian Tax Administration) at build time, and CI warns when a new release
+appears.
 
-`verifaktura` ne prepisuje pravila. Povlači službene artefakte (CEN/TC 434,
-Porezna uprava RH) pri buildu i ima CI koji javlja kad izađe nova verzija.
+## National profiles
 
-## Nacionalni profili
-
-Profili se izvršavaju **nakon** osnovne EN 16931 validacije i biraju se
-automatski prema `cbc:CustomizationID`:
+Profiles run **after** the base EN 16931 validation and are selected
+automatically from `cbc:CustomizationID`:
 
 ```ts
 import { validate } from "verifaktura";
-import "@verifaktura/cius-hr";   // registruje hrvatski profil
+import "@verifaktura/cius-hr";   // registers the Croatian profile
 
 const report = await validate(xml, { lang: "hr" });
 // report.profiles -> [{ id: "en16931", ... }, { id: "hr", ... }]
 ```
 
-| Profil | Paket | Status |
+| Profile | Package | Status |
 |---|---|---|
-| EN 16931 (UBL + CII) | ugrađen | ✅ |
-| Hrvatska — Fiskalizacija 2.0 | `@verifaktura/cius-hr` | ✅ |
-| Srbija — SEF | `@verifaktura/cius-rs` | planirano |
-| BiH — FBiH CPF | `@verifaktura/cius-ba` | čeka pravilnike |
+| EN 16931 (UBL + CII) | built in | ✅ |
+| Croatia — Fiskalizacija 2.0 | `@verifaktura/cius-hr` | ✅ |
+| Serbia — SEF | `@verifaktura/cius-rs` | planned |
+| Bosnia and Herzegovina — FBiH | `@verifaktura/cius-ba` | pending regulations |
 
-Nacionalni CIUS ponekad traži elemente koje CEN-ova sintaksna pravila zabranjuju
-(npr. hrvatski eRačun traži `cbc:IssueTime`, a `UBL-CR-006` kaže da ga ne treba
-biti). Profil takva pravila deklariše kroz `overrides` — nalaz ostaje u
-izvještaju, ali kao `info` s napomenom koji ga profil nadjačava. Ne skriva se, ne
-alarmira.
+A national CIUS sometimes requires elements that CEN syntax rules forbid — the
+Croatian eRačun needs `cbc:IssueTime`, while `UBL-CR-006` says it should not be
+there. A profile declares such rules through `overrides`: the finding stays in
+the report but drops to `info` with a note naming the profile that overrides it.
+Nothing is hidden, nothing cries wolf.
 
-## Izvještaj
+## Report
 
 ```jsonc
 {
@@ -91,27 +88,28 @@ alarmira.
 }
 ```
 
-`businessTerms` je namjerno zaseban niz — integrator mapira grešku na polje u
-svom ERP-u preko BT-broja, bez parsiranja teksta.
+`businessTerms` is deliberately a separate array — integrators map a finding
+onto a field in their own ERP through the BT number, without parsing text.
 
-Format je verzionisan (`reportVersion`) i dokumentovan u
+The format is versioned (`reportVersion`) and documented in
 [FORMAT.md](https://github.com/verifaktura/verifaktura/blob/main/FORMAT.md).
 
-## Generisanje
+## Generating invoices
 
-Isti model radi i u drugom smjeru — [`@verifaktura/build`](https://www.npmjs.com/package/@verifaktura/build)
-gradi fakturu koju `verifaktura` odmah može validirati. Rekapitulacija PDV-a i
-ukupni iznosi se računaju automatski, aritmetika je u cijelim brojevima.
+The same model works in reverse.
+[`@verifaktura/build`](https://www.npmjs.com/package/@verifaktura/build) builds
+an invoice that `verifaktura` validates cleanly. VAT breakdown and totals are
+computed automatically, using integer arithmetic.
 
-## Bez Jave
+## No JVM
 
-Schematron se izvršava kroz Saxon-JS kao prekompajlirani SEF. Nema JVM-a, radi
-u običnom Node procesu, ~250 ms po dokumentu.
+Schematron runs through Saxon-JS as a precompiled SEF — no Java, plain Node,
+~250 ms per document.
 
-## Licenca
+## Licence
 
-Kod je pod Apache-2.0.
+The code is Apache-2.0.
 
-Paket sadrži prekompajlirane CEN/TC 434 validacione artefakte (`sef/*.sef.json`)
-koji zadržavaju svoju licencu — **EUPL 1.2**. Detalji i atribucija u
-[NOTICE](https://github.com/verifaktura/verifaktura/blob/main/NOTICE).
+This package ships precompiled CEN/TC 434 validation artefacts
+(`sef/*.sef.json`) which keep their own licence — **EUPL 1.2**. Attribution and
+details in [NOTICE](https://github.com/verifaktura/verifaktura/blob/main/NOTICE).

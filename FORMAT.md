@@ -1,13 +1,13 @@
-# Format validacionog izvještaja
+# Validation report format
 
-Verzionisan kroz polje `reportVersion`. Trenutno **1.0**.
+Versioned through the `reportVersion` field. Currently **1.0**.
 
-## Primjer
+## Example
 
 ```json
 {
   "reportVersion": "1.0",
-  "engine": "verifaktura/0.1.4",
+  "engine": "verifaktura/0.1.5",
   "validatedAt": "2026-07-29T10:47:12.331Z",
   "valid": false,
   "document": {
@@ -28,7 +28,7 @@ Verzionisan kroz polje `reportVersion`. Trenutno **1.0**.
       "profile": "en16931",
       "businessTerms": ["BT-1"],
       "location": { "xpath": "/*:Invoice[1]" },
-      "message": "Faktura mora sadržavati broj fakture (BT-1).",
+      "message": "Račun mora sadržavati broj računa (BT-1).",
       "messages": {
         "en": "An Invoice shall have an Invoice number (BT-1).",
         "hr": "Račun mora sadržavati broj računa (BT-1).",
@@ -40,50 +40,53 @@ Verzionisan kroz polje `reportVersion`. Trenutno **1.0**.
 }
 ```
 
-## Polja
+## Fields
 
-| Polje | Značenje |
+| Field | Meaning |
 |---|---|
-| `valid` | `true` kad nema nijednog `fatal` nalaza. Upozorenja ne obaraju dokument. |
-| `document` | Sažetak dokumenta iz zaglavlja. Za CII se popunjavaju samo `syntax` i `type`. |
-| `profiles[]` | Koji su profili izvršeni i s kojom verzijom artefakata. |
-| `summary.rulesFired` | Broj izvršenih Schematron pravila. |
-| `issues[].ruleId` | ID pravila, npr. `BR-02`, `HR-BR-25`, `UBL-CR-006`. |
-| `issues[].severity` | `fatal`, `warning` ili `info`. |
-| `issues[].profile` | Koji profil je prijavio nalaz — `en16931`, `hr`, … |
-| `issues[].businessTerms` | EN 16931 termovi na koje se pravilo odnosi, npr. `["BT-1"]`. |
-| `issues[].location.xpath` | Lokacija u dokumentu. `line` i `column` su opcionalni i trenutno se ne popunjavaju. |
-| `issues[].message` | Poruka na traženom jeziku, s fallbackom na engleski. |
-| `issues[].messages` | Svi dostupni prevodi. |
-| `issues[].hint` | Opcionalna uputa. Popunjena i kad nacionalni profil nadjačava pravilo. |
+| `valid` | `true` when there is no `fatal` finding. Warnings do not invalidate a document. |
+| `document` | Header summary. For CII only `syntax` and `type` are populated. |
+| `profiles[]` | Which profiles ran, and with which artefact version. |
+| `summary.rulesFired` | Number of Schematron rules executed. |
+| `issues[].ruleId` | Rule identifier, e.g. `BR-02`, `HR-BR-25`, `UBL-CR-006`. |
+| `issues[].severity` | `fatal`, `warning` or `info`. |
+| `issues[].profile` | Which profile reported the finding — `en16931`, `hr`, … |
+| `issues[].businessTerms` | EN 16931 terms the rule refers to, e.g. `["BT-1"]`. |
+| `issues[].location.xpath` | Location in the document. `line` and `column` are optional and currently not populated. |
+| `issues[].message` | Message in the requested language, falling back to English. |
+| `issues[].messages` | All available translations. |
+| `issues[].hint` | Optional guidance. Also used when a national profile overrides a rule. |
 
-## Zašto je ovako
+## Design notes
 
-**`businessTerms` je zaseban niz.** Integrator mapira grešku na polje u svom
-ERP-u preko BT-broja, bez parsiranja teksta poruke. To je praktično najkorisniji
-dio izvještaja.
+**`businessTerms` is a separate array.** Integrators map a finding onto a field
+in their own ERP through the BT number, without parsing message text. In
+practice this is the most useful part of the report.
 
-**I `message` i `messages`.** `message` je već razriješen jezik — to treba
-većini. `messages` postoji za UI koji sam bira jezik, i štedi ponovni poziv.
+**Both `message` and `messages`.** `message` is the already-resolved language,
+which is what most callers want. `messages` exists for interfaces that pick the
+language themselves, and saves a second call.
 
-**`profile` na svakom nalazu.** Kad se slože EN 16931 i nacionalni CIUS, mora se
-znati čije je pravilo palo — nacionalna i evropska greška se različito rješavaju.
+**`profile` on every finding.** When EN 16931 and a national CIUS run together,
+you need to know whose rule failed — national and European problems are fixed
+differently.
 
-**`profiles[]` nosi verziju artefakata.** Isti dokument uz drugu verziju pravila
-daje drugi rezultat. Bez toga izvještaj nije reproducibilan ni upotrebljiv kao
-audit trag.
+**`profiles[]` carries the artefact version.** The same document validated
+against a different rule version yields a different result. Without this the
+report is neither reproducible nor usable as an audit trail.
 
-**`rulesFired` je sanity check.** Sumnjivo nizak broj znači da dokument nije
-prošao pravu validaciju (najčešće pogrešan namespace), a ne da je ispravan.
+**`rulesFired` is a sanity check.** A suspiciously low number means the document
+never went through real validation — usually a wrong namespace — rather than
+that it is correct.
 
-**Nadjačana pravila se ne brišu.** Kad nacionalni CIUS traži element koji CEN-ovo
-sintaksno pravilo zabranjuje, nalaz ostaje u izvještaju ali kao `info`, uz
-`hint` koji kaže koji ga profil nadjačava. Skrivanje bi značilo da korisnik ne
-može provjeriti zašto se profili razilaze.
+**Overridden rules are not removed.** When a national CIUS requires an element
+that a CEN syntax rule forbids, the finding stays in the report as `info`, with
+a `hint` naming the profile that overrides it. Hiding it would leave no way to
+see why the profiles disagree.
 
-## Stabilnost
+## Stability
 
-- Nova opcionalna polja — minor promjena, `reportVersion` ostaje isti.
-- Promjena značenja, uklanjanje polja ili promjena tipa — `reportVersion` 2.0.
-- Nove vrijednosti za `severity`, `syntax` ili `profile` — minor. Klijenti moraju
-  tolerisati vrijednosti koje ne poznaju.
+- New optional fields — minor change, `reportVersion` stays the same.
+- Changed meaning, removed field or changed type — `reportVersion` 2.0.
+- New values for `severity`, `syntax` or `profile` — minor. Clients must
+  tolerate values they do not recognise.

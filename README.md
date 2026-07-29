@@ -1,7 +1,9 @@
 # verifaktura
 
-Validacija i generisanje e-faktura prema **EN 16931** — UBL 2.1 i CII D16B — s
-nacionalnim CIUS profilima i porukama pravila na hrvatskom, bosanskom i srpskom.
+Validate and generate **EN 16931** e-invoices — UBL 2.1 and CII D16B — with
+national CIUS profiles and rule messages in Croatian, Bosnian and Serbian.
+
+*Hrvatska verzija: [README.hr.md](./README.hr.md)*
 
 ```bash
 npm install verifaktura @verifaktura/build
@@ -12,80 +14,82 @@ import { buildUbl, simpleInvoice } from "@verifaktura/build";
 import { validate } from "verifaktura";
 
 const xml = buildUbl(simpleInvoice({
-  id: "2026-001", issueDate: "2026-07-29", currency: "BAM", vatRate: "17",
+  id: "2026-001", issueDate: "2026-07-29", currency: "EUR", vatRate: "25",
   seller, buyer,
-  lines: [{ name: "Razvoj softvera", quantity: 10, unitPrice: "80.00" }],
+  lines: [{ name: "Software development", quantity: 10, unitPrice: "80.00" }],
 }));
 
-const report = await validate(xml, { lang: "bs" });
+const report = await validate(xml, { lang: "hr" });
 // report.valid === true
 ```
 
-Kad nešto ne valja, izvještaj kaže šta i gdje:
+When something is wrong, the report says what and where — in the user's language:
 
 ```
-GREŠKA  BR-02   Faktura mora sadržavati broj fakture (BT-1).   termovi: BT-1
+FATAL  BR-02   Račun mora sadržavati broj računa (BT-1).   terms: BT-1
 ```
 
-## Paketi
+## Packages
 
-| Paket | Šta radi |
+| Package | What it does |
 |---|---|
-| [`verifaktura`](./packages/core) | validacioni engine |
-| [`@verifaktura/build`](./packages/build) | gradi validne EN 16931 fakture |
-| [`@verifaktura/cius-hr`](./packages/cius-hr) | hrvatski profil (Fiskalizacija 2.0) |
-| [`@verifaktura/cli`](./packages/cli) | CLI |
+| [`verifaktura`](./packages/core) | validation engine |
+| [`@verifaktura/build`](./packages/build) | builds valid EN 16931 invoices |
+| [`@verifaktura/cius-hr`](./packages/cius-hr) | Croatian profile (Fiskalizacija 2.0) |
+| [`@verifaktura/cli`](./packages/cli) | command line interface |
 
-Planirano: `@verifaktura/cius-rs` (Srbija, SEF), `@verifaktura/cius-ba`
-(FBiH, čeka podzakonske akte).
+Planned: `@verifaktura/cius-rs` (Serbia, SEF), `@verifaktura/cius-ba`
+(Bosnia and Herzegovina, pending implementing regulations).
 
-## Zašto
+## Why
 
-Validacijska pravila se mijenjaju usred mandata — hrvatska Porezna uprava je
-objavila dorađenu verziju validatora u martu 2026. Ko ih je prepisao u kod, od
-tada je zastario i to sazna tek kad mu račun bude odbijen.
+Validation rules change mid-mandate. The Croatian Tax Administration shipped a
+revised validator in March 2026, effective the 15th. Anyone who copied the rules
+into their own code went stale that day — and finds out when an invoice gets
+rejected.
 
-verifaktura ne prepisuje pravila. Povlači službene artefakte (CEN/TC 434,
-Porezna uprava RH) pri buildu, a CI javlja kad izađe nova verzija.
+verifaktura does not copy rules. It pulls the official artefacts (CEN/TC 434,
+Croatian Tax Administration) at build time, and CI warns when a new release
+appears.
 
-Schematron se izvršava kroz Saxon-JS kao prekompajlirani SEF — bez JVM-a,
-~250 ms po dokumentu.
+Schematron runs through Saxon-JS as a precompiled SEF — no JVM, ~250 ms per
+document.
 
 ## Status
 
 | | |
 |---|---|
-| EN 16931, UBL | validacija i generisanje |
-| EN 16931, CII | validacija; sažetak dokumenta još samo za UBL |
-| Lokalizacija (hr/bs/sr) | 223/223 business pravila (BR-*) |
-| HR CIUS | radi, uključujući HR proširenja |
+| EN 16931, UBL | validation and generation |
+| EN 16931, CII | validation; document summary is UBL-only for now |
+| Localisation (hr/bs/sr) | 223/223 business rules (BR-*) |
+| Croatian CIUS | working, including national extensions |
 
-Poznata ograničenja: `location.line` i `column` nisu popunjeni (samo XPath),
-generisanje CII-ja nije implementirano.
+Known gaps: `location.line` and `column` are not populated (XPath only),
+CII generation is not implemented.
 
-## Razvoj
+## Development
 
 ```bash
 npm install
-npm run prepare:sef   # preuzima i kompajlira validacione artefakte, ~2 min
+npm run prepare:sef   # downloads and compiles validation artefacts, ~2 min
 npm test
 npm run build
 
-node scripts/e2e.mjs        # validacija kontrolnih faktura
+node scripts/e2e.mjs        # validate reference invoices
 node scripts/roundtrip.mjs  # build -> validate
 ```
 
-`prepare:sef` traži mrežni pristup. Bez hrvatskog profila:
+`prepare:sef` needs network access. Skip the Croatian profile with
 `SKIP_HR=1 npm run prepare:sef`.
 
-Format izvještaja: [FORMAT.md](./FORMAT.md) ·
-doprinos: [CONTRIBUTING.md](./CONTRIBUTING.md) ·
-objava: [RELEASING.md](./RELEASING.md)
+Report format: [FORMAT.md](./FORMAT.md) ·
+contributing: [CONTRIBUTING.md](./CONTRIBUTING.md) ·
+releasing: [RELEASING.md](./RELEASING.md)
 
-## Licenca
+## Licence
 
-Kod je pod [Apache-2.0](./LICENSE).
+The code is [Apache-2.0](./LICENSE).
 
-Validacioni artefakti nisu dio ovog repozitorija — preuzimaju se pri buildu i u
-objavljenim npm paketima zadržavaju licencu svog izvora. Atribucija:
-[NOTICE](./NOTICE).
+Validation artefacts are not part of this repository — they are downloaded at
+build time and, in the published npm packages, keep the licence of their source.
+Attribution: [NOTICE](./NOTICE).

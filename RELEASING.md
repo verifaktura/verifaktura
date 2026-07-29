@@ -1,55 +1,55 @@
-# Objavljivanje
+# Releasing
 
-Sva četiri paketa idu na npm u lockstepu, iz GitHub Actions.
+All four packages are published to npm in lockstep, from GitHub Actions.
 
-## Nova verzija
+## New version
 
-GitHub → Actions → **Release** → Run workflow → `patch`, `minor` ili `major`.
+GitHub → Actions → **Release** → Run workflow → `patch`, `minor` or `major`.
 
-Pipeline: `npm ci` → typecheck → testovi → priprema artefakata → build → e2e →
-round-trip → podizanje verzije → objava → push commita i taga.
+Pipeline: `npm ci` → typecheck → tests → prepare artefacts → build → e2e →
+round-trip → version bump → publish → push commit and tag.
 
-Verzija se diže tek nakon što prođu sve provjere, a commit i tag idu na remote
-tek nakon uspješne objave. Neuspjeh zato ne ostavlja potrošen broj verzije ni
-prazan tag.
+The version is bumped only after every check passes, and the commit and tag are
+pushed only after a successful publish. A failure therefore leaves neither a
+burnt version number nor a dangling tag.
 
-Opcija `dry_run` prođe sve provjere i preskoči objavu — korisno kad se mijenja
-sam workflow.
+`dry_run` runs all checks and skips publishing — useful when changing the
+workflow itself.
 
-Alternativno, push taga `v*` pokreće isti pipeline bez koraka verzionisanja.
+Pushing a `v*` tag runs the same pipeline without the versioning step.
 
-## Autentifikacija
+## Authentication
 
-Objava koristi **npm trusted publishing (OIDC)** — bez tokena u secrets. Svaki
-publish dobija kratkotrajni, workflow-specifičan kredencijal i automatski
-provenance potpis.
+Publishing uses **npm trusted publishing (OIDC)** — no token in secrets. Each
+publish gets a short-lived, workflow-specific credential and an automatic
+provenance attestation.
 
-Podešava se po paketu: npmjs.com → *paket* → Settings → **Trusted Publisher** →
-GitHub Actions:
+Configured per package: npmjs.com → *package* → Settings → **Trusted Publisher**
+→ GitHub Actions:
 
-| Polje | Vrijednost |
+| Field | Value |
 |---|---|
 | Organization or user | `verifaktura` |
 | Repository | `verifaktura` |
 | Workflow filename | `release.yml` |
 | Allowed actions | `npm publish` |
 
-Sva polja su osjetljiva na velika i mala slova. npm ih ne provjerava pri
-spremanju — greška se vidi tek pri objavi, kao `ENEEDAUTH`.
+All fields are case-sensitive. npm does not validate them on save — a mistake
+only surfaces at publish time as `ENEEDAUTH`.
 
-Ako je u repo secrets postavljen `NPM_TOKEN`, workflow će koristiti njega
-umjesto OIDC-a. To postoji samo za prvu objavu paketa koji još ne postoji na
-npm-u; poslije toga secret treba obrisati i token opozvati.
+If an `NPM_TOKEN` repository secret exists, the workflow uses it instead of
+OIDC. That path exists only to bootstrap a package that does not yet exist on
+npm; afterwards, delete the secret and revoke the token.
 
-## Zahtjevi
+## Requirements
 
-- Repozitorij mora biti **public** — provenance se ne generiše iz privatnih.
-- Node ≥ 22.14 i npm ≥ 11.5.1 (workflow koristi Node 24).
-- Samo GitHub-hosted runneri; self-hosted ne podržavaju OIDC.
-- `repository.url` u `package.json` mora tačno odgovarati GitHub repou.
+- The repository must be **public** — provenance is not generated from private ones.
+- Node ≥ 22.14 and npm ≥ 11.5.1 (the workflow uses Node 24).
+- GitHub-hosted runners only; self-hosted runners do not support OIDC.
+- `repository.url` in `package.json` must exactly match the GitHub repository.
 
-## Verzionisanje
+## Versioning
 
-`scripts/version.mjs` postavlja istu verziju na sve pakete i usklađuje interne
-raspone zavisnosti (`@verifaktura/cli` → `verifaktura: ^x.y.z`).
-`npm version --workspaces` to ne radi pouzdano, zato zaseban skript.
+`scripts/version.mjs` sets the same version across all packages and aligns
+internal dependency ranges (`@verifaktura/cli` → `verifaktura: ^x.y.z`).
+`npm version --workspaces` does not do this reliably, hence the separate script.
