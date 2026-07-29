@@ -1,6 +1,6 @@
 {
   "name": "@verifaktura/cli",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "CLI za validaciju e-faktura prema EN 16931.",
   "type": "module",
   "bin": {
@@ -27,10 +27,10 @@
     "access": "public"
   },
   "dependencies": {
-    "verifaktura": "^0.1.6"
+    "verifaktura": "^0.1.7"
   },
   "peerDependencies": {
-    "@verifaktura/cius-hr": "^0.1.0"
+    "@verifaktura/cius-hr": "^0.1.7"
   },
   "peerDependenciesMeta": {
     "@verifaktura/cius-hr": {
