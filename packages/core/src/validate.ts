@@ -23,8 +23,33 @@ const require = createRequire(import.meta.url);
 const ENGINE_VERSION: string = (
   require("../package.json") as { version: string }
 ).version;
-/** Verzija CEN/TC 434 validacionih artefakata na koju je build pinovan. */
-const ARTEFACT_VERSION = "1.3.16";
+/**
+ * Verzija CEN artefakata, pročitana iz onoga što je build stvarno pripremio.
+ *
+ * Bila je zakucana, a `build-sef.mjs` dopušta `CEN_TAG` override - build s
+ * drugim tagom bi proizveo izvještaj koji tvrdi da su izvršena pravila koja
+ * nisu. `profiles[].version` je jedini razlog zbog kojeg izvještaj može služiti
+ * kao audit trag, pa je pogrešna vrijednost gora od nikakve.
+ */
+function readArtefactInfo(): { version: string; source: string } {
+  try {
+    const path = fileURLToPath(new URL("../sef/artefacts.json", import.meta.url));
+    const meta = JSON.parse(readFileSync(path, "utf-8")) as {
+      en16931?: { version?: string; source?: string };
+    };
+    if (meta.en16931?.version) {
+      return {
+        version: meta.en16931.version,
+        source: meta.en16931.source ?? "CEN/TC 434",
+      };
+    }
+  } catch {
+    // stariji build bez metapodataka
+  }
+  return { version: "unknown", source: "CEN/TC 434" };
+}
+
+const ARTEFACTS = readArtefactInfo();
 
 const BASE_SEF: Record<Syntax, string> = {
   ubl: fileURLToPath(new URL("../sef/en16931-ubl.sef.json", import.meta.url)),
@@ -134,7 +159,7 @@ export async function validate(
   const summary = syntax === "ubl" ? summarizeUbl(doc) : {};
 
   const profilesUsed: ProfileInfo[] = [
-    { id: "en16931", version: ARTEFACT_VERSION, source: "CEN/TC 434" },
+    { id: "en16931", version: ARTEFACTS.version, source: ARTEFACTS.source },
   ];
   const issues: Issue[] = [];
   let rulesFired = 0;

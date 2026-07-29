@@ -31,6 +31,7 @@ export function computeVatBreakdown(invoice: Invoice): VatBreakdownEntry[] {
     taxable: bigint;
     reason?: string;
     reasonCode?: string;
+    name?: string;
   }
   const buckets = new Map<string, Bucket>();
 
@@ -40,6 +41,7 @@ export function computeVatBreakdown(invoice: Invoice): VatBreakdownEntry[] {
     amount: bigint,
     reason?: string,
     reasonCode?: string,
+    name?: string,
   ): void => {
     const key = vatKey(category, rate);
     const hit = buckets.get(key);
@@ -48,22 +50,23 @@ export function computeVatBreakdown(invoice: Invoice): VatBreakdownEntry[] {
       // prvi naveden razlog vrijedi za cijelu grupu
       hit.reason ??= reason;
       hit.reasonCode ??= reasonCode;
+      hit.name ??= name;
     } else {
-      buckets.set(key, { category, rate, taxable: amount, reason, reasonCode });
+      buckets.set(key, { category, rate, taxable: amount, reason, reasonCode, name });
     }
   };
 
   for (const line of invoice.lines) {
     add(line.vatCategory, line.vatRate, lineNetAmount(line),
-        line.vatExemptionReason, line.vatExemptionReasonCode);
+        line.vatExemptionReason, line.vatExemptionReasonCode, line.vatCategoryName);
   }
   for (const a of invoice.allowances ?? []) {
     add(a.vatCategory, a.vatRate, -parseAmount(a.amount),
-        a.vatExemptionReason, a.vatExemptionReasonCode);
+        a.vatExemptionReason, a.vatExemptionReasonCode, a.vatCategoryName);
   }
   for (const c of invoice.charges ?? []) {
     add(c.vatCategory, c.vatRate, parseAmount(c.amount),
-        c.vatExemptionReason, c.vatExemptionReasonCode);
+        c.vatExemptionReason, c.vatExemptionReasonCode, c.vatCategoryName);
   }
 
   /** Kategorije kod kojih je iznos PDV-a nula bez obzira na stopu. */
@@ -78,6 +81,7 @@ export function computeVatBreakdown(invoice: Invoice): VatBreakdownEntry[] {
     ),
     exemptionReason: b.reason,
     exemptionReasonCode: b.reasonCode,
+    categoryName: b.name,
   })) as VatBreakdownEntry[];
 }
 

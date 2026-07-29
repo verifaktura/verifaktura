@@ -103,6 +103,14 @@ export interface InvoiceLine {
   vatExemptionReason?: string;
   /** BT-121 - šifra razloga oslobođenja (CEF VATEX). */
   vatExemptionReasonCode?: string;
+  /**
+   * HR-BT-12 - hrvatska oznaka PDV kategorije, npr. "HR:PDV25", "HR:E", "HR:O".
+   *
+   * Nacionalno proširenje: HR-BR-16 traži je za stavke u kategoriji E ili O,
+   * pa bez nje hrvatski eRačun s oslobođenom isporukom nije moguće sastaviti.
+   * Za ostale profile se izostavlja.
+   */
+  vatCategoryName?: string;
   /** BG-27 - popusti na stavci */
   allowances?: LineCharge[];
   /** BG-28 - troškovi na stavci */
@@ -132,6 +140,8 @@ export interface DocumentCharge extends LineCharge {
   vatExemptionReason?: string;
   /** BT-121 - šifra razloga oslobođenja */
   vatExemptionReasonCode?: string;
+  /** HR-BT-12 - hrvatska oznaka PDV kategorije, kao na stavci */
+  vatCategoryName?: string;
   /** BT-93 / BT-100 - osnovica za procentualni popust/trošak */
   baseAmount?: Amount;
 }
@@ -159,6 +169,8 @@ export interface VatBreakdownEntry {
   exemptionReason?: string;
   /** BT-121 - šifra razloga po CEF VATEX */
   exemptionReasonCode?: string;
+  /** HR-BT-12 - hrvatska oznaka PDV kategorije u rekapitulaciji */
+  categoryName?: string;
 }
 
 export interface Totals {

@@ -97,4 +97,19 @@ if (process.env.SKIP_HR === "1") {
   }
 }
 
+// Verzije se zapisuju uz artefakte, ne zakucavaju u kod. Izvještaj tvrdi koja
+// su pravila izvršena; ako se to razilazi sa stvarnošću, `profiles[].version`
+// prestaje biti audit trag i postaje pogrešna tvrdnja.
+writeFileSync(
+  join(OUT, "artefacts.json"),
+  JSON.stringify(
+    {
+      en16931: { version: TAG.replace(/^validation-/, ""), source: "CEN/TC 434" },
+      preparedAt: new Date().toISOString(),
+    },
+    null,
+    2,
+  ) + "\n",
+);
+
 console.log("Gotovo. SEF fajlovi u:", OUT);

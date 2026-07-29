@@ -36,5 +36,8 @@
     "@verifaktura/cius-hr": {
       "optional": true
     }
+  },
+  "engines": {
+    "node": ">=20.10"
   }
 }

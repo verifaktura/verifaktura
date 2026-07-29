@@ -35,5 +35,8 @@
   },
   "peerDependencies": {
     "verifaktura": "^0.1.7"
+  },
+  "engines": {
+    "node": ">=20.10"
   }
 }

@@ -9,6 +9,7 @@
  */
 import { buildUbl, simpleInvoice } from "@verifaktura/build";
 import { validate } from "verifaktura";
+import { existsSync } from "node:fs";
 import { HR_CUSTOMIZATION_ID } from "@verifaktura/cius-hr";
 
 const seller = {
@@ -163,8 +164,15 @@ const CASES = [
   },
 ];
 
-// Hrvatski eRačun se testira samo ako je profil pripremljen
-// (npm run prepare:sef preuzima artefakte s porezna.gov.hr).
+// Hrvatski eRačun se testira samo ako je profil stvarno pripremljen. Ranije se
+// slučaj dodavao bezuvjetno iako je komentar tvrdio suprotno, pa bi pad
+// preuzimanja s porezna.gov.hr završio kriptičnom Saxon greškom umjesto
+// razumljivim preskakanjem.
+const hrSefPath = new URL("../packages/cius-hr/sef/hr-cius-ext-ubl.sef.json", import.meta.url);
+const hrReady = existsSync(hrSefPath);
+if (!hrReady) {
+  console.warn("upozorenje: hrvatski profil nije pripremljen — preskačem njegov slučaj");
+}
 const hrSeller = {
   name: "Primjer d.o.o.", vatId: "HR12345678903", legalId: "12345678903",
   electronicAddress: { value: "12345678903", scheme: "9934" },
@@ -177,7 +185,7 @@ const hrBuyer = {
   address: { street: "Riva 2", city: "Split", postalCode: "21000", country: "HR" },
 };
 
-CASES.push({
+if (hrReady) CASES.push({
   name: "hrvatski eRacun (Fiskalizacija 2.0)",
   invoice: {
     customizationId: HR_CUSTOMIZATION_ID,
@@ -193,7 +201,34 @@ CASES.push({
     lines: [{
       name: "Usluga razvoja softvera", quantity: "10", unitPrice: "80.00",
       vatCategory: "S", vatRate: "25", unitCode: "HUR",
+      vatCategoryName: "HR:PDV25",                           // HR-BT-12
       classification: { value: "62.10.11", scheme: "CG" },   // HR-BR-25, KPD 2025
+    }],
+  },
+});
+
+// HR-BR-16 traži HR oznaku kategorije za stavke u E ili O. Bez polja u modelu
+// ovakav račun nije bilo moguće sastaviti — a oslobođene isporuke nisu rubni
+// slučaj nego svakodnevica.
+if (hrReady) CASES.push({
+  name: "hrvatski eRacun s oslobodjenom stavkom (E)",
+  invoice: {
+    customizationId: HR_CUSTOMIZATION_ID,
+    profileId: "P1",
+    id: "2026-011",
+    issueDate: "2026-07-29",
+    issueTime: "10:15:00",
+    dueDate: "2026-08-28",
+    currency: "EUR",
+    seller: hrSeller,
+    buyer: hrBuyer,
+    paymentMeans: { code: "30", accountId: "HR1210010051863000160" },
+    lines: [{
+      name: "Oslobodjena usluga", quantity: "1", unitPrice: "500.00",
+      vatCategory: "E", vatRate: "0",
+      vatCategoryName: "HR:E",                               // HR-BT-12, HR-BR-16
+      vatExemptionReason: "Oslobodjeno prema clanu 39.",
+      classification: { value: "62.10.11", scheme: "CG" },
     }],
   },
 });

@@ -41,7 +41,9 @@ export const hrProfile: ProfileDefinition = {
    *  - UBL-CR-006: cbc:IssueTime                       -> HR-BR-2
    *  - UBL-CR-200: cac:SellerContact                   -> HR-BR-37, HR-BR-9
    *  - UBL-CR-001: ext:UBLExtensions                   -> nosač HR proširenja
+   *  - UBL-CR-504: TaxSubtotal TaxCategory/cbc:Name    -> HR šifre u rekapitulaciji
    *  - UBL-CR-597: ClassifiedTaxCategory/cbc:Name      -> HR šifre (npr. "HR:PDV25")
+   *  - UBL-CR-600: ClassifiedTaxCategory TaxExemptionReasonCode -> HR-BR-36
    *  - UBL-CR-477: AllowanceCharge TaxCategory/cbc:Name -> isto, na popustima
    *  - UBL-CR-601: ClassifiedTaxCategory TaxExemptionReason -> HR razlozi oslobođenja
    *  - UBL-CR-481: AllowanceCharge TaxCategory TaxExemptionReason -> isto
@@ -50,7 +52,9 @@ export const hrProfile: ProfileDefinition = {
     "UBL-CR-006",
     "UBL-CR-200",
     "UBL-CR-001",
+    "UBL-CR-504",
     "UBL-CR-597",
+    "UBL-CR-600",
     "UBL-CR-477",
     "UBL-CR-601",
     "UBL-CR-481",

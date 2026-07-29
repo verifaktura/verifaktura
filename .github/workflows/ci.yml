@@ -17,7 +17,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ["20", "22", "24"]
+        # 20.10 je najniza podrzana: import ... with { type: "json" } trazi bas
+        # tu verziju, a "20" bi u CI-u uvijek bio zadnji 20.x pa bi problem
+        # ostao neprimijecen dok ga korisnik ne pogodi.
+        node: ["20.10", "22", "24"]
     steps:
       - uses: actions/checkout@v4
 

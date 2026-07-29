@@ -6,6 +6,7 @@ import type {
   Address,
   Contact,
   DocumentCharge,
+  Totals,
   Invoice,
   InvoiceLine,
   Party,
@@ -17,6 +18,8 @@ const NS = {
   cn: "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2",
   cac: "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
   cbc: "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+  ext: "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2",
+  hrextac: "urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1",
 };
 
 const DEFAULT_CUSTOMIZATION = "urn:cen.eu:en16931:2017";
@@ -111,12 +114,13 @@ function writeDocumentCharge(
 ): void {
   w.block("cac:AllowanceCharge", () => {
     w.leaf("cbc:ChargeIndicator", isCharge ? "true" : "false");
-    w.leaf(isCharge ? "cbc:AllowanceChargeReasonCode" : "cbc:AllowanceChargeReasonCode", c.reasonCode);
+    w.leaf("cbc:AllowanceChargeReasonCode", c.reasonCode);
     w.leaf("cbc:AllowanceChargeReason", c.reason);
     w.leaf("cbc:Amount", num(c.amount), { currencyID: currency });
     w.leaf("cbc:BaseAmount", num(c.baseAmount), { currencyID: currency });
     w.block("cac:TaxCategory", () => {
       w.leaf("cbc:ID", c.vatCategory);
+      w.leaf("cbc:Name", c.vatCategoryName);   // HR-BT-12
       // Kategorija "O" ne smije nositi stopu (BR-O-05/06/07)
       if (c.vatCategory !== "O") w.leaf("cbc:Percent", num(c.vatRate));
       w.block("cac:TaxScheme", () => w.leaf("cbc:ID", "VAT"));
@@ -138,6 +142,7 @@ function writeVatBreakdown(
         w.leaf("cbc:TaxAmount", num(e.taxAmount), { currencyID: currency });
         w.block("cac:TaxCategory", () => {
           w.leaf("cbc:ID", e.category);
+          w.leaf("cbc:Name", e.categoryName);   // HR-BT-12
           if (e.category !== "O") w.leaf("cbc:Percent", num(e.rate));
           w.leaf("cbc:TaxExemptionReasonCode", e.exemptionReasonCode);
           w.leaf("cbc:TaxExemptionReason", e.exemptionReason);
@@ -154,6 +159,7 @@ function writeLine(
   index: number,
   currency: string,
   isCreditNote: boolean,
+  isHrProfile: boolean,
 ): void {
   w.block(isCreditNote ? "cac:CreditNoteLine" : "cac:InvoiceLine", () => {
     w.leaf("cbc:ID", line.id ?? String(index + 1));
@@ -191,13 +197,74 @@ function writeLine(
       }
       w.block("cac:ClassifiedTaxCategory", () => {
         w.leaf("cbc:ID", line.vatCategory);
+        w.leaf("cbc:Name", line.vatCategoryName);   // HR-BT-12
         if (line.vatCategory !== "O") w.leaf("cbc:Percent", num(line.vatRate));
+        // HR-BR-36 traži razlog oslobođenja na samoj stavci, ne samo u
+        // rekapitulaciji. Izvan hrvatskog profila to isto mjesto zabranjuju
+        // UBL-CR-600 i UBL-CR-601, pa se piše samo kad dokument ide po HR
+        // specifikaciji - razlog i dalje završi u rekapitulaciji (BG-23).
+        if (isHrProfile) {
+          w.leaf("cbc:TaxExemptionReason", line.vatExemptionReason);
+          w.leaf("cbc:TaxExemptionReasonCode", line.vatExemptionReasonCode);
+        }
         w.block("cac:TaxScheme", () => w.leaf("cbc:ID", "VAT"));
       });
     });
     w.block("cac:Price", () =>
       w.leaf("cbc:PriceAmount", num(line.unitPrice), { currencyID: currency }),
     );
+  });
+}
+
+/**
+ * Hrvatsko proširenje (HR-BG-2): rekapitulacija PDV-a u vlastitom namespaceu,
+ * unutar ext:UBLExtensions.
+ *
+ * HR-BR-26 ga traži čim se pojavi stavka u kategoriji E ili O — bez njega
+ * hrvatski eRačun s oslobođenom isporukom ne prolazi validaciju, koliko god
+ * ostatak dokumenta bio ispravan.
+ */
+function writeHrExtension(
+  w: XmlWriter,
+  breakdown: VatBreakdownEntry[],
+  totals: Totals,
+  currency: string,
+): void {
+  const vatTotal = breakdown.reduce((a, e) => a + parseAmount(e.taxAmount), 0n);
+  const outOfScope = breakdown
+    .filter((e) => e.category === "O")
+    .reduce((a, e) => a + parseAmount(e.taxableAmount), 0n);
+
+  w.block("ext:UBLExtensions", () => {
+    w.block("ext:UBLExtension", () => {
+      w.block("ext:ExtensionContent", () => {
+        w.block("hrextac:HRFISK20Data", () => {
+          w.block("hrextac:HRTaxTotal", () => {
+            w.leaf("cbc:TaxAmount", formatAmount(vatTotal), { currencyID: currency });
+            for (const e of breakdown) {
+              w.block("hrextac:HRTaxSubtotal", () => {
+                w.leaf("cbc:TaxableAmount", num(e.taxableAmount), { currencyID: currency });
+                w.leaf("cbc:TaxAmount", num(e.taxAmount), { currencyID: currency });
+                w.block("hrextac:HRTaxCategory", () => {
+                  w.leaf("cbc:ID", e.category);
+                  w.leaf("cbc:Name", e.categoryName);
+                  if (e.category !== "O") w.leaf("cbc:Percent", num(e.rate));
+                  w.leaf("cbc:TaxExemptionReason", e.exemptionReason);
+                  w.leaf("cbc:TaxExemptionReasonCode", e.exemptionReasonCode);
+                  w.block("hrextac:HRTaxScheme", () => w.leaf("cbc:ID", "VAT"));
+                });
+              });
+            }
+          });
+          w.block("hrextac:HRLegalMonetaryTotal", () => {
+            w.leaf("cbc:TaxExclusiveAmount", num(totals.netTotal), { currencyID: currency });
+            w.leaf("hrextac:OutOfScopeOfVATAmount", formatAmount(outOfScope), {
+              currencyID: currency,
+            });
+          });
+        });
+      });
+    });
   });
 }
 
@@ -216,12 +283,18 @@ export function buildUbl(invoice: Invoice): string {
   const breakdown = invoice.vatBreakdown ?? computeVatBreakdown(invoice);
   const totals = invoice.totals ?? computeTotals(invoice, breakdown);
 
+  // Hrvatski CIUS mijenja mjesto kontakta i traži vlastito proširenje
+  const isHrProfile = (invoice.customizationId ?? "").includes("mfin.gov.hr");
+
   const w = new XmlWriter();
   w.open(root, {
     xmlns: isCreditNote ? NS.cn : NS.inv,
     "xmlns:cac": NS.cac,
     "xmlns:cbc": NS.cbc,
+    ...(isHrProfile ? { "xmlns:ext": NS.ext, "xmlns:hrextac": NS.hrextac } : {}),
   });
+
+  if (isHrProfile) writeHrExtension(w, breakdown, totals, currency);
 
   w.leaf("cbc:CustomizationID", invoice.customizationId ?? DEFAULT_CUSTOMIZATION);
   w.leaf("cbc:ProfileID", invoice.profileId ?? DEFAULT_PROFILE);
@@ -241,8 +314,6 @@ export function buildUbl(invoice: Invoice): string {
     w.block("cac:OrderReference", () => w.leaf("cbc:ID", invoice.orderReference));
   }
 
-  // Hrvatski CIUS mijenja mjesto kontakta prodavatelja
-  const isHrProfile = (invoice.customizationId ?? "").includes("mfin.gov.hr");
   writeParty(w, "cac:AccountingSupplierParty", invoice.seller, isHrProfile);
   writeParty(w, "cac:AccountingCustomerParty", invoice.buyer);
 
@@ -284,7 +355,9 @@ export function buildUbl(invoice: Invoice): string {
     w.leaf("cbc:PayableAmount", num(totals.payableAmount), { currencyID: currency });
   });
 
-  invoice.lines.forEach((line, i) => writeLine(w, line, i, currency, isCreditNote));
+  invoice.lines.forEach((line, i) =>
+    writeLine(w, line, i, currency, isCreditNote, isHrProfile),
+  );
 
   w.close(root);
   return w.toString();
