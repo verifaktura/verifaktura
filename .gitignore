@@ -6,3 +6,4 @@ dist/
 
 # macOS
 .DS_Store
+vitest.config.ts.timestamp-*
