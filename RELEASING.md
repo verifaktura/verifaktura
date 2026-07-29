@@ -7,7 +7,7 @@ All four packages are published to npm in lockstep, from GitHub Actions.
 GitHub → Actions → **Release** → Run workflow → `patch`, `minor` or `major`.
 
 Pipeline: `npm ci` → typecheck → tests → prepare artefacts → build → e2e →
-round-trip → version bump → publish → push commit and tag.
+round-trip → version bump → publish → push commit and tag → GitHub Release.
 
 The version is bumped only after every check passes, and the commit and tag are
 pushed only after a successful publish. A failure therefore leaves neither a
