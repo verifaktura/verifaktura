@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["20", "22", "24"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit testovi
+        run: npm test
+
+      - name: Build paketa
+        run: npm run build
+
+  # SEF kompajliranje je sporo (~1 min) i traži mrežu, pa ide u zaseban posao
+  # s cacheom po verziji CEN artefakata.
+  e2e:
+    name: End-to-end validacija
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Odredi verziju CEN artefakata
+        id: cen
+        run: echo "tag=$(grep -oE 'validation-[0-9.]+' scripts/build-sef.mjs | head -1)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache SEF fajlova
+        id: sef-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            packages/core/sef
+            packages/cius-hr/sef
+          key: sef-${{ steps.cen.outputs.tag }}-${{ hashFiles('scripts/build-sef.mjs') }}
+
+      - name: Pripremi SEF
+        if: steps.sef-cache.outputs.cache-hit != 'true'
+        run: npm run prepare:sef
+
+      - run: npm run build
+
+      - name: Validiraj kontrolne fakture
+        run: node scripts/e2e.mjs
+
+  artefacts:
+    name: Provjera novih artefakata
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ima li noviji CEN release od pinovanog
+        run: |
+          PINNED=$(grep -oE 'validation-[0-9.]+' scripts/build-sef.mjs | head -1)
+          LATEST=$(git ls-remote --tags --refs \
+            https://github.com/ConnectingEurope/eInvoicing-EN16931.git \
+            | awk -F/ '{print $NF}' | grep '^validation-' | sort -V | tail -1)
+          echo "pinovano: $PINNED | zadnje: $LATEST"
+          if [ "$PINNED" != "$LATEST" ]; then
+            echo "::warning title=Novi CEN release::$LATEST (pinovano $PINNED) - treba update i regresijski test."
+          fi
