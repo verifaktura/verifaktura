@@ -1,0 +1,11 @@
+{
+  "name": "@verifaktura/cli",
+  "version": "0.1.0",
+  "description": "CLI za validaciju e-faktura prema EN 16931.",
+  "type": "module",
+  "bin": { "verifaktura": "./dist/cli.js" },
+  "files": ["dist"],
+  "scripts": { "build": "tsc -p tsconfig.build.json" },
+  "license": "Apache-2.0",
+  "dependencies": { "verifaktura": "^0.1.0" }
+}
