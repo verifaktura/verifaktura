@@ -12,7 +12,19 @@ ne može iscuriti ni ponovo upotrijebiti, i automatski nosi provenance.
 git push -u origin main
 ```
 
-Repo mora biti **public** — provenance se ne generiše iz privatnih repozitorija.
+Zatim **repo na public**: Settings → General → dno stranice → Change visibility.
+
+Ovo nije kozmetika. Provenance radi isključivo iz javnih repozitorija; iz
+privatnog npm vraća:
+
+```
+E422 Unprocessable Entity — Error verifying sigstore provenance bundle:
+Unsupported GitHub Actions source repository visibility: "private".
+```
+
+Workflow to sada prepozna sam i objavi bez provenance uz upozorenje, umjesto da
+padne — ali paket time gubi kriptografski dokaz porijekla, što je za proizvod
+čiji je pitch tačnost i povjerenje lošija zamjena nego što djeluje.
 
 Preporučeno uz to: zaštita tagova (Settings → Rules), da objavu može pokrenuti
 samo onaj ko smije praviti `v*` tagove.
@@ -110,7 +122,10 @@ i interne raspone zavisnosti (`@verifaktura/cli` → `verifaktura: ^x.y.z`).
 
 ## Zahtjevi i zamke
 
+- **Repozitorij mora biti public** da bi paketi imali provenance.
 - Node ≥ 22.14 i npm ≥ 11.5.1 (workflow koristi Node 24).
+- npm najavljuje ograničenja za tokene koji zaobilaze 2FA — još jedan razlog da
+  bootstrap token ne ostane duže nego što mora.
 - Samo GitHub-hosted runneri; self-hosted nisu podržani.
 - `repository.url` u `package.json` mora **tačno** odgovarati GitHub repou —
   inače objava pada na autentifikaciji.

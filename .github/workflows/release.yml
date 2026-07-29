@@ -98,10 +98,11 @@ jobs:
         run: echo "version=$(node -p "require('./packages/core/package.json').version")" >> "$GITHUB_OUTPUT"
 
       # --- objava ---
-      - name: Odredi način autentifikacije
+      - name: Odredi način autentifikacije i provenance
         id: auth
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VISIBILITY: ${{ github.event.repository.visibility }}
         run: |
           if [ -n "$NPM_TOKEN" ]; then
             echo "mode=token" >> "$GITHUB_OUTPUT"
@@ -110,17 +111,33 @@ jobs:
             echo "mode=oidc" >> "$GITHUB_OUTPUT"
           fi
 
-      # Provenance: kod trusted publishinga se generiše sam, pa se --provenance
-      # ne navodi. Kod bootstrap objave tokenom navodi se eksplicitno.
+          # Provenance radi ISKLJUČIVO iz javnih repozitorija. Iz privatnog npm
+          # odbija objavu s E422 ("Unsupported ... source repository
+          # visibility"), i to tek NAKON što je paket već potpisan - pa se bez
+          # ove provjere gubi cijeli prolaz.
+          if [ "$VISIBILITY" = "public" ]; then
+            echo "provenance=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "provenance=no" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Bez provenance::Repozitorij je \"$VISIBILITY\". Paketi se objavljuju bez provenance potpisa. Prebaci repo na public pa ponovi objavu da bi ga dobili."
+          fi
+
+      # Provenance: kod trusted publishinga se generiše sam (pa se --provenance
+      # ne navodi), kod objave tokenom se traži eksplicitno. U oba slučaja se
+      # gasi ako repozitorij nije javan.
       - name: Objavi pakete
         if: ${{ !inputs.dry_run }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # gasi automatski provenance kod OIDC-a iz privatnog repoa
+          NPM_CONFIG_PROVENANCE: ${{ steps.auth.outputs.provenance == 'yes' }}
         run: |
+          PUBLISH_ARGS=""
           if [ "${{ steps.auth.outputs.mode }}" = "token" ]; then
-            PUBLISH_ARGS="--provenance --access public"
-          else
-            PUBLISH_ARGS=""
+            PUBLISH_ARGS="--access public"
+            if [ "${{ steps.auth.outputs.provenance }}" = "yes" ]; then
+              PUBLISH_ARGS="$PUBLISH_ARGS --provenance"
+            fi
           fi
           for dir in packages/core packages/build packages/cius-hr packages/cli; do
             name="$(node -p "require('./$dir/package.json').name")"
@@ -137,7 +154,7 @@ jobs:
             if [ "${{ inputs.dry_run }}" = "true" ]; then
               echo "Probni prolaz — ništa nije objavljeno."
             else
-              echo "Objavljeno na npm (autentifikacija: ${{ steps.auth.outputs.mode }}):"
+              echo "Objavljeno na npm (autentifikacija: ${{ steps.auth.outputs.mode }}, provenance: ${{ steps.auth.outputs.provenance }}):"
               echo "- verifaktura"
               echo "- @verifaktura/build"
               echo "- @verifaktura/cius-hr"
