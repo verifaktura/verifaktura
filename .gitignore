@@ -3,3 +3,6 @@ dist/
 *.sef.json
 /vendor/
 .env
+
+# macOS
+.DS_Store
