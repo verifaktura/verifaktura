@@ -38,6 +38,26 @@ if (!report.valid) {
 
 Format izvještaja je dokumentovan u [FORMAT.md](./FORMAT.md) i verzionisan (`reportVersion`).
 
+## Generisanje
+
+Isti model radi i u drugom smjeru — `@verifaktura/build` gradi fakturu koju
+`verifaktura` odmah može validirati:
+
+```ts
+import { buildUbl, simpleInvoice } from "@verifaktura/build";
+import { validate } from "verifaktura";
+
+const xml = buildUbl(simpleInvoice({
+  id: "2026-001", issueDate: "2026-07-29", currency: "BAM", vatRate: "17",
+  seller, buyer, lines: [{ name: "Razvoj softvera", quantity: 10, unitPrice: "80.00" }],
+}));
+
+await validate(xml);   // valid: true
+```
+
+Rekapitulacija PDV-a i ukupni iznosi se računaju automatski, aritmetika je u
+cijelim brojevima (bez float greške). Detalji: [packages/build](./packages/build).
+
 ## Nacionalni profili
 
 CIUS profili se izvršavaju **nakon** osnovne EN 16931 validacije i biraju se
@@ -59,6 +79,7 @@ zastarjelim pravilima.
 
 ```
 packages/core     verifaktura            — validacioni engine
+packages/build    @verifaktura/build     — gradi validne EN 16931 fakture
 packages/cli      @verifaktura/cli       — CLI
 packages/cius-hr  @verifaktura/cius-hr   — HR profil (Fiskalizacija 2.0)
 packages/cius-sef @verifaktura/cius-sef  — Srbija SEF                    [planirano]
@@ -66,6 +87,7 @@ packages/cius-ba  @verifaktura/cius-ba   — FBiH CPF                      [ček
 scripts/build-sef.mjs                     — preuzima i kompajlira artefakte u SEF
 scripts/gen-messages.py                   — generiše katalog lokalizovanih poruka
 scripts/e2e.mjs                           — validacija kontrolnih faktura
+scripts/roundtrip.mjs                     — build -> validate provjera
 ```
 
 ## Razvoj
@@ -91,6 +113,8 @@ v0.1.0
 | EN 16931 CII | validacija radi; sažetak dokumenta još samo za UBL |
 | Lokalizacija (hr/bs/sr) | 223/223 business pravila (BR-*) |
 | HR CIUS | profil registrovan, artefakti se preuzimaju pri buildu |
+| Generisanje (UBL) | radi; 5 round-trip slučajeva prolazi validaciju |
+| Generisanje (CII) | u planu |
 | Hosted API | u planu |
 
 Poznata ograničenja: `location.line`/`column` još nisu popunjeni (samo XPath),
