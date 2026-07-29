@@ -32,11 +32,29 @@ export const hrProfile: ProfileDefinition = {
   matches: (customizationId) => customizationId === HR_CUSTOMIZATION_ID,
   sefPath: fileURLToPath(new URL("../sef/hr-cius-ext-ubl.sef.json", import.meta.url)),
   /**
-   * CEN-ova sintaksna pravila koja hrvatski CIUS namjerno krši:
-   *  - UBL-CR-006: cbc:IssueTime  -> traži ga HR-BR-2 (vrijeme izdavanja)
-   *  - UBL-CR-200: cac:SellerContact -> traže ga HR-BR-37 i HR-BR-9 (operater)
+   * CEN-ova sintaksna pravila koja hrvatski CIUS namjerno krši.
+   *
+   * Popis je izveden iz službenih primjera eRačuna Porezne uprave: svih 20
+   * primjera koristi elemente koje CEN označava s "should not include", a
+   * hrvatski schematron ih zahtijeva ili validira.
+   *
+   *  - UBL-CR-006: cbc:IssueTime                       -> HR-BR-2
+   *  - UBL-CR-200: cac:SellerContact                   -> HR-BR-37, HR-BR-9
+   *  - UBL-CR-001: ext:UBLExtensions                   -> nosač HR proširenja
+   *  - UBL-CR-597: ClassifiedTaxCategory/cbc:Name      -> HR šifre (npr. "HR:PDV25")
+   *  - UBL-CR-477: AllowanceCharge TaxCategory/cbc:Name -> isto, na popustima
+   *  - UBL-CR-601: ClassifiedTaxCategory TaxExemptionReason -> HR razlozi oslobođenja
+   *  - UBL-CR-481: AllowanceCharge TaxCategory TaxExemptionReason -> isto
    */
-  overrides: ["UBL-CR-006", "UBL-CR-200"],
+  overrides: [
+    "UBL-CR-006",
+    "UBL-CR-200",
+    "UBL-CR-001",
+    "UBL-CR-597",
+    "UBL-CR-477",
+    "UBL-CR-601",
+    "UBL-CR-481",
+  ],
 };
 
 registerProfile(hrProfile);
