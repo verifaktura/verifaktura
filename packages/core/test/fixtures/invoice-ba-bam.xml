@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Testni primjer: tipična bosanskohercegovačka izlazna faktura preslikana u UBL 2.1 / EN 16931.
+  Struktura i podaci (BAM valuta, PDV 17%, JIB kao identifikator, poziv na fiskalni račun)
+  preuzeti su iz stvarne fakture; nazivi i identifikatori su izmišljeni.
+
+  Svrha: pokazati koliko je tipična BH faktura daleko od EN 16931 i koja pravila pada.
+-->
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017</cbc:CustomizationID>
+  <cbc:ID>52430-1/2026</cbc:ID>
+  <cbc:IssueDate>2026-04-20</cbc:IssueDate>
+  <cbc:DueDate>2026-05-10</cbc:DueDate>
+  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  <cbc:Note>Broj fiskalnog racuna: 184682</cbc:Note>
+  <cbc:DocumentCurrencyCode>BAM</cbc:DocumentCurrencyCode>
+
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cac:PostalAddress>
+        <cbc:StreetName>Primjerska bb</cbc:StreetName>
+        <cbc:CityName>Gracanica</cbc:CityName>
+        <cbc:PostalZone>75320</cbc:PostalZone>
+        <cac:Country><cbc:IdentificationCode>BA</cbc:IdentificationCode></cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>210300400000</cbc:CompanyID>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Primjer Telekom d.o.o.</cbc:RegistrationName>
+        <cbc:CompanyID>4210300400000</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cac:PostalAddress>
+        <cbc:StreetName>Primjerska 56</cbc:StreetName>
+        <cbc:CityName>Mostar</cbc:CityName>
+        <cbc:PostalZone>88000</cbc:PostalZone>
+        <cac:Country><cbc:IdentificationCode>BA</cbc:IdentificationCode></cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Primjer Obrt vl. Ime Prezime</cbc:RegistrationName>
+        <cbc:CompanyID>4329167750000</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode>30</cbc:PaymentMeansCode>
+    <cac:PayeeFinancialAccount><cbc:ID>1543602009459017</cbc:ID></cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="BAM">1.36</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="BAM">8.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="BAM">1.36</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>17</cbc:Percent>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="BAM">8.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="BAM">8.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="BAM">9.36</cbc:TaxInclusiveAmount>
+    <cbc:PayableAmount currencyID="BAM">9.36</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="H87">1</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="BAM">8.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Name>Najam aplikacije - PLUS za mjesec 4/2026</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>17</cbc:Percent>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price><cbc:PriceAmount currencyID="BAM">8.00</cbc:PriceAmount></cac:Price>
+  </cac:InvoiceLine>
+</Invoice>
