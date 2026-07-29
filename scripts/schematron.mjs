@@ -15,7 +15,7 @@
  * jednostavnije i pouzdanije razriješiti ga direktno.
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
 
@@ -23,7 +23,24 @@ const SCH_NS = "http://purl.oclc.org/dsdl/schematron";
 const SKELETON_REPO = "https://github.com/schematron/schematron.git";
 const SKELETON_STAGES = ["iso_abstract_expand", "iso_svrl_for_xslt2"];
 
-const run = (cmd, args) => execFileSync(cmd, args, { stdio: "inherit" });
+/** Pokreće naredbu i propušta njen izlaz. */
+export const run = (cmd, args) => execFileSync(cmd, args, { stdio: "inherit" });
+
+/** Kompajlira XSLT (ili već pripremljeni SEF izvor) u SEF. */
+export const compileToSef = (source, dest) =>
+  run("npx", ["xslt3", `-xsl:${source}`, `-export:${dest}`, "-nogo"]);
+
+/**
+ * Rekurzivno traži prvi fajl čije ime odgovara regexu.
+ * Bio je dupliran u build-sef.mjs kao ručni walk.
+ */
+export function findFile(dir, re) {
+  for (const entry of readdirSync(dir, { recursive: true })) {
+    const name = String(entry);
+    if (re.test(name.split("/").pop())) return join(dir, name);
+  }
+  return null;
+}
 
 /**
  * Rekurzivno ugrađuje <sch:include href="..."> na mjesto elementa.
@@ -63,7 +80,7 @@ export function prepareSkeleton(vendorDir) {
     const sef = join(out, `${stage}.sef.json`);
     if (!existsSync(sef)) {
       console.log(`Kompajliram skeleton: ${stage}`);
-      run("npx", ["xslt3", `-xsl:${join(code, `${stage}.xsl`)}`, `-export:${sef}`, "-nogo"]);
+      compileToSef(join(code, `${stage}.xsl`), sef);
     }
     stages[stage] = sef;
   }
@@ -89,6 +106,6 @@ export function compileSchematron(schPath, sefPath, workDir, stages) {
   writeFileSync(included, new XMLSerializer().serializeToString(resolveIncludes(schPath)), "utf-8");
   run("npx", ["xslt3", `-xsl:${stages.iso_abstract_expand}`, `-s:${included}`, `-o:${expanded}`]);
   run("npx", ["xslt3", `-xsl:${stages.iso_svrl_for_xslt2}`, `-s:${expanded}`, `-o:${generated}`]);
-  run("npx", ["xslt3", `-xsl:${generated}`, `-export:${sefPath}`, "-nogo"]);
+  compileToSef(generated, sefPath);
   return sefPath;
 }

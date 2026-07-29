@@ -1,3 +1,4 @@
+import { NS } from "verifaktura";
 import { XmlWriter } from "./xml.js";
 import { computeTotals, computeVatBreakdown } from "./totals.js";
 import { formatAmount, normalizeDecimal, parseAmount } from "./money.js";
@@ -13,14 +14,8 @@ import type {
   VatBreakdownEntry,
 } from "./model.js";
 
-const NS = {
-  inv: "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
-  cn: "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2",
-  cac: "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
-  cbc: "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
-  ext: "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2",
-  hrextac: "urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1",
-};
+// Namespace URI-ji dolaze iz jezgra, da validator i builder ne mogu razići se
+// na tipfeler koji se ne bi vidio dok neki dokument tiho ne prođe pogrešno.
 
 const DEFAULT_CUSTOMIZATION = "urn:cen.eu:en16931:2017";
 const DEFAULT_PROFILE = "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0";
@@ -48,9 +43,17 @@ function writeAddress(w: XmlWriter, a: Address): void {
   });
 }
 
-function writeContact(w: XmlWriter, tag: string, c: Contact): void {
+/**
+ * Kontakt stranke.
+ *
+ * `cbc:ID` se piše samo na hrvatskoj lokaciji (`cac:SellerContact`), gdje ga
+ * HR-BR-9 traži kao OIB operatera. Unutar `cac:Party/cac:Contact` EN 16931 nema
+ * business term za identifikator, pa ga UBL-CR-189 prijavljuje — kontakt bi
+ * inače nosio upozorenje na svakom običnom računu.
+ */
+function writeContact(w: XmlWriter, tag: string, c: Contact, withId: boolean): void {
   w.block(tag, () => {
-    w.leaf("cbc:ID", c.id);
+    if (withId) w.leaf("cbc:ID", c.id);
     w.leaf("cbc:Name", c.name);
     w.leaf("cbc:Telephone", c.phone);
     w.leaf("cbc:ElectronicMail", c.email);
@@ -100,9 +103,9 @@ function writeParty(
       // što CEN-ovo UBL-CR-200 prijavljuje. Zato se ta lokacija koristi samo
       // kad dokument stvarno ide po hrvatskoj specifikaciji - inače bi svaki
       // običan EN 16931 račun s kontaktom nosio nepotrebno upozorenje.
-      if (p.contact && !asSellerContact) writeContact(w, "cac:Contact", p.contact);
+      if (p.contact && !asSellerContact) writeContact(w, "cac:Contact", p.contact, false);
     });
-    if (p.contact && asSellerContact) writeContact(w, "cac:SellerContact", p.contact);
+    if (p.contact && asSellerContact) writeContact(w, "cac:SellerContact", p.contact, true);
   });
 }
 
@@ -288,10 +291,10 @@ export function buildUbl(invoice: Invoice): string {
 
   const w = new XmlWriter();
   w.open(root, {
-    xmlns: isCreditNote ? NS.cn : NS.inv,
+    xmlns: isCreditNote ? NS.ublCreditNote : NS.ublInvoice,
     "xmlns:cac": NS.cac,
     "xmlns:cbc": NS.cbc,
-    ...(isHrProfile ? { "xmlns:ext": NS.ext, "xmlns:hrextac": NS.hrextac } : {}),
+    ...(isHrProfile ? { "xmlns:ext": NS.ext, "xmlns:hrextac": NS.hrExt } : {}),
   });
 
   if (isHrProfile) writeHrExtension(w, breakdown, totals, currency);

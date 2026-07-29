@@ -47,10 +47,6 @@ export function listProfiles(): ProfileDefinition[] {
   return [...REGISTRY.values()];
 }
 
-export function getProfile(id: string): ProfileDefinition | undefined {
-  return REGISTRY.get(id);
-}
-
 /**
  * Bira profile za izvršavanje.
  * - eksplicitno traženi (`opts.profiles`) uvijek se izvršavaju; nepoznat id je greška

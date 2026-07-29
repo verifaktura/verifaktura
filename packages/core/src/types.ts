@@ -4,8 +4,14 @@ export type Severity = "fatal" | "warning" | "info";
 /** Sintaksa dokumenta. */
 export type Syntax = "ubl" | "cii";
 
+/**
+ * Podržani jezici poruka. Popis je izvor istine — `Lang` se iz njega izvodi, pa
+ * dodavanje jezika ne traži izmjenu na četiri mjesta (tipovi, katalog, CLI).
+ */
+export const LANGS = ["en", "hr", "bs", "sr"] as const;
+
 /** Jezik poruka. Fallback lanac: traženi -> en. */
-export type Lang = "en" | "hr" | "bs" | "sr";
+export type Lang = (typeof LANGS)[number];
 
 export interface RuleMessage {
   en: string;
@@ -89,8 +95,6 @@ export interface ValidateOptions {
   lang?: Lang;
   /** Dodatni CIUS profili uz osnovni EN 16931, npr. ["hr"]. */
   profiles?: string[];
-  /** Preskoči XSD provjeru šeme (brže, ali propušta strukturne greške). */
-  skipSchema?: boolean;
   /**
    * Ograniči broj nalaza u `issues` (zaštita za API). `0` vraća samo sažetak.
    * Sažetak i `valid` se uvijek računaju iz svih nalaza, bez obzira na limit.

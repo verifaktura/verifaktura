@@ -3,7 +3,6 @@ import CATALOG from "./catalog/rules.json" with { type: "json" };
 
 interface CatalogEntry {
   en: string;
-  flag?: string;
   hr?: string;
   bs?: string;
   sr?: string;
@@ -37,6 +36,23 @@ export function pickMessage(messages: RuleMessage, lang: Lang): string {
   return messages[lang] ?? messages.en;
 }
 
+/**
+ * Napomena uz pravilo koje nacionalni profil nadjačava.
+ *
+ * Bila je zakucana na hrvatskom u `validate.ts`, pa je lokalizacijska
+ * infrastruktura zaobilazila samu sebe - engleski korisnik je dobivao poruku na
+ * hrvatskom usred engleskog izvještaja.
+ */
+export function overrideHint(profileId: string, lang: Lang): string {
+  const templates: Record<Lang, string> = {
+    en: `Overridden by profile "${profileId}", which requires this element.`,
+    hr: `Pravilo nadjačava profil "${profileId}", koji ovaj element zahtijeva.`,
+    bs: `Pravilo nadjačava profil "${profileId}", koji ovaj element zahtijeva.`,
+    sr: `Pravilo nadjačava profil "${profileId}", koji ovaj element zahteva.`,
+  };
+  return templates[lang] ?? templates.en;
+}
+
 /** Statistika pokrivenosti - koristi se u testu i u README badge-u. */
 export function catalogStats(): {
   total: number;
@@ -46,10 +62,15 @@ export function catalogStats(): {
 } {
   const ids = Object.keys(RULES);
   const br = ids.filter((id) => id.startsWith("BR"));
+  // Prisutnost bilo kojeg prijevoda, ne baš "bs" - marker jednog jezika bi tiho
+  // podbacio čim se doda jezik koji ga ne prati.
+  const localized = (id: string): boolean =>
+    RULES[id].hr !== undefined || RULES[id].bs !== undefined || RULES[id].sr !== undefined;
+
   return {
     total: ids.length,
-    localized: ids.filter((id) => RULES[id].bs !== undefined).length,
+    localized: ids.filter(localized).length,
     businessRules: br.length,
-    businessRulesLocalized: br.filter((id) => RULES[id].bs !== undefined).length,
+    businessRulesLocalized: br.filter(localized).length,
   };
 }

@@ -70,10 +70,9 @@ export class XmlWriter {
     return this;
   }
 
-  /** Otvara element, izvršava blok, zatvara. Preskače se ako je `when` false. */
-  block(name: string, fn: () => void, attrs?: Attrs, when = true): this {
-    if (!when) return this;
-    this.open(name, attrs);
+  /** Otvara element, izvršava blok, zatvara. */
+  block(name: string, fn: () => void): this {
+    this.open(name);
     fn();
     this.close(name);
     return this;

@@ -6,34 +6,16 @@
  * Pokretanje:  npm run prepare:sef
  * Rezultat:    packages/core/sef/en16931-{ubl,cii}.sef.json
  */
-import { execFileSync } from "node:child_process";
 import { mkdirSync, existsSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { compileSchematron, prepareSkeleton } from "./schematron.mjs";
+import { compileSchematron, compileToSef, findFile, prepareSkeleton, run } from "./schematron.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VENDOR = join(ROOT, "vendor", "cen");
 const OUT = join(ROOT, "packages", "core", "sef");
 const REPO = "https://github.com/ConnectingEurope/eInvoicing-EN16931.git";
 const TAG = process.env.CEN_TAG ?? "validation-1.3.16";
-
-const run = (cmd, args, opts = {}) =>
-  execFileSync(cmd, args, { stdio: "inherit", ...opts });
-
-/** Rekurzivno traži prvi fajl koji odgovara regexu. */
-function findFile(dir, re) {
-  for (const name of readdirSync(dir)) {
-    const full = join(dir, name);
-    if (statSync(full).isDirectory()) {
-      const hit = findFile(full, re);
-      if (hit) return hit;
-    } else if (re.test(name)) {
-      return full;
-    }
-  }
-  return null;
-}
 
 if (!existsSync(VENDOR)) {
   mkdirSync(dirname(VENDOR), { recursive: true });

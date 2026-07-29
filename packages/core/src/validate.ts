@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { detectSyntax, summarizeUbl } from "./detect.js";
 import { parseSvrl } from "./svrl.js";
+import { overrideHint } from "./messages.js";
 import { resolveProfiles, type ProfileDefinition } from "./profiles.js";
 import type {
   Issue,
@@ -164,7 +165,6 @@ export async function validate(
   const issues: Issue[] = [];
   let rulesFired = 0;
 
-  // 1) osnovna EN 16931 validacija
   const base = parseSvrl(
     parse(await runSef(BASE_SEF[syntax], source), "SVRL izvještaj"),
     "en16931",
@@ -173,7 +173,8 @@ export async function validate(
   issues.push(...base.issues);
   rulesFired += base.rulesFired;
 
-  // 2) nacionalni profili - izvršavaju se NAKON osnovne validacije
+  // Nacionalni profili se izvršavaju NAKON osnovne validacije: njihova pravila
+  // pretpostavljaju da je dokument već prošao EN 16931 strukturu.
   const extra: ProfileDefinition[] = resolveProfiles(
     summary.customizationId,
     syntax,
@@ -202,7 +203,7 @@ export async function validate(
       const by = overridden.get(issue.ruleId);
       if (by && issue.profile === "en16931") {
         issue.severity = "info";
-        issue.hint = `Pravilo nadjačava profil "${by}", koji ovaj element zahtijeva.`;
+        issue.hint = overrideHint(by, lang);
       }
     }
   }

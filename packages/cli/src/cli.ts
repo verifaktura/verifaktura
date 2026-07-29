@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { validateFile } from "verifaktura";
+import { LANGS, validateFile } from "verifaktura";
 import type { Lang, ValidationReport } from "verifaktura";
 
 const USAGE = `verifaktura - validacija e-faktura (EN 16931)
@@ -122,11 +122,10 @@ async function main() {
   // Opcije se provjeravaju PRIJE traženja datoteke: `verifaktura --lang racun.xml`
   // proguta datoteku kao vrijednost jezika, pa bi obrnut redoslijed prijavio
   // "nema ulazne datoteke" umjesto stvarnog uzroka.
-  const LANGS = ["en", "hr", "bs", "sr"];
   const FORMATS = ["text", "json"];
   const lang = arg("--lang", "en") as string;
   const format = arg("--format", "text") as string;
-  if (!LANGS.includes(lang)) {
+  if (!(LANGS as readonly string[]).includes(lang)) {
     throw new Error(`Nepoznat jezik "${lang}". Podržani: ${LANGS.join(", ")}.`);
   }
   if (!FORMATS.includes(format)) {

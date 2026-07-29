@@ -156,7 +156,9 @@ def main() -> None:
     rules = load_rules()
     out, localized = {}, 0
     for rid, data in sorted(rules.items()):
-        entry = {"en": data["en"], "flag": data["flag"]}
+        # `flag` se ne zapisuje: ozbiljnost dolazi iz SVRL izlaza pri validaciji,
+        # a duplikat u katalogu niko nije čitao (1562 mrtva unosa).
+        entry = {"en": data["en"]}
         loc = localize(rid, data["en"])
         if loc:
             entry.update({k: v for k, v in loc.items() if k in ("hr", "bs", "sr")})

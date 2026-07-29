@@ -1,7 +1,7 @@
 import type { Issue, Lang, RuleMessage, Severity } from "./types.js";
 import { messagesFor, pickMessage } from "./messages.js";
+import { SVRL_NS } from "./namespaces.js";
 
-const SVRL_NS = "http://purl.oclc.org/dsdl/svrl";
 
 /**
  * SVRL @flag / @role -> naša ozbiljnost.
@@ -40,9 +40,12 @@ export function extractBusinessTerms(text: string): string[] {
   return [...found];
 }
 
-/** Skida "[BR-02]-" prefiks koji CEN stavlja u tekst poruke. */
+/** Prefiks "[BR-02]-" kojim CEN otvara tekst svake poruke. */
+const RULE_PREFIX = /^\s*\[([^\]]+)\]\s*-?\s*/;
+
+/** Skida "[BR-02]-" prefiks iz teksta poruke. */
 export function stripRulePrefix(text: string): string {
-  return text.replace(/^\s*\[[^\]]+\]\s*-\s*/, "").trim();
+  return text.replace(RULE_PREFIX, "").trim();
 }
 
 export interface ParsedSvrl {
@@ -64,9 +67,9 @@ export function parseSvrl(
   const reports = doc.getElementsByTagNameNS(SVRL_NS, "successful-report");
   const fired = doc.getElementsByTagNameNS(SVRL_NS, "fired-rule");
 
-  const collect = (nodes: HTMLCollectionOf<Element> | any, kind: SvrlKind) => {
+  const collect = (nodes: ArrayLike<Element>, kind: SvrlKind): void => {
     for (let i = 0; i < nodes.length; i++) {
-      const el = nodes[i] as Element;
+      const el = nodes[i];
       const textEl = el.getElementsByTagNameNS(SVRL_NS, "text")[0];
       const rawText = (textEl?.textContent ?? "").trim();
       const ruleId = el.getAttribute("id") || inferRuleId(rawText) || "UNKNOWN";
@@ -78,7 +81,7 @@ export function parseSvrl(
         profile,
         businessTerms: extractBusinessTerms(rawText),
         location: { xpath: el.getAttribute("location") ?? "" },
-        message: pickMessage(messages, lang as Lang),
+        message: pickMessage(messages, lang),
         messages,
       });
     }
@@ -90,8 +93,7 @@ export function parseSvrl(
   return { issues, rulesFired: fired.length };
 }
 
-/** Ako SVRL nema @id, pokušaj iz "[BR-02]-..." teksta. */
+/** Ako SVRL nema @id, pokušaj iz istog "[BR-02]-" prefiksa. */
 function inferRuleId(text: string): string | null {
-  const m = text.match(/^\s*\[([^\]]+)\]/);
-  return m ? m[1] : null;
+  return RULE_PREFIX.exec(text)?.[1] ?? null;
 }

@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { registerProfile, listProfiles, resolveProfiles, type ProfileDefinition } from "../src/profiles.js";
 
-const HR_ID =
-  "urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0" +
-  "#conformant#urn:mfin.gov.hr:ext[1]2025:1.0";
+// Izmišljena oznaka: test provjerava mehanizam odabira, ne hrvatski profil.
+// Ranije je ovdje stajala baš ona pokvarena "ext[1]2025" vrijednost protiv koje
+// upozorava komentar u cius-hr - test bi ovjekovječio grešku.
+const TEST_ID = "urn:test:profil:1.0";
 
 const fake: ProfileDefinition = {
   id: "test-hr",
@@ -11,7 +12,7 @@ const fake: ProfileDefinition = {
   version: "1.0",
   source: "test",
   syntax: ["ubl"],
-  matches: (id) => id === HR_ID,
+  matches: (id) => id === TEST_ID,
   sefPath: "/nepostojeci/put.sef.json",
 };
 
@@ -23,7 +24,7 @@ describe("registar profila", () => {
   });
 
   it("automatski bira profil po CustomizationID", () => {
-    expect(resolveProfiles(HR_ID, "ubl").map((p) => p.id)).toContain("test-hr");
+    expect(resolveProfiles(TEST_ID, "ubl").map((p) => p.id)).toContain("test-hr");
   });
 
   it("ne bira profil za čisti EN 16931 dokument", () => {
@@ -31,7 +32,7 @@ describe("registar profila", () => {
   });
 
   it("ne bira UBL profil za CII dokument", () => {
-    expect(resolveProfiles(HR_ID, "cii")).toEqual([]);
+    expect(resolveProfiles(TEST_ID, "cii")).toEqual([]);
   });
 
   it("eksplicitan zahtjev nadjačava automatski odabir", () => {

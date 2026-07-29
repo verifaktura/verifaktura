@@ -1,12 +1,7 @@
+import { NS } from "./namespaces.js";
 import type { DocumentSummary, Syntax } from "./types.js";
 
-const UBL_INV = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2";
-const UBL_CN = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2";
-const CII = "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100";
-const CBC = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
-const CAC = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2";
-const RAM =
-  "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100";
+const { ublInvoice: UBL_INV, ublCreditNote: UBL_CN, cii: CII, cbc: CBC, cac: CAC, ram: RAM } = NS;
 
 /**
  * Tip CII dokumenta iz `ExchangedDocument/TypeCode`.
