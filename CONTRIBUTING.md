@@ -15,6 +15,16 @@ node scripts/roundtrip.mjs   # build -> validate
 `prepare:sef` needs network access. Skip the Croatian profile with
 `SKIP_HR=1 npm run prepare:sef`; force recompilation with `FORCE_SEF=1`.
 
+## Two different Node floors
+
+- **Published packages:** `>= 20.10` — the version that supports
+  `import ... with { type: "json" }`, which the rule catalogue uses.
+- **This repository:** `>= 20.19` — vitest 4 runs on rolldown, which needs it.
+
+The main test matrix therefore cannot verify the floor the packages claim. The
+`runtime-floor` CI job installs on 20.10, builds, and runs `npm run smoke` —
+built code only, no dev tooling — so the `engines` claim stays honest.
+
 **Unit tests must not require validation artefacts.** `sef/*.json` only exists
 after `prepare:sef`, so anything that calls `validate()` belongs in
 `packages/*/test/integration/` and runs via `npm run test:integration`, after

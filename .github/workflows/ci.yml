@@ -17,10 +17,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 20.10 je najniza podrzana: import ... with { type: "json" } trazi bas
-        # tu verziju, a "20" bi u CI-u uvijek bio zadnji 20.x pa bi problem
-        # ostao neprimijecen dok ga korisnik ne pogodi.
-        node: ["20.10", "22", "24"]
+        # Razvojni alat traži više od objavljenih paketa: rolldown (kroz vitest)
+        # traži Node >= 20.19, a paketi samo >= 20.10. Ovdje se vrti alat; donja
+        # granica onoga što KORISNIK treba provjerava se u poslu "runtime-floor".
+        node: ["20.19", "22", "24"]
     steps:
       - uses: actions/checkout@v4
 
@@ -88,6 +88,28 @@ jobs:
 
       - name: Round-trip (build -> validate)
         run: node scripts/roundtrip.mjs
+
+  # Objavljeni paketi tvrde engines >= 20.10 zbog `import ... with { type: "json" }`.
+  # Tu tvrdnju ne moze provjeriti glavna matrica jer njen alat trazi noviji Node,
+  # pa se ovdje pokrece samo izgradjeni kod, bez vitesta.
+  runtime-floor:
+    name: Najniza podrzana Node verzija
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.10"
+
+      - name: Instaliraj bez razvojnih zavisnosti alata
+        run: npm ci --ignore-scripts
+
+      - name: Build
+        run: npm run build
+
+      - name: Paketi se ucitavaju i builder radi
+        run: node scripts/smoke.mjs
 
   artefacts:
     name: Provjera novih artefakata
