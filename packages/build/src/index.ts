@@ -11,3 +11,4 @@ export {
   normalizeDecimal,
 } from "./money.js";
 export { isValidOib, oibFromVatId, assertValidOib } from "./oib.js";
+export { escapeXml, stripIllegalXmlChars, XmlWriter } from "./xml.js";

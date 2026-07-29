@@ -1,7 +1,24 @@
 /** Minimalni XML writer - bez zavisnosti, s ispravnim escapeom i uvlačenjem. */
 
+/**
+ * C0 kontrolni znakovi zabranjeni u XML 1.0 (dozvoljeni su samo tab, LF i CR).
+ * Escapeanje ne pomaže - `&#x1;` je jednako nedozvoljen kao i sirovi znak.
+ */
+const ILLEGAL_XML_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g;
+
+/**
+ * Uklanja znakove koje XML 1.0 ne dopušta ni u escapeanom obliku.
+ *
+ * Bez ovoga izlaz može biti "well-formed-invalid": xmldom i Saxon su tolerantni
+ * pa ga round-trip propusti, a stroži primatelj ga odbije. Podaci s kontrolnim
+ * znakovima stižu iz ERP izvoza i copy-paste unosa češće nego što se očekuje.
+ */
+export function stripIllegalXmlChars(value: string): string {
+  return value.replace(ILLEGAL_XML_CHARS, "");
+}
+
 export function escapeXml(value: string): string {
-  return value
+  return stripIllegalXmlChars(value)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")

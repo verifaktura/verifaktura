@@ -30,6 +30,17 @@ const BASE_SEF: Record<Syntax, string> = {
   cii: fileURLToPath(new URL("../sef/en16931-cii.sef.json", import.meta.url)),
 };
 
+/**
+ * Uklanja UTF-8 BOM.
+ *
+ * Datoteke spremljene iz Windows alata ga redovno nose, a XML parser na njemu
+ * puca prije nego što dođe do sadržaja - dokument bi bio odbijen s nejasnom
+ * greškom umjesto da se validira.
+ */
+function stripBom(xml: string): string {
+  return xml.charCodeAt(0) === 0xfeff ? xml.slice(1) : xml;
+}
+
 /** Pokreće jedan SEF nad dokumentom i vraća SVRL kao string. */
 async function runSef(sefPath: string, xml: string): Promise<string> {
   const SaxonJS = require("saxon-js");
@@ -61,10 +72,28 @@ export async function validate(
   const started = Date.now();
   const lang = opts.lang ?? "en";
   const { DOMParser } = require("@xmldom/xmldom");
-  const parse = (s: string): Document =>
-    new DOMParser().parseFromString(s, "text/xml") as unknown as Document;
 
-  const doc = parse(xml);
+  /**
+   * xmldom na neispravnom XML-u baca ParseError bez konteksta. Bez ovoga
+   * korisnik dobije poruku iz utrobe parsera umjesto podatka šta je krivo -
+   * a najčešći uzrok je BOM ili pogrešno kodiranje, ne sadržaj dokumenta.
+   */
+  const parse = (s: string, what: string): Document => {
+    try {
+      const doc = new DOMParser({
+        onError: (level: string, msg: string) => {
+          if (level === "error" || level === "fatalError") throw new Error(msg);
+        },
+      }).parseFromString(s, "text/xml") as unknown as Document;
+      if (!doc?.documentElement) throw new Error("dokument nema korijenski element");
+      return doc;
+    } catch (e) {
+      const detail = e instanceof Error ? e.message : String(e);
+      throw new Error(`Nije moguće parsirati ${what}: ${detail}`);
+    }
+  };
+
+  const doc = parse(stripBom(xml), "XML dokument");
   const { syntax, type } = detectSyntax(doc);
   const summary = syntax === "ubl" ? summarizeUbl(doc) : {};
 
@@ -75,7 +104,8 @@ export async function validate(
   let rulesFired = 0;
 
   // 1) osnovna EN 16931 validacija
-  const baseSvrl = parse(await runSef(BASE_SEF[syntax], xml));
+  const source = stripBom(xml);
+  const baseSvrl = parse(await runSef(BASE_SEF[syntax], source), "SVRL izvještaj");
   const base = parseSvrl(baseSvrl, "en16931", lang);
   issues.push(...base.issues);
   rulesFired += base.rulesFired;
@@ -87,7 +117,7 @@ export async function validate(
     opts.profiles,
   );
   for (const p of extra) {
-    const svrl = parse(await runSef(p.sefPath, xml));
+    const svrl = parse(await runSef(p.sefPath, source), `SVRL izvještaj profila "${p.id}"`);
     const res = parseSvrl(svrl, p.id, lang);
     issues.push(...res.issues);
     rulesFired += res.rulesFired;

@@ -68,6 +68,15 @@ export function resolveProfiles(
         const known = [...REGISTRY.keys()].join(", ") || "(nijedan registrovan)";
         throw new Error(`Nepoznat profil "${id}". Registrovani profili: ${known}`);
       }
+      // Eksplicitan zahtjev ne smije zaobići provjeru sintakse: UBL profil nad
+      // CII dokumentom ne bi prijavio nijedno pravilo, a u izvještaju bi stajao
+      // kao da je validirao - tiho lažno uvjerenje da je provjera obavljena.
+      if (!p.syntax.includes(syntax)) {
+        throw new Error(
+          `Profil "${id}" pokriva ${p.syntax.join(", ").toUpperCase()}, ` +
+            `a dokument je ${syntax.toUpperCase()}.`,
+        );
+      }
       return p;
     });
   }
