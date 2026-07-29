@@ -7,3 +7,6 @@ dist/
 # macOS
 .DS_Store
 vitest.config.ts.timestamp-*
+
+# privatni planovi - NE ide na javni repo
+.private/
