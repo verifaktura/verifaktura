@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.xml text
+*.sch text
+*.json text
+packages/core/src/catalog/rules.json linguist-generated=true
+packages/core/test/fixtures/* linguist-vendored=true
