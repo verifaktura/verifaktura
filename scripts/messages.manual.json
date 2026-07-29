@@ -1,0 +1,660 @@
+{
+  "_comment": "Ručni prijevodi jezgra EN 16931 pravila. Ostalo generiše scripts/gen-messages.py iz šablona. Ključ _terms je rječnik BT/BG naziva koji koriste šabloni.",
+  "_terms": {
+    "BT-92": {
+      "hr": "iznos popusta na razini dokumenta",
+      "bs": "iznos popusta na nivou dokumenta",
+      "sr": "iznos popusta na nivou dokumenta"
+    },
+    "BT-93": {
+      "hr": "osnovicu popusta na razini dokumenta",
+      "bs": "osnovicu popusta na nivou dokumenta",
+      "sr": "osnovicu popusta na nivou dokumenta"
+    },
+    "BT-99": {
+      "hr": "iznos troška na razini dokumenta",
+      "bs": "iznos troška na nivou dokumenta",
+      "sr": "iznos troška na nivou dokumenta"
+    },
+    "BT-100": {
+      "hr": "osnovicu troška na razini dokumenta",
+      "bs": "osnovicu troška na nivou dokumenta",
+      "sr": "osnovicu troška na nivou dokumenta"
+    },
+    "BT-106": {
+      "hr": "zbroj neto iznosa stavki",
+      "bs": "zbir neto iznosa stavki",
+      "sr": "zbir neto iznosa stavki"
+    },
+    "BT-107": {
+      "hr": "zbroj popusta na razini dokumenta",
+      "bs": "zbir popusta na nivou dokumenta",
+      "sr": "zbir popusta na nivou dokumenta"
+    },
+    "BT-108": {
+      "hr": "zbroj troškova na razini dokumenta",
+      "bs": "zbir troškova na nivou dokumenta",
+      "sr": "zbir troškova na nivou dokumenta"
+    },
+    "BT-109": {
+      "hr": "ukupan iznos bez PDV-a",
+      "bs": "ukupan iznos bez PDV-a",
+      "sr": "ukupan iznos bez PDV-a"
+    },
+    "BT-110": {
+      "hr": "ukupan iznos PDV-a",
+      "bs": "ukupan iznos PDV-a",
+      "sr": "ukupan iznos PDV-a"
+    },
+    "BT-111": {
+      "hr": "ukupan PDV u obračunskoj valuti",
+      "bs": "ukupan PDV u obračunskoj valuti",
+      "sr": "ukupan PDV u obračunskoj valuti"
+    },
+    "BT-112": {
+      "hr": "ukupan iznos s PDV-om",
+      "bs": "ukupan iznos s PDV-om",
+      "sr": "ukupan iznos sa PDV-om"
+    },
+    "BT-113": {
+      "hr": "plaćeni iznos",
+      "bs": "plaćeni iznos",
+      "sr": "plaćeni iznos"
+    },
+    "BT-114": {
+      "hr": "iznos zaokruživanja",
+      "bs": "iznos zaokruživanja",
+      "sr": "iznos zaokruživanja"
+    },
+    "BT-115": {
+      "hr": "iznos za plaćanje",
+      "bs": "iznos za plaćanje",
+      "sr": "iznos za plaćanje"
+    },
+    "BT-116": {
+      "hr": "poreznu osnovicu kategorije",
+      "bs": "poresku osnovicu kategorije",
+      "sr": "poresku osnovicu kategorije"
+    },
+    "BT-117": {
+      "hr": "iznos PDV-a kategorije",
+      "bs": "iznos PDV-a kategorije",
+      "sr": "iznos PDV-a kategorije"
+    },
+    "BT-131": {
+      "hr": "neto iznos stavke",
+      "bs": "neto iznos stavke",
+      "sr": "neto iznos stavke"
+    },
+    "BT-136": {
+      "hr": "iznos popusta na stavci",
+      "bs": "iznos popusta na stavci",
+      "sr": "iznos popusta na stavci"
+    },
+    "BT-137": {
+      "hr": "osnovicu popusta na stavci",
+      "bs": "osnovicu popusta na stavci",
+      "sr": "osnovicu popusta na stavci"
+    },
+    "BT-141": {
+      "hr": "iznos troška na stavci",
+      "bs": "iznos troška na stavci",
+      "sr": "iznos troška na stavci"
+    },
+    "BT-142": {
+      "hr": "osnovicu troška na stavci",
+      "bs": "osnovicu troška na stavci",
+      "sr": "osnovicu troška na stavci"
+    }
+  },
+  "BR-01": {
+    "hr": "Račun mora sadržavati identifikator specifikacije (BT-24).",
+    "bs": "Faktura mora sadržavati identifikator specifikacije (BT-24).",
+    "sr": "Faktura mora da sadrži identifikator specifikacije (BT-24)."
+  },
+  "BR-02": {
+    "hr": "Račun mora sadržavati broj računa (BT-1).",
+    "bs": "Faktura mora sadržavati broj fakture (BT-1).",
+    "sr": "Faktura mora da sadrži broj fakture (BT-1)."
+  },
+  "BR-03": {
+    "hr": "Račun mora sadržavati datum izdavanja (BT-2).",
+    "bs": "Faktura mora sadržavati datum izdavanja (BT-2).",
+    "sr": "Faktura mora da sadrži datum izdavanja (BT-2)."
+  },
+  "BR-04": {
+    "hr": "Račun mora sadržavati šifru vrste dokumenta (BT-3).",
+    "bs": "Faktura mora sadržavati šifru vrste dokumenta (BT-3).",
+    "sr": "Faktura mora da sadrži šifru vrste dokumenta (BT-3)."
+  },
+  "BR-05": {
+    "hr": "Račun mora sadržavati valutu računa (BT-5).",
+    "bs": "Faktura mora sadržavati valutu fakture (BT-5).",
+    "sr": "Faktura mora da sadrži valutu fakture (BT-5)."
+  },
+  "BR-06": {
+    "hr": "Račun mora sadržavati naziv prodavatelja (BT-27).",
+    "bs": "Faktura mora sadržavati naziv prodavca (BT-27).",
+    "sr": "Faktura mora da sadrži naziv prodavca (BT-27)."
+  },
+  "BR-07": {
+    "hr": "Račun mora sadržavati naziv kupca (BT-44).",
+    "bs": "Faktura mora sadržavati naziv kupca (BT-44).",
+    "sr": "Faktura mora da sadrži naziv kupca (BT-44)."
+  },
+  "BR-08": {
+    "hr": "Račun mora sadržavati poštansku adresu prodavatelja (BG-5).",
+    "bs": "Faktura mora sadržavati poštansku adresu prodavca (BG-5).",
+    "sr": "Faktura mora da sadrži poštansku adresu prodavca (BG-5)."
+  },
+  "BR-09": {
+    "hr": "Adresa prodavatelja (BG-5) mora sadržavati oznaku države (BT-40).",
+    "bs": "Adresa prodavca (BG-5) mora sadržavati oznaku države (BT-40).",
+    "sr": "Adresa prodavca (BG-5) mora da sadrži oznaku države (BT-40)."
+  },
+  "BR-10": {
+    "hr": "Račun mora sadržavati poštansku adresu kupca (BG-8).",
+    "bs": "Faktura mora sadržavati poštansku adresu kupca (BG-8).",
+    "sr": "Faktura mora da sadrži poštansku adresu kupca (BG-8)."
+  },
+  "BR-11": {
+    "hr": "Adresa kupca mora sadržavati oznaku države (BT-55).",
+    "bs": "Adresa kupca mora sadržavati oznaku države (BT-55).",
+    "sr": "Adresa kupca mora da sadrži oznaku države (BT-55)."
+  },
+  "BR-12": {
+    "hr": "Račun mora sadržavati zbroj neto iznosa stavki (BT-106).",
+    "bs": "Faktura mora sadržavati zbir neto iznosa stavki (BT-106).",
+    "sr": "Faktura mora da sadrži zbir neto iznosa stavki (BT-106)."
+  },
+  "BR-13": {
+    "hr": "Račun mora sadržavati ukupan iznos bez PDV-a (BT-109).",
+    "bs": "Faktura mora sadržavati ukupan iznos bez PDV-a (BT-109).",
+    "sr": "Faktura mora da sadrži ukupan iznos bez PDV-a (BT-109)."
+  },
+  "BR-14": {
+    "hr": "Račun mora sadržavati ukupan iznos s PDV-om (BT-112).",
+    "bs": "Faktura mora sadržavati ukupan iznos s PDV-om (BT-112).",
+    "sr": "Faktura mora da sadrži ukupan iznos sa PDV-om (BT-112)."
+  },
+  "BR-15": {
+    "hr": "Račun mora sadržavati iznos za plaćanje (BT-115).",
+    "bs": "Faktura mora sadržavati iznos za plaćanje (BT-115).",
+    "sr": "Faktura mora da sadrži iznos za plaćanje (BT-115)."
+  },
+  "BR-16": {
+    "hr": "Račun mora imati barem jednu stavku (BG-25).",
+    "bs": "Faktura mora imati najmanje jednu stavku (BG-25).",
+    "sr": "Faktura mora da ima najmanje jednu stavku (BG-25)."
+  },
+  "BR-17": {
+    "hr": "Ako je primatelj plaćanja (BG-10) različit od prodavatelja (BG-4), mora se navesti naziv primatelja plaćanja (BT-59).",
+    "bs": "Ako je primalac plaćanja (BG-10) različit od prodavca (BG-4), mora se navesti naziv primaoca plaćanja (BT-59).",
+    "sr": "Ako je primalac plaćanja (BG-10) različit od prodavca (BG-4), mora da se navede naziv primaoca plaćanja (BT-59)."
+  },
+  "BR-18": {
+    "hr": "Ako prodavatelj ima poreznog zastupnika (BG-11), mora se navesti njegov naziv (BT-62).",
+    "bs": "Ako prodavac ima poreskog zastupnika (BG-11), mora se navesti njegov naziv (BT-62).",
+    "sr": "Ako prodavac ima poreskog zastupnika (BG-11), mora da se navede njegov naziv (BT-62)."
+  },
+  "BR-19": {
+    "hr": "Ako prodavatelj ima poreznog zastupnika (BG-11), mora se navesti njegova adresa (BG-12).",
+    "bs": "Ako prodavac ima poreskog zastupnika (BG-11), mora se navesti njegova adresa (BG-12).",
+    "sr": "Ako prodavac ima poreskog zastupnika (BG-11), mora da se navede njegova adresa (BG-12)."
+  },
+  "BR-20": {
+    "hr": "Adresa poreznog zastupnika (BG-12) mora sadržavati oznaku države (BT-69).",
+    "bs": "Adresa poreskog zastupnika (BG-12) mora sadržavati oznaku države (BT-69).",
+    "sr": "Adresa poreskog zastupnika (BG-12) mora da sadrži oznaku države (BT-69)."
+  },
+  "BR-21": {
+    "hr": "Svaka stavka (BG-25) mora imati redni broj stavke (BT-126).",
+    "bs": "Svaka stavka (BG-25) mora imati redni broj stavke (BT-126).",
+    "sr": "Svaka stavka (BG-25) mora da ima redni broj stavke (BT-126)."
+  },
+  "BR-22": {
+    "hr": "Svaka stavka (BG-25) mora imati količinu (BT-129).",
+    "bs": "Svaka stavka (BG-25) mora imati količinu (BT-129).",
+    "sr": "Svaka stavka (BG-25) mora da ima količinu (BT-129)."
+  },
+  "BR-23": {
+    "hr": "Stavka (BG-25) mora imati jedinicu mjere količine (BT-130).",
+    "bs": "Stavka (BG-25) mora imati jedinicu mjere količine (BT-130).",
+    "sr": "Stavka (BG-25) mora da ima jedinicu mere količine (BT-130)."
+  },
+  "BR-24": {
+    "hr": "Svaka stavka (BG-25) mora imati neto iznos (BT-131).",
+    "bs": "Svaka stavka (BG-25) mora imati neto iznos (BT-131).",
+    "sr": "Svaka stavka (BG-25) mora da ima neto iznos (BT-131)."
+  },
+  "BR-25": {
+    "hr": "Svaka stavka (BG-25) mora sadržavati naziv artikla (BT-153).",
+    "bs": "Svaka stavka (BG-25) mora sadržavati naziv artikla (BT-153).",
+    "sr": "Svaka stavka (BG-25) mora da sadrži naziv artikla (BT-153)."
+  },
+  "BR-26": {
+    "hr": "Svaka stavka (BG-25) mora sadržavati neto cijenu artikla (BT-146).",
+    "bs": "Svaka stavka (BG-25) mora sadržavati neto cijenu artikla (BT-146).",
+    "sr": "Svaka stavka (BG-25) mora da sadrži neto cenu artikla (BT-146)."
+  },
+  "BR-27": {
+    "hr": "Neto cijena artikla (BT-146) ne smije biti negativna.",
+    "bs": "Neto cijena artikla (BT-146) ne smije biti negativna.",
+    "sr": "Neto cena artikla (BT-146) ne sme da bude negativna."
+  },
+  "BR-28": {
+    "hr": "Bruto cijena artikla (BT-148) ne smije biti negativna.",
+    "bs": "Bruto cijena artikla (BT-148) ne smije biti negativna.",
+    "sr": "Bruto cena artikla (BT-148) ne sme da bude negativna."
+  },
+  "BR-29": {
+    "hr": "Datum završetka razdoblja obračuna (BT-74) mora biti kasniji ili jednak datumu početka (BT-73).",
+    "bs": "Datum završetka perioda obračuna (BT-74) mora biti kasniji ili jednak datumu početka (BT-73).",
+    "sr": "Datum završetka perioda obračuna (BT-74) mora da bude kasniji ili jednak datumu početka (BT-73)."
+  },
+  "BR-30": {
+    "hr": "Datum završetka razdoblja stavke (BT-135) mora biti kasniji ili jednak datumu početka (BT-134).",
+    "bs": "Datum završetka perioda stavke (BT-135) mora biti kasniji ili jednak datumu početka (BT-134).",
+    "sr": "Datum završetka perioda stavke (BT-135) mora da bude kasniji ili jednak datumu početka (BT-134)."
+  },
+  "BR-31": {
+    "hr": "Svaki popust na razini dokumenta (BG-20) mora imati iznos (BT-92).",
+    "bs": "Svaki popust na nivou dokumenta (BG-20) mora imati iznos (BT-92).",
+    "sr": "Svaki popust na nivou dokumenta (BG-20) mora da ima iznos (BT-92)."
+  },
+  "BR-32": {
+    "hr": "Svaki popust na razini dokumenta (BG-20) mora imati PDV kategoriju (BT-95).",
+    "bs": "Svaki popust na nivou dokumenta (BG-20) mora imati PDV kategoriju (BT-95).",
+    "sr": "Svaki popust na nivou dokumenta (BG-20) mora da ima PDV kategoriju (BT-95)."
+  },
+  "BR-33": {
+    "hr": "Svaki popust na razini dokumenta (BG-20) mora imati razlog (BT-97) ili šifru razloga (BT-98).",
+    "bs": "Svaki popust na nivou dokumenta (BG-20) mora imati razlog (BT-97) ili šifru razloga (BT-98).",
+    "sr": "Svaki popust na nivou dokumenta (BG-20) mora da ima razlog (BT-97) ili šifru razloga (BT-98)."
+  },
+  "BR-36": {
+    "hr": "Svaki trošak na razini dokumenta (BG-21) mora imati iznos (BT-99).",
+    "bs": "Svaki trošak na nivou dokumenta (BG-21) mora imati iznos (BT-99).",
+    "sr": "Svaki trošak na nivou dokumenta (BG-21) mora da ima iznos (BT-99)."
+  },
+  "BR-37": {
+    "hr": "Svaki trošak na razini dokumenta (BG-21) mora imati PDV kategoriju (BT-102).",
+    "bs": "Svaki trošak na nivou dokumenta (BG-21) mora imati PDV kategoriju (BT-102).",
+    "sr": "Svaki trošak na nivou dokumenta (BG-21) mora da ima PDV kategoriju (BT-102)."
+  },
+  "BR-38": {
+    "hr": "Svaki trošak na razini dokumenta (BG-21) mora imati razlog (BT-104) ili šifru razloga (BT-105).",
+    "bs": "Svaki trošak na nivou dokumenta (BG-21) mora imati razlog (BT-104) ili šifru razloga (BT-105).",
+    "sr": "Svaki trošak na nivou dokumenta (BG-21) mora da ima razlog (BT-104) ili šifru razloga (BT-105)."
+  },
+  "BR-41": {
+    "hr": "Svaki popust na stavci (BG-27) mora imati iznos (BT-136).",
+    "bs": "Svaki popust na stavci (BG-27) mora imati iznos (BT-136).",
+    "sr": "Svaki popust na stavci (BG-27) mora da ima iznos (BT-136)."
+  },
+  "BR-42": {
+    "hr": "Svaki popust na stavci (BG-27) mora imati razlog (BT-139) ili šifru razloga (BT-140).",
+    "bs": "Svaki popust na stavci (BG-27) mora imati razlog (BT-139) ili šifru razloga (BT-140).",
+    "sr": "Svaki popust na stavci (BG-27) mora da ima razlog (BT-139) ili šifru razloga (BT-140)."
+  },
+  "BR-43": {
+    "hr": "Svaki trošak na stavci (BG-28) mora imati iznos (BT-141).",
+    "bs": "Svaki trošak na stavci (BG-28) mora imati iznos (BT-141).",
+    "sr": "Svaki trošak na stavci (BG-28) mora da ima iznos (BT-141)."
+  },
+  "BR-44": {
+    "hr": "Svaki trošak na stavci (BG-28) mora imati razlog (BT-144) ili šifru razloga (BT-145).",
+    "bs": "Svaki trošak na stavci (BG-28) mora imati razlog (BT-144) ili šifru razloga (BT-145).",
+    "sr": "Svaki trošak na stavci (BG-28) mora da ima razlog (BT-144) ili šifru razloga (BT-145)."
+  },
+  "BR-45": {
+    "hr": "Svaka rekapitulacija PDV-a (BG-23) mora imati poreznu osnovicu (BT-116).",
+    "bs": "Svaka rekapitulacija PDV-a (BG-23) mora imati poresku osnovicu (BT-116).",
+    "sr": "Svaka rekapitulacija PDV-a (BG-23) mora da ima poresku osnovicu (BT-116)."
+  },
+  "BR-46": {
+    "hr": "Svaka rekapitulacija PDV-a (BG-23) mora imati iznos PDV-a (BT-117).",
+    "bs": "Svaka rekapitulacija PDV-a (BG-23) mora imati iznos PDV-a (BT-117).",
+    "sr": "Svaka rekapitulacija PDV-a (BG-23) mora da ima iznos PDV-a (BT-117)."
+  },
+  "BR-47": {
+    "hr": "Svaka rekapitulacija PDV-a (BG-23) mora biti određena PDV kategorijom (BT-118).",
+    "bs": "Svaka rekapitulacija PDV-a (BG-23) mora biti određena PDV kategorijom (BT-118).",
+    "sr": "Svaka rekapitulacija PDV-a (BG-23) mora da bude određena PDV kategorijom (BT-118)."
+  },
+  "BR-48": {
+    "hr": "Svaka rekapitulacija PDV-a (BG-23) mora imati stopu (BT-119), osim ako račun nije predmet PDV-a.",
+    "bs": "Svaka rekapitulacija PDV-a (BG-23) mora imati stopu (BT-119), osim ako faktura nije predmet PDV-a.",
+    "sr": "Svaka rekapitulacija PDV-a (BG-23) mora da ima stopu (BT-119), osim ako faktura nije predmet PDV-a."
+  },
+  "BR-49": {
+    "hr": "Uputa za plaćanje (BG-16) mora sadržavati šifru načina plaćanja (BT-81).",
+    "bs": "Uputa za plaćanje (BG-16) mora sadržavati šifru načina plaćanja (BT-81).",
+    "sr": "Uputstvo za plaćanje (BG-16) mora da sadrži šifru načina plaćanja (BT-81)."
+  },
+  "BR-50": {
+    "hr": "Ako je navedena informacija o prijenosu sredstava (BG-17), mora postojati broj računa za plaćanje (BT-84).",
+    "bs": "Ako je navedena informacija o prenosu sredstava (BG-17), mora postojati broj računa za plaćanje (BT-84).",
+    "sr": "Ako je navedena informacija o prenosu sredstava (BG-17), mora da postoji broj računa za plaćanje (BT-84)."
+  },
+  "BR-51": {
+    "hr": "Račun ne bi smio sadržavati puni broj platne kartice (BT-87) — dopušteno je najviše prvih 6 i zadnje 4 znamenke (PCI DSS).",
+    "bs": "Faktura ne bi smjela sadržavati puni broj platne kartice (BT-87) — dozvoljeno je najviše prvih 6 i zadnje 4 cifre (PCI DSS).",
+    "sr": "Faktura ne bi smela da sadrži pun broj platne kartice (BT-87) — dozvoljeno je najviše prvih 6 i poslednje 4 cifre (PCI DSS)."
+  },
+  "BR-52": {
+    "hr": "Svaki priloženi dokument (BG-24) mora imati referencu (BT-122).",
+    "bs": "Svaki priloženi dokument (BG-24) mora imati referencu (BT-122).",
+    "sr": "Svaki priloženi dokument (BG-24) mora da ima referencu (BT-122)."
+  },
+  "BR-53": {
+    "hr": "Ako je navedena obračunska valuta PDV-a (BT-6), mora se navesti i ukupan PDV u toj valuti (BT-111).",
+    "bs": "Ako je navedena obračunska valuta PDV-a (BT-6), mora se navesti i ukupan PDV u toj valuti (BT-111).",
+    "sr": "Ako je navedena obračunska valuta PDV-a (BT-6), mora da se navede i ukupan PDV u toj valuti (BT-111)."
+  },
+  "BR-54": {
+    "hr": "Svako svojstvo artikla (BG-32) mora imati naziv (BT-160) i vrijednost (BT-161).",
+    "bs": "Svako svojstvo artikla (BG-32) mora imati naziv (BT-160) i vrijednost (BT-161).",
+    "sr": "Svako svojstvo artikla (BG-32) mora da ima naziv (BT-160) i vrednost (BT-161)."
+  },
+  "BR-55": {
+    "hr": "Svaka referenca na prethodni račun (BG-3) mora sadržavati broj tog računa (BT-25).",
+    "bs": "Svaka referenca na prethodnu fakturu (BG-3) mora sadržavati broj te fakture (BT-25).",
+    "sr": "Svaka referenca na prethodnu fakturu (BG-3) mora da sadrži broj te fakture (BT-25)."
+  },
+  "BR-56": {
+    "hr": "Svaki porezni zastupnik prodavatelja (BG-11) mora imati PDV identifikator (BT-63).",
+    "bs": "Svaki poreski zastupnik prodavca (BG-11) mora imati PDV identifikator (BT-63).",
+    "sr": "Svaki poreski zastupnik prodavca (BG-11) mora da ima PDV identifikator (BT-63)."
+  },
+  "BR-57": {
+    "hr": "Svaka adresa isporuke (BG-15) mora sadržavati oznaku države (BT-80).",
+    "bs": "Svaka adresa isporuke (BG-15) mora sadržavati oznaku države (BT-80).",
+    "sr": "Svaka adresa isporuke (BG-15) mora da sadrži oznaku države (BT-80)."
+  },
+  "BR-61": {
+    "hr": "Ako način plaćanja (BT-81) označava prijenos sredstava (SEPA, domaći ili međunarodni), mora postojati broj računa (BT-84).",
+    "bs": "Ako način plaćanja (BT-81) označava prenos sredstava (SEPA, domaći ili međunarodni), mora postojati broj računa (BT-84).",
+    "sr": "Ako način plaćanja (BT-81) označava prenos sredstava (SEPA, domaći ili međunarodni), mora da postoji broj računa (BT-84)."
+  },
+  "BR-62": {
+    "hr": "Elektronička adresa prodavatelja (BT-34) mora imati identifikator sheme.",
+    "bs": "Elektronska adresa prodavca (BT-34) mora imati identifikator šeme.",
+    "sr": "Elektronska adresa prodavca (BT-34) mora da ima identifikator šeme."
+  },
+  "BR-63": {
+    "hr": "Elektronička adresa kupca (BT-49) mora imati identifikator sheme.",
+    "bs": "Elektronska adresa kupca (BT-49) mora imati identifikator šeme.",
+    "sr": "Elektronska adresa kupca (BT-49) mora da ima identifikator šeme."
+  },
+  "BR-64": {
+    "hr": "Standardni identifikator artikla (BT-157) mora imati identifikator sheme.",
+    "bs": "Standardni identifikator artikla (BT-157) mora imati identifikator šeme.",
+    "sr": "Standardni identifikator artikla (BT-157) mora da ima identifikator šeme."
+  },
+  "BR-65": {
+    "hr": "Klasifikacijski identifikator artikla (BT-158) mora imati identifikator sheme.",
+    "bs": "Klasifikacijski identifikator artikla (BT-158) mora imati identifikator šeme.",
+    "sr": "Klasifikacioni identifikator artikla (BT-158) mora da ima identifikator šeme."
+  },
+  "BR-CO-03": {
+    "hr": "Datum obveze PDV-a (BT-7) i šifra datuma obveze (BT-8) međusobno se isključuju.",
+    "bs": "Datum obaveze PDV-a (BT-7) i šifra datuma obaveze (BT-8) međusobno se isključuju.",
+    "sr": "Datum poreske obaveze (BT-7) i šifra datuma obaveze (BT-8) međusobno se isključuju."
+  },
+  "BR-CO-04": {
+    "hr": "Svaka stavka (BG-25) mora biti razvrstana u PDV kategoriju (BT-151).",
+    "bs": "Svaka stavka (BG-25) mora biti razvrstana u PDV kategoriju (BT-151).",
+    "sr": "Svaka stavka (BG-25) mora da bude razvrstana u PDV kategoriju (BT-151)."
+  },
+  "BR-CO-05": {
+    "hr": "Šifra razloga popusta (BT-98) i tekst razloga (BT-97) moraju označavati istu vrstu popusta.",
+    "bs": "Šifra razloga popusta (BT-98) i tekst razloga (BT-97) moraju označavati istu vrstu popusta.",
+    "sr": "Šifra razloga popusta (BT-98) i tekst razloga (BT-97) moraju da označavaju istu vrstu popusta."
+  },
+  "BR-CO-06": {
+    "hr": "Šifra razloga troška (BT-105) i tekst razloga (BT-104) moraju označavati istu vrstu troška.",
+    "bs": "Šifra razloga troška (BT-105) i tekst razloga (BT-104) moraju označavati istu vrstu troška.",
+    "sr": "Šifra razloga troška (BT-105) i tekst razloga (BT-104) moraju da označavaju istu vrstu troška."
+  },
+  "BR-CO-07": {
+    "hr": "Šifra razloga popusta na stavci (BT-140) i tekst razloga (BT-139) moraju označavati isto.",
+    "bs": "Šifra razloga popusta na stavci (BT-140) i tekst razloga (BT-139) moraju označavati isto.",
+    "sr": "Šifra razloga popusta na stavci (BT-140) i tekst razloga (BT-139) moraju da označavaju isto."
+  },
+  "BR-CO-08": {
+    "hr": "Šifra razloga troška na stavci (BT-145) i tekst razloga (BT-144) moraju označavati isto.",
+    "bs": "Šifra razloga troška na stavci (BT-145) i tekst razloga (BT-144) moraju označavati isto.",
+    "sr": "Šifra razloga troška na stavci (BT-145) i tekst razloga (BT-144) moraju da označavaju isto."
+  },
+  "BR-CO-09": {
+    "hr": "PDV identifikatori (BT-31, BT-63, BT-48) moraju počinjati oznakom države po ISO 3166-1 alpha-2; Grčka smije koristiti 'EL'.",
+    "bs": "PDV identifikatori (BT-31, BT-63, BT-48) moraju počinjati oznakom države po ISO 3166-1 alpha-2; Grčka smije koristiti 'EL'.",
+    "sr": "PDV identifikatori (BT-31, BT-63, BT-48) moraju da počinju oznakom države po ISO 3166-1 alpha-2; Grčka sme da koristi 'EL'."
+  },
+  "BR-CO-10": {
+    "hr": "Zbroj neto iznosa stavki (BT-106) mora biti jednak sumi neto iznosa svih stavki (BT-131).",
+    "bs": "Zbir neto iznosa stavki (BT-106) mora biti jednak sumi neto iznosa svih stavki (BT-131).",
+    "sr": "Zbir neto iznosa stavki (BT-106) mora da bude jednak sumi neto iznosa svih stavki (BT-131)."
+  },
+  "BR-CO-11": {
+    "hr": "Zbroj popusta na razini dokumenta (BT-107) mora biti jednak sumi iznosa popusta (BT-92).",
+    "bs": "Zbir popusta na nivou dokumenta (BT-107) mora biti jednak sumi iznosa popusta (BT-92).",
+    "sr": "Zbir popusta na nivou dokumenta (BT-107) mora da bude jednak sumi iznosa popusta (BT-92)."
+  },
+  "BR-CO-12": {
+    "hr": "Zbroj troškova na razini dokumenta (BT-108) mora biti jednak sumi iznosa troškova (BT-99).",
+    "bs": "Zbir troškova na nivou dokumenta (BT-108) mora biti jednak sumi iznosa troškova (BT-99).",
+    "sr": "Zbir troškova na nivou dokumenta (BT-108) mora da bude jednak sumi iznosa troškova (BT-99)."
+  },
+  "BR-CO-13": {
+    "hr": "Ukupan iznos bez PDV-a (BT-109) = zbroj neto stavki (BT-131) − popusti (BT-107) + troškovi (BT-108).",
+    "bs": "Ukupan iznos bez PDV-a (BT-109) = zbir neto stavki (BT-131) − popusti (BT-107) + troškovi (BT-108).",
+    "sr": "Ukupan iznos bez PDV-a (BT-109) = zbir neto stavki (BT-131) − popusti (BT-107) + troškovi (BT-108)."
+  },
+  "BR-CO-14": {
+    "hr": "Ukupan iznos PDV-a (BT-110) mora biti jednak sumi iznosa PDV-a po kategorijama (BT-117).",
+    "bs": "Ukupan iznos PDV-a (BT-110) mora biti jednak sumi iznosa PDV-a po kategorijama (BT-117).",
+    "sr": "Ukupan iznos PDV-a (BT-110) mora da bude jednak sumi iznosa PDV-a po kategorijama (BT-117)."
+  },
+  "BR-CO-15": {
+    "hr": "Ukupan iznos s PDV-om (BT-112) = ukupno bez PDV-a (BT-109) + ukupan PDV (BT-110).",
+    "bs": "Ukupan iznos s PDV-om (BT-112) = ukupno bez PDV-a (BT-109) + ukupan PDV (BT-110).",
+    "sr": "Ukupan iznos sa PDV-om (BT-112) = ukupno bez PDV-a (BT-109) + ukupan PDV (BT-110)."
+  },
+  "BR-CO-16": {
+    "hr": "Iznos za plaćanje (BT-115) = ukupno s PDV-om (BT-112) − plaćeno (BT-113) + zaokruživanje (BT-114).",
+    "bs": "Iznos za plaćanje (BT-115) = ukupno s PDV-om (BT-112) − plaćeno (BT-113) + zaokruživanje (BT-114).",
+    "sr": "Iznos za plaćanje (BT-115) = ukupno sa PDV-om (BT-112) − plaćeno (BT-113) + zaokruživanje (BT-114)."
+  },
+  "BR-CO-17": {
+    "hr": "Iznos PDV-a kategorije (BT-117) = osnovica (BT-116) × stopa (BT-119) / 100, zaokruženo na dvije decimale.",
+    "bs": "Iznos PDV-a kategorije (BT-117) = osnovica (BT-116) × stopa (BT-119) / 100, zaokruženo na dvije decimale.",
+    "sr": "Iznos PDV-a kategorije (BT-117) = osnovica (BT-116) × stopa (BT-119) / 100, zaokruženo na dve decimale."
+  },
+  "BR-CO-18": {
+    "hr": "Račun mora imati barem jednu rekapitulaciju PDV-a (BG-23).",
+    "bs": "Faktura mora imati najmanje jednu rekapitulaciju PDV-a (BG-23).",
+    "sr": "Faktura mora da ima najmanje jednu rekapitulaciju PDV-a (BG-23)."
+  },
+  "BR-CO-19": {
+    "hr": "Ako se koristi razdoblje obračuna (BG-14), mora biti popunjen datum početka (BT-73) ili završetka (BT-74), ili oba.",
+    "bs": "Ako se koristi period obračuna (BG-14), mora biti popunjen datum početka (BT-73) ili završetka (BT-74), ili oba.",
+    "sr": "Ako se koristi period obračuna (BG-14), mora da bude popunjen datum početka (BT-73) ili završetka (BT-74), ili oba."
+  },
+  "BR-CO-20": {
+    "hr": "Ako se koristi razdoblje stavke (BG-26), mora biti popunjen datum početka (BT-134) ili završetka (BT-135), ili oba.",
+    "bs": "Ako se koristi period stavke (BG-26), mora biti popunjen datum početka (BT-134) ili završetka (BT-135), ili oba.",
+    "sr": "Ako se koristi period stavke (BG-26), mora da bude popunjen datum početka (BT-134) ili završetka (BT-135), ili oba."
+  },
+  "BR-CO-21": {
+    "hr": "Svaki popust na razini dokumenta (BG-20) mora sadržavati razlog (BT-97) ili šifru razloga (BT-98), ili oboje.",
+    "bs": "Svaki popust na nivou dokumenta (BG-20) mora sadržavati razlog (BT-97) ili šifru razloga (BT-98), ili oboje.",
+    "sr": "Svaki popust na nivou dokumenta (BG-20) mora da sadrži razlog (BT-97) ili šifru razloga (BT-98), ili oboje."
+  },
+  "BR-CO-22": {
+    "hr": "Svaki trošak na razini dokumenta (BG-21) mora sadržavati razlog (BT-104) ili šifru razloga (BT-105), ili oboje.",
+    "bs": "Svaki trošak na nivou dokumenta (BG-21) mora sadržavati razlog (BT-104) ili šifru razloga (BT-105), ili oboje.",
+    "sr": "Svaki trošak na nivou dokumenta (BG-21) mora da sadrži razlog (BT-104) ili šifru razloga (BT-105), ili oboje."
+  },
+  "BR-CO-23": {
+    "hr": "Svaki popust na stavci (BG-27) mora sadržavati razlog (BT-139) ili šifru razloga (BT-140), ili oboje.",
+    "bs": "Svaki popust na stavci (BG-27) mora sadržavati razlog (BT-139) ili šifru razloga (BT-140), ili oboje.",
+    "sr": "Svaki popust na stavci (BG-27) mora da sadrži razlog (BT-139) ili šifru razloga (BT-140), ili oboje."
+  },
+  "BR-CO-24": {
+    "hr": "Svaki trošak na stavci (BG-28) mora sadržavati razlog (BT-144) ili šifru razloga (BT-145), ili oboje.",
+    "bs": "Svaki trošak na stavci (BG-28) mora sadržavati razlog (BT-144) ili šifru razloga (BT-145), ili oboje.",
+    "sr": "Svaki trošak na stavci (BG-28) mora da sadrži razlog (BT-144) ili šifru razloga (BT-145), ili oboje."
+  },
+  "BR-CO-26": {
+    "hr": "Kako bi kupac mogao automatski identificirati dobavljača, mora postojati identifikator prodavatelja (BT-29), matični broj (BT-30) i/ili PDV identifikator (BT-31).",
+    "bs": "Kako bi kupac mogao automatski identifikovati dobavljača, mora postojati identifikator prodavca (BT-29), matični broj (BT-30) i/ili PDV identifikator (BT-31).",
+    "sr": "Da bi kupac mogao automatski da identifikuje dobavljača, mora da postoji identifikator prodavca (BT-29), matični broj (BT-30) i/ili PDV identifikator (BT-31)."
+  },
+  "BR-CL-01": {
+    "hr": "Šifra vrste dokumenta mora biti iz UNTDID 1001 popisa za račune i odobrenja.",
+    "bs": "Šifra vrste dokumenta mora biti iz UNTDID 1001 liste za fakture i odobrenja.",
+    "sr": "Šifra vrste dokumenta mora da bude iz UNTDID 1001 liste za fakture i odobrenja."
+  },
+  "BR-CL-03": {
+    "hr": "currencyID mora biti kodiran po ISO 4217 alpha-3.",
+    "bs": "currencyID mora biti kodiran po ISO 4217 alpha-3.",
+    "sr": "currencyID mora da bude kodiran po ISO 4217 alpha-3."
+  },
+  "BR-CL-04": {
+    "hr": "Valuta računa mora biti kodirana po ISO 4217 alpha-3.",
+    "bs": "Valuta fakture mora biti kodirana po ISO 4217 alpha-3.",
+    "sr": "Valuta fakture mora da bude kodirana po ISO 4217 alpha-3."
+  },
+  "BR-CL-05": {
+    "hr": "Obračunska valuta PDV-a mora biti kodirana po ISO 4217 alpha-3.",
+    "bs": "Obračunska valuta PDV-a mora biti kodirana po ISO 4217 alpha-3.",
+    "sr": "Obračunska valuta PDV-a mora da bude kodirana po ISO 4217 alpha-3."
+  },
+  "BR-CL-06": {
+    "hr": "Šifra datuma obveze PDV-a mora biti iz ograničenja UNTDID 2005.",
+    "bs": "Šifra datuma obaveze PDV-a mora biti iz ograničenja UNTDID 2005.",
+    "sr": "Šifra datuma poreske obaveze mora da bude iz ograničenja UNTDID 2005."
+  },
+  "BR-CL-07": {
+    "hr": "Identifikator sheme objekta mora biti iz ograničenja UNTDID 1153.",
+    "bs": "Identifikator šeme objekta mora biti iz ograničenja UNTDID 1153.",
+    "sr": "Identifikator šeme objekta mora da bude iz ograničenja UNTDID 1153."
+  },
+  "BR-CL-08": {
+    "hr": "Šifra predmeta mora biti iz ograničenja UNTDID 4451.",
+    "bs": "Šifra predmeta mora biti iz ograničenja UNTDID 4451.",
+    "sr": "Šifra predmeta mora da bude iz ograničenja UNTDID 4451."
+  },
+  "BR-CL-10": {
+    "hr": "Identifikator sheme bilo kojeg identifikatora mora biti iz ISO 6523 ICD popisa.",
+    "bs": "Identifikator šeme bilo kojeg identifikatora mora biti iz ISO 6523 ICD liste.",
+    "sr": "Identifikator šeme bilo kog identifikatora mora da bude iz ISO 6523 ICD liste."
+  },
+  "BR-CL-11": {
+    "hr": "Identifikator sheme registracijskog identifikatora mora biti iz ISO 6523 ICD popisa.",
+    "bs": "Identifikator šeme registracijskog identifikatora mora biti iz ISO 6523 ICD liste.",
+    "sr": "Identifikator šeme registracionog identifikatora mora da bude iz ISO 6523 ICD liste."
+  },
+  "BR-CL-13": {
+    "hr": "Identifikator sheme klasifikacije artikla mora biti iz UNTDID 7143 popisa.",
+    "bs": "Identifikator šeme klasifikacije artikla mora biti iz UNTDID 7143 liste.",
+    "sr": "Identifikator šeme klasifikacije artikla mora da bude iz UNTDID 7143 liste."
+  },
+  "BR-CL-14": {
+    "hr": "Oznake država moraju biti kodirane po ISO 3166-1.",
+    "bs": "Oznake država moraju biti kodirane po ISO 3166-1.",
+    "sr": "Oznake država moraju da budu kodirane po ISO 3166-1."
+  },
+  "BR-CL-15": {
+    "hr": "Oznake država moraju biti kodirane po ISO 3166-1.",
+    "bs": "Oznake država moraju biti kodirane po ISO 3166-1.",
+    "sr": "Oznake država moraju da budu kodirane po ISO 3166-1."
+  },
+  "BR-CL-16": {
+    "hr": "Način plaćanja mora biti kodiran po UNTDID 4461.",
+    "bs": "Način plaćanja mora biti kodiran po UNTDID 4461.",
+    "sr": "Način plaćanja mora da bude kodiran po UNTDID 4461."
+  },
+  "BR-CL-17": {
+    "hr": "PDV kategorije moraju biti kodirane po UNCL 5305.",
+    "bs": "PDV kategorije moraju biti kodirane po UNCL 5305.",
+    "sr": "PDV kategorije moraju da budu kodirane po UNCL 5305."
+  },
+  "BR-CL-18": {
+    "hr": "PDV kategorije moraju biti kodirane po UNCL 5305.",
+    "bs": "PDV kategorije moraju biti kodirane po UNCL 5305.",
+    "sr": "PDV kategorije moraju da budu kodirane po UNCL 5305."
+  },
+  "BR-CL-19": {
+    "hr": "Šifrirani razlozi popusta moraju pripadati UNCL 5189 popisu.",
+    "bs": "Šifrirani razlozi popusta moraju pripadati UNCL 5189 listi.",
+    "sr": "Šifrirani razlozi popusta moraju da pripadaju UNCL 5189 listi."
+  },
+  "BR-CL-20": {
+    "hr": "Šifrirani razlozi troška moraju pripadati UNCL 7161 popisu.",
+    "bs": "Šifrirani razlozi troška moraju pripadati UNCL 7161 listi.",
+    "sr": "Šifrirani razlozi troška moraju da pripadaju UNCL 7161 listi."
+  },
+  "BR-CL-21": {
+    "hr": "Shema standardnog identifikatora artikla mora pripadati ISO 6523 ICD popisu.",
+    "bs": "Šema standardnog identifikatora artikla mora pripadati ISO 6523 ICD listi.",
+    "sr": "Šema standardnog identifikatora artikla mora da pripada ISO 6523 ICD listi."
+  },
+  "BR-CL-22": {
+    "hr": "Shema šifre razloga oslobođenja od PDV-a mora pripadati CEF VATEX popisu.",
+    "bs": "Šema šifre razloga oslobođenja od PDV-a mora pripadati CEF VATEX listi.",
+    "sr": "Šema šifre razloga oslobođenja od PDV-a mora da pripada CEF VATEX listi."
+  },
+  "BR-CL-23": {
+    "hr": "Jedinica mjere mora biti kodirana po UN/ECE Preporuci 20 s proširenjem Rec 21.",
+    "bs": "Jedinica mjere mora biti kodirana po UN/ECE Preporuci 20 s proširenjem Rec 21.",
+    "sr": "Jedinica mere mora da bude kodirana po UN/ECE Preporuci 20 sa proširenjem Rec 21."
+  },
+  "BR-CL-24": {
+    "hr": "Za Mime kod u atributu koristi se MIMEMediaType.",
+    "bs": "Za Mime kod u atributu koristi se MIMEMediaType.",
+    "sr": "Za Mime kod u atributu koristi se MIMEMediaType."
+  },
+  "BR-CL-25": {
+    "hr": "Shema identifikatora elektroničke adrese mora pripadati CEF EAS popisu.",
+    "bs": "Šema identifikatora elektronske adrese mora pripadati CEF EAS listi.",
+    "sr": "Šema identifikatora elektronske adrese mora da pripada CEF EAS listi."
+  },
+  "BR-CL-26": {
+    "hr": "Shema identifikatora mjesta isporuke mora pripadati ISO 6523 ICD popisu.",
+    "bs": "Šema identifikatora mjesta isporuke mora pripadati ISO 6523 ICD listi.",
+    "sr": "Šema identifikatora mesta isporuke mora da pripada ISO 6523 ICD listi."
+  },
+  "BR-IC-11": {
+    "hr": "Ako rekapitulacija PDV-a (BG-23) ima kategoriju „isporuka unutar EU“, mora biti popunjen stvarni datum isporuke (BT-72) ili razdoblje obračuna (BG-14).",
+    "bs": "Ako rekapitulacija PDV-a (BG-23) ima kategoriju „isporuka unutar EU“, mora biti popunjen stvarni datum isporuke (BT-72) ili period obračuna (BG-14).",
+    "sr": "Ako rekapitulacija PDV-a (BG-23) ima kategoriju „isporuka unutar EU“, mora da bude popunjen stvarni datum isporuke (BT-72) ili period obračuna (BG-14)."
+  },
+  "BR-IC-12": {
+    "hr": "Ako rekapitulacija PDV-a (BG-23) ima kategoriju „isporuka unutar EU“, mora biti popunjena oznaka države isporuke (BT-80).",
+    "bs": "Ako rekapitulacija PDV-a (BG-23) ima kategoriju „isporuka unutar EU“, mora biti popunjena oznaka države isporuke (BT-80).",
+    "sr": "Ako rekapitulacija PDV-a (BG-23) ima kategoriju „isporuka unutar EU“, mora da bude popunjena oznaka države isporuke (BT-80)."
+  },
+  "BR-O-11": {
+    "hr": "Račun s rekapitulacijom PDV-a (BG-23) u kategoriji „nije predmet oporezivanja PDV-om“ ne smije sadržavati druge rekapitulacije PDV-a.",
+    "bs": "Faktura s rekapitulacijom PDV-a (BG-23) u kategoriji „nije predmet oporezivanja PDV-om“ ne smije sadržavati druge rekapitulacije PDV-a.",
+    "sr": "Faktura sa rekapitulacijom PDV-a (BG-23) u kategoriji „nije predmet oporezivanja PDV-om“ ne sme da sadrži druge rekapitulacije PDV-a."
+  },
+  "BR-O-12": {
+    "hr": "Račun s kategorijom „nije predmet oporezivanja PDV-om“ ne smije sadržavati stavke (BG-25) druge PDV kategorije (BT-151).",
+    "bs": "Faktura s kategorijom „nije predmet oporezivanja PDV-om“ ne smije sadržavati stavke (BG-25) druge PDV kategorije (BT-151).",
+    "sr": "Faktura sa kategorijom „nije predmet oporezivanja PDV-om“ ne sme da sadrži stavke (BG-25) druge PDV kategorije (BT-151)."
+  },
+  "BR-O-13": {
+    "hr": "Račun s kategorijom „nije predmet oporezivanja PDV-om“ ne smije sadržavati popuste (BG-20) druge PDV kategorije (BT-95).",
+    "bs": "Faktura s kategorijom „nije predmet oporezivanja PDV-om“ ne smije sadržavati popuste (BG-20) druge PDV kategorije (BT-95).",
+    "sr": "Faktura sa kategorijom „nije predmet oporezivanja PDV-om“ ne sme da sadrži popuste (BG-20) druge PDV kategorije (BT-95)."
+  },
+  "BR-O-14": {
+    "hr": "Račun s kategorijom „nije predmet oporezivanja PDV-om“ ne smije sadržavati troškove (BG-21) druge PDV kategorije (BT-102).",
+    "bs": "Faktura s kategorijom „nije predmet oporezivanja PDV-om“ ne smije sadržavati troškove (BG-21) druge PDV kategorije (BT-102).",
+    "sr": "Faktura sa kategorijom „nije predmet oporezivanja PDV-om“ ne sme da sadrži troškove (BG-21) druge PDV kategorije (BT-102)."
+  }
+}
