@@ -23,7 +23,8 @@ Trusted publisher se podešava na stranici paketa, a stranica postoji tek kad
 paket postoji. Prvu objavu zato ne može odraditi OIDC. Dvije opcije:
 
 **A — jednokratni token, pipeline radi sve** (preporučeno ako ne želiš ništa
-lokalno):
+lokalno). Workflow sam prepozna postoji li `NPM_TOKEN` secret i prebaci se na
+njega — nema izmjena u `release.yml`.
 
 1. npmjs.com → Access Tokens → **Granular access token**
    - Packages and scopes: `Read and write`, opseg **All packages**
@@ -32,15 +33,14 @@ lokalno):
      `E403 ... Two-factor authentication or granular access token with bypass
      2fa enabled is required to publish packages`
    - Expiration: **7 dana** — token živi samo koliko traje bootstrap
-2. GitHub → Settings → Secrets → Actions → novi secret `NPM_TOKEN`
-3. Privremeno dodaj u `release.yml`, u korak „Objavi pakete":
-   ```yaml
-   env:
-     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-   ```
-4. Pokreni Actions → Release → `minor`
-5. Nakon uspjeha: **vrati `release.yml` na verziju bez `env:`**, obriši secret,
-   opozovi token.
+2. GitHub → Settings → Secrets and variables → Actions → New repository secret
+   - Name: `NPM_TOKEN`
+   - Secret: *(token)*
+3. Actions → **Release** → Run workflow → `patch`, `dry_run: true`
+   Probni prolaz provjeri da sve prolazi bez objavljivanja.
+4. Ponovi bez `dry_run`. U sažetku posla piše koja je autentifikacija korištena.
+5. Nakon uspjeha: podesi trusted publishing (korak 3 ispod), **obriši secret**
+   i opozovi token. Workflow se sam vraća na OIDC.
 
 **B — jednom ručno s tvoje mašine:**
 

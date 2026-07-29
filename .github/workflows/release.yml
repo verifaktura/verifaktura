@@ -8,6 +8,17 @@ name: Release
 #  2. push taga v* (npr. ako verziju dižeš ručno)
 #
 # Objava ide preko npm trusted publishing (OIDC) - bez tokena u secrets.
+#
+# BOOTSTRAP: trusted publisher se podešava na stranici paketa, a stranica
+# postoji tek kad paket postoji. Za prvu objavu zato postoji privremeni izlaz:
+# ako u repo secrets postaviš NPM_TOKEN, workflow će ga upotrijebiti.
+# Nakon prve uspješne objave: podesi trusted publishing za sva četiri paketa,
+# obriši secret i opozovi token - OIDC dalje radi sam.
+#
+# Token za bootstrap mora imati:
+#   - opseg "All packages" (unscoped `verifaktura` nije u scope-u @verifaktura)
+#   - uključen "Bypass two-factor authentication"
+#
 # Postavljanje je opisano u RELEASING.md.
 
 on:
@@ -87,13 +98,34 @@ jobs:
         run: echo "version=$(node -p "require('./packages/core/package.json').version")" >> "$GITHUB_OUTPUT"
 
       # --- objava ---
-      # --provenance se ne navodi: kod trusted publishinga se generiše sam
+      - name: Odredi način autentifikacije
+        id: auth
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -n "$NPM_TOKEN" ]; then
+            echo "mode=token" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Bootstrap objava::Koristi se NPM_TOKEN. Nakon uspjeha podesi trusted publishing, obriši secret i opozovi token."
+          else
+            echo "mode=oidc" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Provenance: kod trusted publishinga se generiše sam, pa se --provenance
+      # ne navodi. Kod bootstrap objave tokenom navodi se eksplicitno.
       - name: Objavi pakete
         if: ${{ !inputs.dry_run }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          if [ "${{ steps.auth.outputs.mode }}" = "token" ]; then
+            PUBLISH_ARGS="--provenance --access public"
+          else
+            PUBLISH_ARGS=""
+          fi
           for dir in packages/core packages/build packages/cius-hr packages/cli; do
-            echo "::group::npm publish ($dir)"
-            (cd "$dir" && npm publish)
+            name="$(node -p "require('./$dir/package.json').name")"
+            echo "::group::npm publish $name"
+            (cd "$dir" && npm publish $PUBLISH_ARGS)
             echo "::endgroup::"
           done
 
@@ -105,10 +137,15 @@ jobs:
             if [ "${{ inputs.dry_run }}" = "true" ]; then
               echo "Probni prolaz — ništa nije objavljeno."
             else
-              echo "Objavljeno na npm:"
+              echo "Objavljeno na npm (autentifikacija: ${{ steps.auth.outputs.mode }}):"
               echo "- verifaktura"
               echo "- @verifaktura/build"
               echo "- @verifaktura/cius-hr"
               echo "- @verifaktura/cli"
+              if [ "${{ steps.auth.outputs.mode }}" = "token" ]; then
+                echo
+                echo "### Sljedeći korak"
+                echo "Podesi trusted publishing za sva četiri paketa, obriši \`NPM_TOKEN\` secret i opozovi token."
+              fi
             fi
           } >> "$GITHUB_STEP_SUMMARY"
