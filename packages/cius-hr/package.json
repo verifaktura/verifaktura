@@ -1,0 +1,13 @@
+{
+  "name": "@verifaktura/cius-hr",
+  "version": "0.1.0",
+  "description": "Hrvatski CIUS profil (Fiskalizacija 2.0) za verifaktura validator e-računa.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "sef"],
+  "scripts": { "build": "tsc -p tsconfig.build.json" },
+  "keywords": ["eracun", "fiskalizacija", "hrvatska", "cius", "en16931"],
+  "license": "Apache-2.0",
+  "peerDependencies": { "verifaktura": "^0.1.0" }
+}
