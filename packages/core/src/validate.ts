@@ -239,10 +239,32 @@ export async function validate(
   };
 }
 
-/** Kao `validate`, ali čita dokument s diska. */
+/**
+ * Kodiranja koja Node dekodira izvorno. Za ostalo je bolje odbiti nego tiho
+ * proizvesti mojibake.
+ */
+const SUPPORTED_ENCODINGS = new Set(["utf-8", "utf8", "us-ascii", "ascii"]);
+
+/**
+ * Kao `validate`, ali čita dokument s diska.
+ *
+ * Poštuje `encoding` iz XML deklaracije. Ranije se sve čitalo kao UTF-8, pa je
+ * ISO-8859-2 dokument tiho postajao mojibake (U+FFFD) i padao na naizgled
+ * nepovezanim pravilima - umjesto da odmah kaže da kodiranje nije podržano.
+ */
 export async function validateFile(
   path: string,
   opts: ValidateOptions = {},
 ): Promise<ValidationReport> {
-  return validate(await readFile(path, "utf-8"), opts);
+  const bytes = await readFile(path);
+  const head = bytes.subarray(0, 200).toString("latin1");
+  const declared = /<\?xml[^>]*\bencoding\s*=\s*["']([^"']+)["']/i.exec(head)?.[1];
+
+  if (declared && !SUPPORTED_ENCODINGS.has(declared.toLowerCase())) {
+    throw new Error(
+      `Dokument deklariše kodiranje "${declared}", koje nije podržano. ` +
+        `Pretvori ga u UTF-8 prije validacije.`,
+    );
+  }
+  return validate(bytes.toString("utf-8"), opts);
 }

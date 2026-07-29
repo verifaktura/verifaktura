@@ -40,9 +40,53 @@ async function loadInstalledProfiles(): Promise<string[]> {
   return loaded;
 }
 
+/**
+ * Vrijednost opcije `--flag vrijednost` ili `--flag=vrijednost`.
+ *
+ * Ranije se slijepo uzimao sljedeći argument, pa je `verifaktura --lang inv.xml`
+ * pojeo ime datoteke kao jezik i onda se žalio da nema datoteke.
+ */
 function arg(flag: string, fallback?: string): string | undefined {
-  const i = process.argv.indexOf(flag);
-  return i > -1 ? process.argv[i + 1] : fallback;
+  const argv = process.argv.slice(2);
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === flag) {
+      const next = argv[i + 1];
+      if (next === undefined || next.startsWith("-")) {
+        throw new Error(`Opcija ${flag} traži vrijednost.`);
+      }
+      return next;
+    }
+    if (a.startsWith(`${flag}=`)) return a.slice(flag.length + 1);
+  }
+  return fallback;
+}
+
+/** Prvi argument koji nije opcija ni vrijednost opcije. */
+function positional(): string | undefined {
+  const withValue = new Set(["--lang", "--format"]);
+  const argv = process.argv.slice(2);
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (withValue.has(a)) {
+      i++;
+      continue;
+    }
+    if (!a.startsWith("-")) return a;
+  }
+  return undefined;
+}
+
+/**
+ * Ispisuje i čeka da izlaz stvarno ode.
+ *
+ * `process.exit` odmah nakon `console.log` odsijeca veliki `--format json`
+ * izlaz kad stdout ide kroz cijev, jer je pisanje tada asinkrono.
+ */
+function writeOut(text: string): Promise<void> {
+  return new Promise((resolve) => {
+    process.stdout.write(text + "\n", () => resolve());
+  });
 }
 
 function renderText(r: ValidationReport): string {
@@ -71,15 +115,36 @@ function renderText(r: ValidationReport): string {
 }
 
 async function main() {
-  const file = process.argv[2];
-  if (!file || file === "-h" || file === "--help") {
-    console.log(USAGE);
-    process.exit(file ? 0 : 2);
+  if (process.argv.includes("-h") || process.argv.includes("--help")) {
+    await writeOut(USAGE);
+    process.exit(0);
   }
+  // Opcije se provjeravaju PRIJE traženja datoteke: `verifaktura --lang racun.xml`
+  // proguta datoteku kao vrijednost jezika, pa bi obrnut redoslijed prijavio
+  // "nema ulazne datoteke" umjesto stvarnog uzroka.
+  const LANGS = ["en", "hr", "bs", "sr"];
+  const FORMATS = ["text", "json"];
+  const lang = arg("--lang", "en") as string;
+  const format = arg("--format", "text") as string;
+  if (!LANGS.includes(lang)) {
+    throw new Error(`Nepoznat jezik "${lang}". Podržani: ${LANGS.join(", ")}.`);
+  }
+  if (!FORMATS.includes(format)) {
+    throw new Error(`Nepoznat format "${format}". Podržani: ${FORMATS.join(", ")}.`);
+  }
+
+  const file = positional();
+  if (!file) {
+    await writeOut(USAGE);
+    process.exit(2);
+  }
+
   await loadInstalledProfiles();
-  const report = await validateFile(file, { lang: (arg("--lang", "en") as Lang) });
+  const report = await validateFile(file, { lang: lang as Lang });
   if (!process.argv.includes("--quiet")) {
-    console.log(arg("--format", "text") === "json" ? JSON.stringify(report, null, 2) : renderText(report));
+    await writeOut(
+      format === "json" ? JSON.stringify(report, null, 2) : renderText(report),
+    );
   }
   process.exit(report.valid ? 0 : 1);
 }

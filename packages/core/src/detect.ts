@@ -5,6 +5,20 @@ const UBL_CN = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2";
 const CII = "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100";
 const CBC = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
 const CAC = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2";
+const RAM =
+  "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100";
+
+/**
+ * Tip CII dokumenta iz `ExchangedDocument/TypeCode`.
+ *
+ * Ranije je svaki CII dokument prijavljivan kao "invoice", pa su odobrenja
+ * (šifra 381) bila pogrešno označena u sažetku izvještaja.
+ */
+function ciiDocumentType(root: Element): DocumentSummary["type"] {
+  const code = root.getElementsByTagNameNS(RAM, "TypeCode")[0]?.textContent?.trim();
+  if (code === "381") return "creditNote";
+  return code ? "invoice" : "unknown";
+}
 
 /** Prepoznaje sintaksu i tip dokumenta iz korijenskog elementa. */
 export function detectSyntax(doc: Document): { syntax: Syntax; type: DocumentSummary["type"] } {
@@ -12,7 +26,7 @@ export function detectSyntax(doc: Document): { syntax: Syntax; type: DocumentSum
   const ns = root?.namespaceURI ?? "";
   if (ns === UBL_INV) return { syntax: "ubl", type: "invoice" };
   if (ns === UBL_CN) return { syntax: "ubl", type: "creditNote" };
-  if (ns === CII) return { syntax: "cii", type: "invoice" };
+  if (ns === CII) return { syntax: "cii", type: ciiDocumentType(root) };
   throw new Error(`Nepoznata sintaksa dokumenta (namespace: ${ns || "nema"})`);
 }
 
@@ -41,11 +55,29 @@ function partyName(root: Element, wrapper: string): string | undefined {
   return legal?.getElementsByTagNameNS(CBC, "RegistrationName")[0]?.textContent?.trim() || undefined;
 }
 
-/** PDV/VAT ID stranke (cac:PartyTaxScheme/cbc:CompanyID). */
+/**
+ * PDV identifikator stranke (BT-31 / BT-48).
+ *
+ * Bira se PartyTaxScheme čija je shema stvarno "VAT". Ranije se uzimao prvi po
+ * redu, pa je porezni broj (BT-32) mogao završiti u sažetku kao PDV ID - dvije
+ * različite stvari koje se u dokumentu razlikuju samo po TaxScheme/ID.
+ */
 function partyVat(root: Element, wrapper: string): string | undefined {
   const w = root.getElementsByTagNameNS(CAC, wrapper)[0];
-  const ts = w?.getElementsByTagNameNS(CAC, "PartyTaxScheme")[0];
-  return ts?.getElementsByTagNameNS(CBC, "CompanyID")[0]?.textContent?.trim() || undefined;
+  if (!w) return undefined;
+  const schemes = w.getElementsByTagNameNS(CAC, "PartyTaxScheme");
+  for (let i = 0; i < schemes.length; i++) {
+    const scheme = schemes[i] as Element;
+    const id = scheme
+      .getElementsByTagNameNS(CAC, "TaxScheme")[0]
+      ?.getElementsByTagNameNS(CBC, "ID")[0]
+      ?.textContent?.trim()
+      .toUpperCase();
+    if (id === "VAT") {
+      return scheme.getElementsByTagNameNS(CBC, "CompanyID")[0]?.textContent?.trim() || undefined;
+    }
+  }
+  return undefined;
 }
 
 /** Izvlači sažetak dokumenta za zaglavlje izvještaja (UBL; CII se dodaje u v0.2). */

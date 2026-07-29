@@ -34,6 +34,8 @@ function parseScaled(value: string | number, scale: bigint): bigint {
   const [whole, frac = ""] = s.replace("-", "").split(".");
   const padded = (frac + "0".repeat(digits + 1)).slice(0, digits + 1);
   let units = BigInt(whole) * scale + BigInt(padded.slice(0, digits) || "0");
+  // half-up se primjenjuje na apsolutnu vrijednost pa se predznak vraća, da bi
+  // -0.015 i 0.015 dali simetrične rezultate
   if (Number(padded[digits]) >= 5) units += 1n;
   return neg ? -units : units;
 }
@@ -69,12 +71,23 @@ export function sum(...values: (string | undefined)[]): bigint {
  */
 export function applyRate(baseCents: bigint, ratePercent: string): bigint {
   const rate = parseAmount(ratePercent); // stopa u stotinkama procenta
-  const numerator = baseCents * rate;
-  const denominator = 100n * SCALE;
+  return divideHalfUp(baseCents * rate, 100n * SCALE);
+}
+
+/**
+ * Dijeli uz half-up zaokruživanje, simetrično oko nule.
+ *
+ * Ranija provjera `r * 2n >= denominator` nikad nije okinula za negativan
+ * ostatak, pa su se negativni iznosi zaokruživali ka nuli dok su se pozitivni
+ * zaokruživali navise - razlika od jedne stotinke na storniranim i negativnim
+ * osnovicama, dovoljna da padne BR-CO-17.
+ */
+function divideHalfUp(numerator: bigint, denominator: bigint): bigint {
   const q = numerator / denominator;
   const r = numerator % denominator;
-  // half-up
-  return r * 2n >= denominator ? q + 1n : q;
+  const rAbs = r < 0n ? -r : r;
+  if (rAbs * 2n < denominator) return q;
+  return numerator < 0n ? q - 1n : q + 1n;
 }
 
 /**
@@ -88,12 +101,5 @@ export function applyRate(baseCents: bigint, ratePercent: string): bigint {
 export function multiply(quantity: string | number, unitPrice: string | number): bigint {
   const qty = parseScaled(quantity, QTY_SCALE);
   const price = parseScaled(unitPrice, QTY_SCALE);
-  const denominator = QTY_SCALE * QTY_SCALE / SCALE;
-  const numerator = qty * price;
-  const q = numerator / denominator;
-  const r = numerator % denominator;
-  const half = denominator / 2n;
-  const rAbs = r < 0n ? -r : r;
-  if (rAbs >= half) return q + (numerator < 0n ? -1n : 1n);
-  return q;
+  return divideHalfUp(qty * price, (QTY_SCALE * QTY_SCALE) / SCALE);
 }

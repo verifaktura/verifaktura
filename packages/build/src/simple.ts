@@ -27,7 +27,19 @@ export interface SimpleInvoiceInput {
   /** Poziv na broj. */
   paymentReference?: string;
   notes?: string[];
+  /**
+   * BT-24. Za hrvatski eRačun koristi `HR_CUSTOMIZATION_ID` iz
+   * `@verifaktura/cius-hr`; tada su obavezni i `issueTime`, `profileId` i
+   * `dueDate`, pa ih ovaj put traži zajedno s njim.
+   */
   customizationId?: string;
+  /**
+   * HR-BT-2 - vrijeme izdavanja, `hh:mm:ss`. Obavezno za hrvatski eRačun
+   * (HR-BR-2); bez njega dokument pada bez obzira na ostalo.
+   */
+  issueTime?: string;
+  /** BT-23 - oznaka procesa. Za hrvatski eRačun P1–P12 ili `P99:<oznaka>` (HR-BR-34). */
+  profileId?: string;
 }
 
 /**
@@ -64,8 +76,10 @@ export function simpleInvoice(input: SimpleInvoiceInput): Invoice {
 
   return {
     customizationId: input.customizationId,
+    profileId: input.profileId,
     id: input.id,
     issueDate: input.issueDate,
+    issueTime: input.issueTime,
     dueDate: input.dueDate,
     currency: input.currency,
     notes: input.notes,

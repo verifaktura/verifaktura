@@ -25,7 +25,7 @@ export function escapeXml(value: string): string {
     .replace(/"/g, "&quot;");
 }
 
-export type Attrs = Record<string, string | undefined>;
+export type Attrs = Record<string, string | number | undefined>;
 
 export class XmlWriter {
   private readonly parts: string[] = [];
@@ -55,11 +55,17 @@ export class XmlWriter {
     return this;
   }
 
-  /** Element s tekstom. Preskače se ako je vrijednost undefined ili prazna. */
-  leaf(name: string, value: string | undefined, attrs?: Attrs): this {
+  /**
+   * Element s tekstom. Preskače se ako je vrijednost undefined ili prazna.
+   *
+   * Vrijednost se koercira u string kao i kod atributa - JS pozivalac bez
+   * tipova (npr. `quantity: 2`) je inače dobivao `value.replace is not a
+   * function` iz utrobe writera, bez naznake kojeg polja.
+   */
+  leaf(name: string, value: string | number | undefined, attrs?: Attrs): this {
     if (value === undefined || value === "") return this;
     this.parts.push(
-      `${this.indent()}<${name}${this.attrs(attrs)}>${escapeXml(value)}</${name}>`,
+      `${this.indent()}<${name}${this.attrs(attrs)}>${escapeXml(String(value))}</${name}>`,
     );
     return this;
   }
