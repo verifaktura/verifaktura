@@ -28,5 +28,13 @@
   },
   "dependencies": {
     "verifaktura": "^0.1.6"
+  },
+  "peerDependencies": {
+    "@verifaktura/cius-hr": "^0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@verifaktura/cius-hr": {
+      "optional": true
+    }
   }
 }

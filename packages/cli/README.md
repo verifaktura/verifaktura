@@ -6,6 +6,13 @@ Command line validation of EN 16931 e-invoices.
 npx @verifaktura/cli invoice.xml --lang hr
 ```
 
+National CIUS profiles load automatically when installed:
+
+```bash
+npm i @verifaktura/cli @verifaktura/cius-hr
+npx verifaktura eracun.xml --lang hr
+```
+
 ```
 Faktura 12115118 - UBL
   Izdavatelj: De Koksmaat
@@ -14,7 +21,7 @@ Faktura 12115118 - UBL
 GREŠKA  BR-02        Račun mora sadržavati broj računa (BT-1).
                      termovi: BT-1
 
-NEVALIDNO - 1 grešaka, 0 upozorenja (211 pravila, 272 ms)
+NEVALIDNO - 1 grešaka, 0 upozorenja (profili: en16931; 211 pravila, 272 ms)
 ```
 
 ## Options
