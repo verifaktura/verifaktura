@@ -14,7 +14,14 @@ import type {
 
 const require = createRequire(import.meta.url);
 
-const ENGINE_VERSION = "0.1.0";
+/**
+ * Verzija se čita iz package.json, ne prepisuje ručno. Izvještaj se koristi kao
+ * audit trag, pa netačna oznaka engine-a obara njegovu svrhu - a zakucana
+ * konstanta se zaboravi pri svakoj objavi.
+ */
+const ENGINE_VERSION: string = (
+  require("../package.json") as { version: string }
+).version;
 /** Verzija CEN/TC 434 validacionih artefakata na koju je build pinovan. */
 const ARTEFACT_VERSION = "1.3.16";
 
