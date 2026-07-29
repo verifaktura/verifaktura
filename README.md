@@ -38,14 +38,34 @@ if (!report.valid) {
 
 Format izvještaja je dokumentovan u [FORMAT.md](./FORMAT.md) i verzionisan (`reportVersion`).
 
+## Nacionalni profili
+
+CIUS profili se izvršavaju **nakon** osnovne EN 16931 validacije i biraju se
+automatski prema `cbc:CustomizationID`:
+
+```ts
+import { validate } from "verifaktura";
+import "@verifaktura/cius-hr";   // registruje hrvatski profil
+
+const report = await validate(xml, { lang: "hr" });
+// report.profiles -> [{ id: "en16931", ... }, { id: "hr", ... }]
+```
+
+Artefakti nacionalnih profila se **ne distribuiraju** s paketom — preuzimaju se
+pri buildu s izvora (Porezna uprava RH, CEN), da se nikad ne validira po
+zastarjelim pravilima.
+
 ## Struktura
 
 ```
 packages/core     verifaktura            — validacioni engine
 packages/cli      @verifaktura/cli       — CLI
-packages/cius-hr  @verifaktura/cius-hr   — HR pravila (Fiskalizacija 2.0)   [planirano]
-packages/cius-sef @verifaktura/cius-sef  — Srbija SEF                        [planirano]
-scripts/build-sef.mjs                     — kompajlira CEN XSLT u SEF
+packages/cius-hr  @verifaktura/cius-hr   — HR profil (Fiskalizacija 2.0)
+packages/cius-sef @verifaktura/cius-sef  — Srbija SEF                    [planirano]
+packages/cius-ba  @verifaktura/cius-ba   — FBiH CPF                      [čeka pravilnike]
+scripts/build-sef.mjs                     — preuzima i kompajlira artefakte u SEF
+scripts/gen-messages.py                   — generiše katalog lokalizovanih poruka
+scripts/e2e.mjs                           — validacija kontrolnih faktura
 ```
 
 ## Razvoj
@@ -63,8 +83,18 @@ i Saxon-JS `xslt3` alatom kompajlira Schematron XSLT u SEF format. SEF fajlovi n
 
 ## Status
 
-v0.1.0 — EN 16931 osnovni profil za UBL radi end-to-end. U izradi: CII sažetak dokumenta,
-HR CIUS, prošireni katalog lokalizovanih poruka.
+v0.1.0
+
+| | |
+|---|---|
+| EN 16931 UBL | radi end-to-end |
+| EN 16931 CII | validacija radi; sažetak dokumenta još samo za UBL |
+| Lokalizacija (hr/bs/sr) | 223/223 business pravila (BR-*) |
+| HR CIUS | profil registrovan, artefakti se preuzimaju pri buildu |
+| Hosted API | u planu |
+
+Poznata ograničenja: `location.line`/`column` još nisu popunjeni (samo XPath),
+CII sažetak dokumenta nije implementiran.
 
 ## Licenca
 
