@@ -1,54 +1,63 @@
 name: Release
 
+# Objava ide preko npm trusted publishing (OIDC) - bez tokena u secrets.
+# Preduslovi (jednokratno, na npmjs.com za SVAKI paket):
+#   Package -> Settings -> Trusted Publisher -> GitHub Actions
+#     Organization or user: verifaktura
+#     Repository:           verifaktura
+#     Workflow filename:    release.yml
+#     Allowed actions:      npm publish
+# Paket mora prvo postojati na npm-u, pa se prva objava radi ručno.
+
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: read
-  id-token: write   # npm provenance
+  id-token: write   # obavezno za OIDC
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest   # self-hosted runneri nisu podržani
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: "24"          # trusted publishing traži Node >= 22.14
           registry-url: https://registry.npmjs.org
-          cache: npm
+          package-manager-cache: false # bez cachea u release buildu
 
       - run: npm ci
+
       - run: npm run typecheck
       - run: npm test
 
-      - name: Pripremi SEF (ulaze u objavljeni paket)
+      - name: Pripremi validacione artefakte
         run: npm run prepare:sef
 
       - run: npm run build
 
+      - name: Provjeri izgrađene dokumente prije objave
+        run: |
+          node scripts/e2e.mjs
+          node scripts/roundtrip.mjs
+
+      # --provenance se NE navodi: kod trusted publishinga se generiše automatski
       - name: Objavi verifaktura
-        run: npm publish --access public --provenance
+        run: npm publish
         working-directory: packages/core
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Objavi @verifaktura/build
-        run: npm publish --access public --provenance
+        run: npm publish
         working-directory: packages/build
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Objavi @verifaktura/cli
-        run: npm publish --access public --provenance
-        working-directory: packages/cli
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Objavi @verifaktura/cius-hr
-        run: npm publish --access public --provenance
+        run: npm publish
         working-directory: packages/cius-hr
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Objavi @verifaktura/cli
+        run: npm publish
+        working-directory: packages/cli
