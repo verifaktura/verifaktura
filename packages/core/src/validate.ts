@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
@@ -41,11 +42,45 @@ function stripBom(xml: string): string {
   return xml.charCodeAt(0) === 0xfeff ? xml.slice(1) : xml;
 }
 
-/** Pokreće jedan SEF nad dokumentom i vraća SVRL kao string. */
+/**
+ * Učitani SEF-ovi, po putanji.
+ *
+ * Saxon-JS ne kešira `stylesheetFileName`, pa je svaki poziv iznova čitao i
+ * JSON-parsirao 5–7 MB s diska. Za API koji validira dokument za dokumentom to
+ * je bio najveći pojedinačni trošak, a stylesheet se između poziva ne mijenja.
+ */
+const SEF_CACHE = new Map<string, unknown>();
+
+function loadSef(sefPath: string): unknown {
+  let sef = SEF_CACHE.get(sefPath);
+  if (sef === undefined) {
+    sef = JSON.parse(readFileSync(sefPath, "utf-8"));
+    SEF_CACHE.set(sefPath, sef);
+  }
+  return sef;
+}
+
+/** Prazni keš stylesheetova. Korisno u testovima i nakon zamjene artefakata. */
+export function clearSefCache(): void {
+  SEF_CACHE.clear();
+}
+
+/**
+ * Pokreće jedan SEF nad dokumentom i vraća SVRL kao string.
+ *
+ * `destination: "document"` bi uštedio jedno parsiranje, ali Saxon tada vraća
+ * vlastitu DOM implementaciju bez `getElementsByTagNameNS`, pa bi parser SVRL-a
+ * morao raditi s dva različita DOM-a. Ušteda ne vrijedi te cijene — glavni
+ * trošak je ionako bio učitavanje SEF-a, koje sada ide iz keša.
+ */
 async function runSef(sefPath: string, xml: string): Promise<string> {
   const SaxonJS = require("saxon-js");
   const result = await SaxonJS.transform(
-    { stylesheetFileName: sefPath, sourceText: xml, destination: "serialized" },
+    {
+      stylesheetInternal: loadSef(sefPath),
+      sourceText: xml,
+      destination: "serialized",
+    },
     "async",
   );
   return result.principalResult as string;
@@ -93,7 +128,8 @@ export async function validate(
     }
   };
 
-  const doc = parse(stripBom(xml), "XML dokument");
+  const source = stripBom(xml);
+  const doc = parse(source, "XML dokument");
   const { syntax, type } = detectSyntax(doc);
   const summary = syntax === "ubl" ? summarizeUbl(doc) : {};
 
@@ -104,9 +140,11 @@ export async function validate(
   let rulesFired = 0;
 
   // 1) osnovna EN 16931 validacija
-  const source = stripBom(xml);
-  const baseSvrl = parse(await runSef(BASE_SEF[syntax], source), "SVRL izvještaj");
-  const base = parseSvrl(baseSvrl, "en16931", lang);
+  const base = parseSvrl(
+    parse(await runSef(BASE_SEF[syntax], source), "SVRL izvještaj"),
+    "en16931",
+    lang,
+  );
   issues.push(...base.issues);
   rulesFired += base.rulesFired;
 
@@ -117,8 +155,11 @@ export async function validate(
     opts.profiles,
   );
   for (const p of extra) {
-    const svrl = parse(await runSef(p.sefPath, source), `SVRL izvještaj profila "${p.id}"`);
-    const res = parseSvrl(svrl, p.id, lang);
+    const res = parseSvrl(
+      parse(await runSef(p.sefPath, source), `SVRL izvještaj profila "${p.id}"`),
+      p.id,
+      lang,
+    );
     issues.push(...res.issues);
     rulesFired += res.rulesFired;
     profilesUsed.push({ id: p.id, version: p.version, source: p.source });
