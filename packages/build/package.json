@@ -5,9 +5,38 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
-  "files": ["dist"],
-  "scripts": { "build": "tsc -p tsconfig.build.json" },
-  "keywords": ["en16931", "e-invoice", "ubl", "invoice-generator", "eracun", "efaktura"],
-  "license": "Apache-2.0"
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "keywords": [
+    "en16931",
+    "e-invoice",
+    "ubl",
+    "invoice-generator",
+    "eracun",
+    "efaktura"
+  ],
+  "author": "Jasenko Hadžiomeragić",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/verifaktura/verifaktura.git",
+    "directory": "packages/build"
+  },
+  "homepage": "https://github.com/verifaktura/verifaktura/tree/main/packages/build#readme",
+  "bugs": {
+    "url": "https://github.com/verifaktura/verifaktura/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

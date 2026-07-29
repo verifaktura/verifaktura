@@ -24,9 +24,11 @@ Izvezena je kao `HR_CUSTOMIZATION_ID`.
 
 ## Artefakti
 
-Ne distribuiraju se s paketom. `npm run prepare:sef` preuzima ZIP s
-porezna.gov.hr (dokument 197) i kompajlira ga kroz ISO Schematron lanac —
-za razliku od CEN-a, Porezna uprava isporučuje **sirovi** `.sch`, ne
+U izvornom repozitoriju ih nema — `npm run prepare:sef` preuzima ZIP s
+porezna.gov.hr (dokument 197) i kompajlira ga kroz ISO Schematron lanac. U
+objavljeni npm paket ulazi prekompajlirani rezultat, da paket radi bez mreže.
+
+Za razliku od CEN-a, Porezna uprava isporučuje **sirovi** `.sch`, ne
 prekompajlirani XSLT.
 
 ## Što HR profil traži preko EN 16931
@@ -68,5 +70,9 @@ vraćao dva upozorenja, a upozorenje koje uvijek gori korisnik nauči ignorisati
 
 ## Licenca
 
-Apache-2.0. Schematron artefakti su vlasništvo Ministarstva financija —
-Porezne uprave RH i ne distribuiraju se ovim paketom.
+Kod je pod Apache-2.0.
+
+Paket sadrži prekompajlirani hrvatski schematron (`sef/hr-cius-ext-ubl.sef.json`),
+vlasništvo Ministarstva financija — Porezne uprave RH. Sadržaj se prenosi uz
+navođenje izvora, u skladu s uvjetima porezna.gov.hr. Vidi
+[NOTICE](https://github.com/verifaktura/verifaktura/blob/main/NOTICE).

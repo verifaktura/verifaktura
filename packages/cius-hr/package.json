@@ -5,9 +5,35 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "sef"],
-  "scripts": { "build": "tsc -p tsconfig.build.json" },
-  "keywords": ["eracun", "fiskalizacija", "hrvatska", "cius", "en16931"],
+  "files": [
+    "dist",
+    "sef"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "keywords": [
+    "eracun",
+    "fiskalizacija",
+    "hrvatska",
+    "cius",
+    "en16931"
+  ],
+  "author": "Jasenko Hadžiomeragić",
   "license": "Apache-2.0",
-  "peerDependencies": { "verifaktura": "^0.1.0" }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/verifaktura/verifaktura.git",
+    "directory": "packages/cius-hr"
+  },
+  "homepage": "https://github.com/verifaktura/verifaktura/tree/main/packages/cius-hr#readme",
+  "bugs": {
+    "url": "https://github.com/verifaktura/verifaktura/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "verifaktura": "^0.1.0"
+  }
 }

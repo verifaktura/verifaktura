@@ -122,4 +122,9 @@ CII sažetak dokumenta nije implementiran.
 
 ## Licenca
 
-Apache-2.0. CEN validacioni artefakti su pod EUPL 1.2 i nisu dio ovog repozitorija.
+Kod je pod Apache-2.0.
+
+Validacioni artefakti nisu dio ovog repozitorija — preuzimaju se skriptom
+`npm run prepare:sef`. U objavljene npm pakete ulaze prekompajlirani i tamo
+zadržavaju licencu svog izvora (CEN/TC 434 pod EUPL 1.2, HR CIUS uz navođenje
+izvora). Atribucija: [NOTICE](./NOTICE).

@@ -29,7 +29,17 @@
     "eracun",
     "cius"
   ],
+  "author": "Jasenko Hadžiomeragić",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/verifaktura/verifaktura.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/verifaktura/verifaktura/tree/main/packages/core#readme",
+  "bugs": {
+    "url": "https://github.com/verifaktura/verifaktura/issues"
+  },
   "dependencies": {
     "saxon-js": "^2.7.0",
     "@xmldom/xmldom": "^0.9.0"

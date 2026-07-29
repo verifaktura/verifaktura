@@ -3,9 +3,30 @@
   "version": "0.1.0",
   "description": "CLI za validaciju e-faktura prema EN 16931.",
   "type": "module",
-  "bin": { "verifaktura": "./dist/cli.js" },
-  "files": ["dist"],
-  "scripts": { "build": "tsc -p tsconfig.build.json" },
+  "bin": {
+    "verifaktura": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "author": "Jasenko Hadžiomeragić",
   "license": "Apache-2.0",
-  "dependencies": { "verifaktura": "^0.1.0" }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/verifaktura/verifaktura.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/verifaktura/verifaktura/tree/main/packages/cli#readme",
+  "bugs": {
+    "url": "https://github.com/verifaktura/verifaktura/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "verifaktura": "^0.1.0"
+  }
 }
