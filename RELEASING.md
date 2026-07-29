@@ -26,8 +26,11 @@ paket postoji. Prvu objavu zato ne može odraditi OIDC. Dvije opcije:
 lokalno):
 
 1. npmjs.com → Access Tokens → **Granular access token**
-   - Packages and scopes: `Read and write`
-   - Scope: `@verifaktura` + paket `verifaktura`
+   - Packages and scopes: `Read and write`, opseg **All packages**
+     (unscoped paket `verifaktura` NIJE u scope-u `@verifaktura`)
+   - ✅ **Bypass two-factor authentication** — bez toga npm vraća
+     `E403 ... Two-factor authentication or granular access token with bypass
+     2fa enabled is required to publish packages`
    - Expiration: **7 dana** — token živi samo koliko traje bootstrap
 2. GitHub → Settings → Secrets → Actions → novi secret `NPM_TOKEN`
 3. Privremeno dodaj u `release.yml`, u korak „Objavi pakete":
@@ -43,13 +46,17 @@ lokalno):
 
 ```bash
 npm login                     # 2FA
-npm run prepare:sef && npm run build
-npm test && node scripts/e2e.mjs && node scripts/roundtrip.mjs
+./scripts/publish-local.sh --otp
+```
 
-npm publish -w verifaktura
-npm publish -w @verifaktura/build
-npm publish -w @verifaktura/cius-hr
-npm publish -w @verifaktura/cli
+Skript prođe sve provjere pa traži svjež 2FA kod za svaki paket (kod vrijedi
+~30 s). Ručno je isto:
+
+```bash
+npm publish -w verifaktura --otp=123456
+npm publish -w @verifaktura/build --otp=123456
+npm publish -w @verifaktura/cius-hr --otp=123456
+npm publish -w @verifaktura/cli --otp=123456
 ```
 
 Opcija B je manje koraka i ne traži da ijedan token ikad postoji. Opcija A je
