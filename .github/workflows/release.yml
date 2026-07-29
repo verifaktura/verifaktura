@@ -1,37 +1,57 @@
 name: Release
 
+# Dva načina pokretanja:
+#
+#  1. Actions -> Release -> Run workflow -> odaberi patch/minor/major
+#     Pipeline sam podigne verziju, commita, tagira i objavi. Ništa lokalno.
+#
+#  2. push taga v* (npr. ako verziju dižeš ručno)
+#
 # Objava ide preko npm trusted publishing (OIDC) - bez tokena u secrets.
-# Preduslovi (jednokratno, na npmjs.com za SVAKI paket):
-#   Package -> Settings -> Trusted Publisher -> GitHub Actions
-#     Organization or user: verifaktura
-#     Repository:           verifaktura
-#     Workflow filename:    release.yml
-#     Allowed actions:      npm publish
-# Paket mora prvo postojati na npm-u, pa se prva objava radi ručno.
+# Postavljanje je opisano u RELEASING.md.
 
 on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Koliko podići verziju"
+        required: true
+        default: patch
+        type: choice
+        options: [patch, minor, major]
+      dry_run:
+        description: "Samo provjeri, bez objave"
+        required: false
+        default: false
+        type: boolean
   push:
     tags: ["v*"]
-  workflow_dispatch:
 
 permissions:
-  contents: read
-  id-token: write   # obavezno za OIDC
+  contents: write   # za commit i tag pri workflow_dispatch
+  id-token: write   # obavezno za OIDC objavu
+
+concurrency:
+  group: release
+  cancel-in-progress: false   # objavu nikad ne prekidati usred posla
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest   # self-hosted runneri nisu podržani
+  release:
+    runs-on: ubuntu-latest   # self-hosted runneri nisu podržani za OIDC
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "24"          # trusted publishing traži Node >= 22.14
+          node-version: "24"           # trusted publishing traži Node >= 22.14
           registry-url: https://registry.npmjs.org
           package-manager-cache: false # bez cachea u release buildu
 
       - run: npm ci
 
+      # --- provjere prije bilo kakve promjene verzije ---
       - run: npm run typecheck
       - run: npm test
 
@@ -40,24 +60,55 @@ jobs:
 
       - run: npm run build
 
-      - name: Provjeri izgrađene dokumente prije objave
+      - name: Validiraj kontrolne fakture
+        run: node scripts/e2e.mjs
+
+      - name: Round-trip (build -> validate)
+        run: node scripts/roundtrip.mjs
+
+      # --- podizanje verzije (samo pri ručnom pokretanju) ---
+      - name: Podigni verziju, commitaj i tagiraj
+        if: github.event_name == 'workflow_dispatch'
+        id: version
         run: |
-          node scripts/e2e.mjs
-          node scripts/roundtrip.mjs
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node scripts/version.mjs "${{ inputs.bump }}"
+          npm install --package-lock-only --ignore-scripts
+          VERSION=$(node -p "require('./packages/core/package.json').version")
+          git add -A
+          git commit -m "release: v${VERSION}"
+          git tag "v${VERSION}"
+          # push s GITHUB_TOKEN ne pokreće ponovo ovaj workflow
+          git push origin HEAD:${GITHUB_REF_NAME} --follow-tags
 
-      # --provenance se NE navodi: kod trusted publishinga se generiše automatski
-      - name: Objavi verifaktura
-        run: npm publish
-        working-directory: packages/core
+      - name: Odredi verziju
+        id: v
+        run: echo "version=$(node -p "require('./packages/core/package.json').version")" >> "$GITHUB_OUTPUT"
 
-      - name: Objavi @verifaktura/build
-        run: npm publish
-        working-directory: packages/build
+      # --- objava ---
+      # --provenance se ne navodi: kod trusted publishinga se generiše sam
+      - name: Objavi pakete
+        if: ${{ !inputs.dry_run }}
+        run: |
+          for dir in packages/core packages/build packages/cius-hr packages/cli; do
+            echo "::group::npm publish ($dir)"
+            (cd "$dir" && npm publish)
+            echo "::endgroup::"
+          done
 
-      - name: Objavi @verifaktura/cius-hr
-        run: npm publish
-        working-directory: packages/cius-hr
-
-      - name: Objavi @verifaktura/cli
-        run: npm publish
-        working-directory: packages/cli
+      - name: Sažetak
+        run: |
+          {
+            echo "## verifaktura v${{ steps.v.outputs.version }}"
+            echo
+            if [ "${{ inputs.dry_run }}" = "true" ]; then
+              echo "Probni prolaz — ništa nije objavljeno."
+            else
+              echo "Objavljeno na npm:"
+              echo "- verifaktura"
+              echo "- @verifaktura/build"
+              echo "- @verifaktura/cius-hr"
+              echo "- @verifaktura/cli"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

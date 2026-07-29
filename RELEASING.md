@@ -17,15 +17,33 @@ Repo mora biti **public** — provenance se ne generiše iz privatnih repozitori
 Preporučeno uz to: zaštita tagova (Settings → Rules), da objavu može pokrenuti
 samo onaj ko smije praviti `v*` tagove.
 
-### 2. Prva objava — ručno
+### 2. Prva objava — bootstrap
 
 Trusted publisher se podešava na stranici paketa, a stranica postoji tek kad
-paket postoji. Zato prva objava ide s tvoje mašine:
+paket postoji. Prvu objavu zato ne može odraditi OIDC. Dvije opcije:
+
+**A — jednokratni token, pipeline radi sve** (preporučeno ako ne želiš ništa
+lokalno):
+
+1. npmjs.com → Access Tokens → **Granular access token**
+   - Packages and scopes: `Read and write`
+   - Scope: `@verifaktura` + paket `verifaktura`
+   - Expiration: **7 dana** — token živi samo koliko traje bootstrap
+2. GitHub → Settings → Secrets → Actions → novi secret `NPM_TOKEN`
+3. Privremeno dodaj u `release.yml`, u korak „Objavi pakete":
+   ```yaml
+   env:
+     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+   ```
+4. Pokreni Actions → Release → `minor`
+5. Nakon uspjeha: **vrati `release.yml` na verziju bez `env:`**, obriši secret,
+   opozovi token.
+
+**B — jednom ručno s tvoje mašine:**
 
 ```bash
 npm login                     # 2FA
-npm run prepare:sef
-npm run build
+npm run prepare:sef && npm run build
 npm test && node scripts/e2e.mjs && node scripts/roundtrip.mjs
 
 npm publish -w verifaktura
@@ -33,6 +51,10 @@ npm publish -w @verifaktura/build
 npm publish -w @verifaktura/cius-hr
 npm publish -w @verifaktura/cli
 ```
+
+Opcija B je manje koraka i ne traži da ijedan token ikad postoji. Opcija A je
+bolja ako nemaš npm postavljen lokalno ili želiš da sve ide kroz CI od prvog
+dana.
 
 ### 3. Trusted publisher — za svaki od četiri paketa
 
@@ -59,13 +81,25 @@ prestaju biti put do objave.
 
 ## Svaka sljedeća objava
 
-```bash
-npm version patch -w verifaktura   # ili minor/major
-git push && git push --tags
-```
+**Ništa lokalno.** GitHub → Actions → **Release** → Run workflow → odaberi
+`patch`, `minor` ili `major`.
 
-Tag `v*` pokreće `release.yml`: typecheck → testovi → priprema artefakata →
-build → e2e i round-trip → objava sva četiri paketa.
+Pipeline redom: `npm ci` → typecheck → testovi → priprema artefakata → build →
+e2e → round-trip → **tek onda** podigne verziju, commita, tagira i objavi.
+Redoslijed je namjeran: ako bilo šta padne, verzija se nije ni pomjerila, pa
+nema praznog taga ni preskočenog broja.
+
+Postoji i `dry_run` opcija — prođe sve provjere i preskoči objavu. Korisno kad
+mijenjaš sam workflow.
+
+Alternativno, ako verziju dižeš ručno, push taga `v*` pokreće isti pipeline bez
+koraka verzionisanja.
+
+### Verzionisanje u lockstepu
+
+Sva četiri paketa uvijek idu na istu verziju, a `scripts/version.mjs` usklađuje
+i interne raspone zavisnosti (`@verifaktura/cli` → `verifaktura: ^x.y.z`).
+`npm version --workspaces` to ne radi pouzdano, zato zaseban skript.
 
 ## Zahtjevi i zamke
 
