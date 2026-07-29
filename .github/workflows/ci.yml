@@ -34,6 +34,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      # Unit testovi ne smiju trebati validacione artefakte - oni nastaju tek uz
+      # prepare:sef, koji traži mrežu. Testovi koji stvarno izvršavaju
+      # Schematron su u test/integration i vrte se u e2e poslu.
       - name: Unit testovi
         run: npm test
 
@@ -76,6 +79,9 @@ jobs:
 
       - name: Provjeri validacione artefakte
         run: node scripts/verify-artefacts.mjs
+
+      - name: Integracijski testovi
+        run: npm run test:integration
 
       - name: Validiraj kontrolne fakture
         run: node scripts/e2e.mjs

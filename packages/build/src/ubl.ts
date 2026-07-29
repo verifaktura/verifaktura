@@ -1,4 +1,4 @@
-import { NS } from "verifaktura";
+import { NS } from "./namespaces.js";
 import { XmlWriter } from "./xml.js";
 import { computeTotals, computeVatBreakdown } from "./totals.js";
 import { formatAmount, normalizeDecimal, parseAmount } from "./money.js";
@@ -14,7 +14,7 @@ import type {
   VatBreakdownEntry,
 } from "./model.js";
 
-// Namespace URI-ji dolaze iz jezgra, da validator i builder ne mogu razići se
+
 // na tipfeler koji se ne bi vidio dok neki dokument tiho ne prođe pogrešno.
 
 const DEFAULT_CUSTOMIZATION = "urn:cen.eu:en16931:2017";

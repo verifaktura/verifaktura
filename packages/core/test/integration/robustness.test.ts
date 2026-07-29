@@ -2,10 +2,10 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { validate } from "../src/validate.js";
-import { registerProfile, resolveProfiles } from "../src/profiles.js";
+import { validate } from "../../src/validate.js";
+import { registerProfile, resolveProfiles } from "../../src/profiles.js";
 
-const FIX = join(dirname(fileURLToPath(import.meta.url)), "fixtures");
+const FIX = join(dirname(fileURLToPath(import.meta.url)), "..", "fixtures");
 const valid = readFileSync(join(FIX, "invoice-valid.xml"), "utf-8");
 
 describe("otpornost na ulaz", () => {

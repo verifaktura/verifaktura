@@ -5,10 +5,10 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const run = promisify(execFile);
-const CLI = join(dirname(fileURLToPath(import.meta.url)), "..", "dist", "cli.js");
+const CLI = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "dist", "cli.js");
 const FIX = join(
   dirname(fileURLToPath(import.meta.url)),
-  "..", "..", "core", "test", "fixtures",
+  "..", "..", "..", "core", "test", "fixtures",
 );
 
 /** Pokreće CLI i vraća izlaz s kodom, umjesto da baci na ne-nula kod. */

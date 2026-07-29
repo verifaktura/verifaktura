@@ -2,9 +2,9 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { validate } from "../src/validate.js";
+import { validate } from "../../src/validate.js";
 
-const FIX = join(dirname(fileURLToPath(import.meta.url)), "fixtures");
+const FIX = join(dirname(fileURLToPath(import.meta.url)), "..", "fixtures");
 const xml = readFileSync(join(FIX, "invoice-missing-id-date.xml"), "utf-8");
 
 /**

@@ -11,7 +11,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "build:core": "npm run build -w verifaktura",
-    "verify:artefacts": "node scripts/verify-artefacts.mjs"
+    "verify:artefacts": "node scripts/verify-artefacts.mjs",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

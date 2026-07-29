@@ -4,15 +4,21 @@
 
 ```bash
 npm install
-npm run prepare:sef         # downloads and compiles artefacts, ~2 min
-npm test                    # unit tests
+npm test                     # unit tests — no artefacts needed
+npm run prepare:sef          # downloads and compiles artefacts, ~2 min
 npm run build
-node scripts/e2e.mjs        # validate reference invoices
-node scripts/roundtrip.mjs  # build -> validate
+npm run test:integration     # tests that actually run Schematron
+node scripts/e2e.mjs         # validate reference invoices
+node scripts/roundtrip.mjs   # build -> validate
 ```
 
 `prepare:sef` needs network access. Skip the Croatian profile with
-`SKIP_HR=1 npm run prepare:sef`.
+`SKIP_HR=1 npm run prepare:sef`; force recompilation with `FORCE_SEF=1`.
+
+**Unit tests must not require validation artefacts.** `sef/*.json` only exists
+after `prepare:sef`, so anything that calls `validate()` belongs in
+`packages/*/test/integration/` and runs via `npm run test:integration`, after
+the artefacts are in place.
 
 ## Documentation language follows the market
 

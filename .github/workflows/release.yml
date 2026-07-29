@@ -82,6 +82,9 @@ jobs:
       - name: Provjeri validacione artefakte
         run: node scripts/verify-artefacts.mjs
 
+      - name: Integracijski testovi
+        run: npm run test:integration
+
       # --- podizanje verzije (samo pri ručnom pokretanju) ---
       # Commit i tag se prave LOKALNO; na remote idu tek nakon uspješne objave.
       # Inače neuspjela objava ostavi podignutu verziju na main-u, pa se broj
