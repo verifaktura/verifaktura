@@ -34,8 +34,18 @@ const targets = [
 
 for (const t of targets) {
   const dest = join(OUT, `${t.name}.sef.json`);
+  // Kompajliranje traje po nekoliko sekundi. Preskače se ako je rezultat noviji
+  // od izvora; `FORCE_SEF=1` ga ipak iznudi.
+  if (
+    process.env.FORCE_SEF !== "1" &&
+    existsSync(dest) &&
+    statSync(dest).mtimeMs > statSync(t.xsl).mtimeMs
+  ) {
+    console.log(`${t.name} je već aktuelan, preskačem.`);
+    continue;
+  }
   console.log(`Kompajliram ${t.name}...`);
-  run("npx", ["xslt3", `-xsl:${t.xsl}`, `-export:${dest}`, "-nogo"]);
+  compileToSef(t.xsl, dest);
 }
 
 // --- hrvatski CIUS (Fiskalizacija 2.0) -----------------------------------
