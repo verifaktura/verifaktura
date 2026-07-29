@@ -35,6 +35,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Objavi @verifaktura/build
+        run: npm publish --access public --provenance
+        working-directory: packages/build
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Objavi @verifaktura/cli
         run: npm publish --access public --provenance
         working-directory: packages/cli

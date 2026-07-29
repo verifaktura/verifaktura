@@ -74,6 +74,9 @@ jobs:
       - name: Validiraj kontrolne fakture
         run: node scripts/e2e.mjs
 
+      - name: Round-trip (build -> validate)
+        run: node scripts/roundtrip.mjs
+
   artefacts:
     name: Provjera novih artefakata
     runs-on: ubuntu-latest
