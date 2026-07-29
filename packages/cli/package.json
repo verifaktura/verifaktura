@@ -1,6 +1,6 @@
 {
   "name": "@verifaktura/cli",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "CLI za validaciju e-faktura prema EN 16931.",
   "type": "module",
   "bin": {
@@ -27,6 +27,6 @@
     "access": "public"
   },
   "dependencies": {
-    "verifaktura": "^0.1.3"
+    "verifaktura": "^0.1.4"
   }
 }
