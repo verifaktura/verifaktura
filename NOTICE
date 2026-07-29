@@ -1,0 +1,16 @@
+verifaktura
+Copyright 2026 Jasenko Hadžiomeragić
+
+Ovaj proizvod uključuje pravila i poruke izvedene iz:
+
+  * eInvoicing-EN16931 validacionih artefakata (CEN/TC 434),
+    licenca EUPL 1.2 — https://github.com/ConnectingEurope/eInvoicing-EN16931
+    Artefakti se ne distribuiraju s ovim repozitorijem; preuzimaju se pri buildu.
+
+  * Specifikacije osnovne uporabe eRačuna s proširenjima (HR CIUS),
+    Ministarstvo financija — Porezna uprava Republike Hrvatske.
+    Sadržaj se prenosi uz navođenje izvora, u skladu s uvjetima porezna.gov.hr.
+    Artefakti se ne distribuiraju s ovim repozitorijem; preuzimaju se pri buildu.
+
+Engleski tekstovi pravila su originalni tekstovi iz navedenih izvora.
+Prijevodi na hrvatski, bosanski i srpski jezik su djelo ovog projekta.
