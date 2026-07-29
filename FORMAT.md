@@ -52,7 +52,8 @@
 | `profiles[]` s verzijom artefakata | Reproducibilnost: isti dokument, druga verzija pravila = drugi rezultat. Za audit trag (i za C angažmane) ovo je obavezno. |
 | `location.xpath`, `line`/`column` opcionalni | XPath uvijek dolazi iz SVRL-a. Linija zahtijeva zasebno mapiranje na izvor — v0.2, ne blokira v1 format. |
 | `summary.rulesFired` | Sanity check: ako je broj sumnjivo nizak, dokument nije prošao pravu validaciju (npr. pogrešan namespace). Spašava od lažnog "sve je uredu". |
-| `hint` opcionalan | Praktična uputa za česta pravila. Popunjava se postepeno; odsutan hint ne mijenja shemu. |
+| `hint` opcionalan | Praktična uputa za česta pravila. Koristi se i kad nacionalni profil nadjačava CEN pravilo — tada objašnjava zašto je nalaz spušten na `info`. |
+| Nadjačana pravila se ne brišu | Kad HR CIUS traži element koji UBL-CR pravilo zabranjuje, nalaz ostaje u izvještaju ali kao `info`. Skrivanje bi značilo da korisnik ne može provjeriti zašto se profili razilaze. |
 | `severity` tri nivoa | `fatal` / `warning` / `info` umjesto CEN-ovog `fatal`/`warning` — `info` ostavlja prostor za successful-report i buduće savjete bez breaking changea. |
 
 ## Otvorena pitanja za tvoj review

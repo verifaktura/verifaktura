@@ -35,19 +35,36 @@ Nalazi iz stvarnog izvršavanja schematrona nad minimalnim validnim
 EN 16931 dokumentom. Ovo je ujedno lista koju `@verifaktura/build` još ne
 pokriva:
 
-| Pravilo | Zahtjev | Status u builderu |
+| Pravilo | Zahtjev | Polje u `@verifaktura/build` |
 |---|---|---|
-| HR-BR-2 | vrijeme izdavanja (HR-BT-2), format `hh:mm:ss` | nije podržano |
-| HR-BR-37 | oznaka operatera (HR-BT-4) | nije podržano |
-| HR-BR-9 | OIB operatera (HR-BT-5), s kontrolnom znamenkom | nije podržano |
-| HR-BR-25 | klasifikacija artikla po KPD 2025 (šesteroznamenkasta) | djelimično — treba ispravan `listID` |
-| HR-BR-34 | oznaka procesa (BT-23) iz skupa P1–P12 ili P99 | radi, treba se navesti ručno |
-| HR-BR-53 | OIB mora proći kontrolu (ISO 7064 MOD 11,10) | nije podržano |
-| HR-BR-4 | datum dospijeća obavezan kad je iznos za plaćanje > 0 | radi, treba se navesti ručno |
-| HR-BR-S-1 | PDV ID kupca obavezan kad je kategorija „S" | radi, treba se navesti ručno |
+| HR-BR-2 | vrijeme izdavanja (HR-BT-2), `hh:mm:ss` | `issueTime` |
+| HR-BR-37 | oznaka operatera (HR-BT-4) | `seller.contact.name` |
+| HR-BR-9 | OIB operatera (HR-BT-5) s kontrolnom znamenkom | `seller.contact.id` |
+| HR-BR-25 / HR-BR-CL-2 | klasifikacija artikla po KPD 2025, `listID="CG"`, format `62.10.11` | `line.classification` |
+| HR-BR-34 | oznaka procesa (BT-23): P1–P12 ili `P99:<oznaka>` | `profileId` |
+| HR-BR-53 | OIB prodavca mora proći kontrolu | `seller.vatId` (prefiks `HR` je dozvoljen) |
+| HR-BR-4 | datum dospijeća kad je iznos za plaćanje > 0 | `dueDate` |
+| HR-BR-S-1 | PDV ID kupca kad je kategorija „S" | `buyer.vatId` |
 
-HR-BT-* polja su nacionalno proširenje i traže vlastiti namespace u UBL-u —
-zato ih puni EN 16931 model još nema.
+Ispravnost OIB-a možeš provjeriti prije gradnje:
+
+```ts
+import { isValidOib } from "@verifaktura/build";
+isValidOib("12345678903");   // true
+```
+
+## Sukob s CEN sintaksnim pravilima
+
+HR CIUS traži elemente koje CEN označava s „should not include":
+
+| CEN pravilo | Element | Traži ga |
+|---|---|---|
+| UBL-CR-006 | `cbc:IssueTime` | HR-BR-2 |
+| UBL-CR-200 | `cac:SellerContact` | HR-BR-37, HR-BR-9 |
+
+Profil ih deklariše kroz `overrides`, pa se spuštaju na `info` s napomenom koji
+ih profil nadjačava. Ne skrivaju se — ispravan hrvatski račun bi inače uvijek
+vraćao dva upozorenja, a upozorenje koje uvijek gori korisnik nauči ignorisati.
 
 ## Licenca
 

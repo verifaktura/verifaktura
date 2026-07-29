@@ -9,6 +9,7 @@
  */
 import { buildUbl, simpleInvoice } from "@verifaktura/build";
 import { validate } from "verifaktura";
+import { HR_CUSTOMIZATION_ID } from "@verifaktura/cius-hr";
 
 const seller = {
   name: "Primjer Telekom d.o.o.",
@@ -94,6 +95,41 @@ const CASES = [
     },
   },
 ];
+
+// Hrvatski eRačun se testira samo ako je profil pripremljen
+// (npm run prepare:sef preuzima artefakte s porezna.gov.hr).
+const hrSeller = {
+  name: "Primjer d.o.o.", vatId: "HR12345678903", legalId: "12345678903",
+  electronicAddress: { value: "12345678903", scheme: "9934" },
+  address: { street: "Ilica 1", city: "Zagreb", postalCode: "10000", country: "HR" },
+  contact: { name: "Operater 1", id: "12345678903" },   // HR-BT-4, HR-BT-5
+};
+const hrBuyer = {
+  name: "Kupac d.o.o.", vatId: "HR98765432106", legalId: "98765432106",
+  electronicAddress: { value: "98765432106", scheme: "9934" },
+  address: { street: "Riva 2", city: "Split", postalCode: "21000", country: "HR" },
+};
+
+CASES.push({
+  name: "hrvatski eRacun (Fiskalizacija 2.0)",
+  invoice: {
+    customizationId: HR_CUSTOMIZATION_ID,
+    profileId: "P1",                       // HR-BR-34
+    id: "2026-001",
+    issueDate: "2026-07-29",
+    issueTime: "10:15:00",                 // HR-BR-2
+    dueDate: "2026-08-28",                 // HR-BR-4
+    currency: "EUR",
+    seller: hrSeller,
+    buyer: hrBuyer,
+    paymentMeans: { code: "30", accountId: "HR1210010051863000160" },
+    lines: [{
+      name: "Usluga razvoja softvera", quantity: "10", unitPrice: "80.00",
+      vatCategory: "S", vatRate: "25", unitCode: "HUR",
+      classification: { value: "62.10.11", scheme: "CG" },   // HR-BR-25, KPD 2025
+    }],
+  },
+});
 
 let failed = 0;
 

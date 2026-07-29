@@ -87,6 +87,23 @@ export async function validate(
     profilesUsed.push({ id: p.id, version: p.version, source: p.source });
   }
 
+  // Pravila koja aktivni nacionalni profili namjerno nadjačavaju spuštamo na
+  // `info` umjesto da ih brišemo - korisnik i dalje vidi da je pravilo palo,
+  // ali ga to ne alarmira niti obara dokument.
+  const overridden = new Map<string, string>();
+  for (const p of extra) {
+    for (const ruleId of p.overrides ?? []) overridden.set(ruleId, p.id);
+  }
+  if (overridden.size > 0) {
+    for (const issue of issues) {
+      const by = overridden.get(issue.ruleId);
+      if (by && issue.profile === "en16931") {
+        issue.severity = "info";
+        issue.hint = `Pravilo nadjačava profil "${by}", koji ovaj element zahtijeva.`;
+      }
+    }
+  }
+
   const limited = opts.maxIssues ? issues.slice(0, opts.maxIssues) : issues;
   const count = (s: string): number => limited.filter((i) => i.severity === s).length;
 

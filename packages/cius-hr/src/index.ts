@@ -31,6 +31,12 @@ export const hrProfile: ProfileDefinition = {
   syntax: ["ubl"],
   matches: (customizationId) => customizationId === HR_CUSTOMIZATION_ID,
   sefPath: fileURLToPath(new URL("../sef/hr-cius-ext-ubl.sef.json", import.meta.url)),
+  /**
+   * CEN-ova sintaksna pravila koja hrvatski CIUS namjerno krši:
+   *  - UBL-CR-006: cbc:IssueTime  -> traži ga HR-BR-2 (vrijeme izdavanja)
+   *  - UBL-CR-200: cac:SellerContact -> traže ga HR-BR-37 i HR-BR-9 (operater)
+   */
+  overrides: ["UBL-CR-006", "UBL-CR-200"],
 };
 
 registerProfile(hrProfile);

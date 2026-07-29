@@ -20,6 +20,19 @@ export interface ProfileDefinition {
   matches(customizationId: string | undefined): boolean;
   /** Apsolutna putanja do prekompajliranog SEF fajla. */
   sefPath: string;
+  /**
+   * ID-evi osnovnih EN 16931 pravila koja ovaj profil namjerno krši.
+   *
+   * Nacionalni CIUS-i traže elemente koje CEN-ova sintaksna pravila označavaju
+   * s "should not include" - npr. hrvatski eRačun zahtijeva cbc:IssueTime
+   * (HR-BR-2) iako UBL-CR-006 kaže da ga ne treba biti. Bez ovoga bi svaki
+   * ispravan hrvatski račun vraćao upozorenja i korisnik bi ih naučio
+   * ignorisati, što je gore nego da ih nema.
+   *
+   * Navedena pravila se ne skrivaju - spuštaju se na `info` i dobiju napomenu
+   * koji profil ih nadjačava.
+   */
+  overrides?: string[];
 }
 
 const REGISTRY = new Map<string, ProfileDefinition>();

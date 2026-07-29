@@ -4,6 +4,7 @@ import { formatAmount, parseAmount } from "./money.js";
 import { lineNetAmount } from "./totals.js";
 import type {
   Address,
+  Contact,
   DocumentCharge,
   Invoice,
   InvoiceLine,
@@ -32,7 +33,17 @@ function writeAddress(w: XmlWriter, a: Address): void {
   });
 }
 
+function writeContact(w: XmlWriter, tag: string, c: Contact): void {
+  w.block(tag, () => {
+    w.leaf("cbc:ID", c.id);
+    w.leaf("cbc:Name", c.name);
+    w.leaf("cbc:Telephone", c.phone);
+    w.leaf("cbc:ElectronicMail", c.email);
+  });
+}
+
 function writeParty(w: XmlWriter, wrapper: string, p: Party): void {
+  const isSupplier = wrapper === "cac:AccountingSupplierParty";
   w.block(wrapper, () => {
     w.block("cac:Party", () => {
       if (p.electronicAddress) {
@@ -63,7 +74,11 @@ function writeParty(w: XmlWriter, wrapper: string, p: Party): void {
         w.leaf("cbc:RegistrationName", p.name);
         w.leaf("cbc:CompanyID", p.legalId, { schemeID: p.legalIdScheme });
       });
+      // Kupčev kontakt ide unutar Party; prodavčev ide kao cac:SellerContact
+      // izvan Party - tako to traži UBL i tako ga HR schematron traži.
+      if (!isSupplier && p.contact) writeContact(w, "cac:Contact", p.contact);
     });
+    if (isSupplier && p.contact) writeContact(w, "cac:SellerContact", p.contact);
   });
 }
 
@@ -190,6 +205,8 @@ export function buildUbl(invoice: Invoice): string {
   w.leaf("cbc:ProfileID", invoice.profileId ?? DEFAULT_PROFILE);
   w.leaf("cbc:ID", invoice.id);
   w.leaf("cbc:IssueDate", invoice.issueDate);
+  // HR-BT-2: hrvatski eRačun traži vrijeme izdavanja (HR-BR-2)
+  w.leaf("cbc:IssueTime", invoice.issueTime);
   w.leaf("cbc:DueDate", invoice.dueDate);
   w.leaf(isCreditNote ? "cbc:CreditNoteTypeCode" : "cbc:InvoiceTypeCode", invoice.typeCode ?? "380");
   for (const note of invoice.notes ?? []) w.leaf("cbc:Note", note);

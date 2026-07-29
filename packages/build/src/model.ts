@@ -33,6 +33,16 @@ export interface Address {
   /** BT-40 / BT-55 - ISO 3166-1 alpha-2, obavezno */ country: string;
 }
 
+/** Kontakt osoba/operater. Hrvatski CIUS ga traži na prodavcu (HR-BT-4, HR-BT-5). */
+export interface Contact {
+  /** HR-BT-4 - oznaka/ime operatera koji je izdao račun */
+  name?: string;
+  /** HR-BT-5 - identifikator operatera; u HR mora biti ispravan OIB */
+  id?: string;
+  phone?: string;
+  email?: string;
+}
+
 export interface Party {
   /** BT-27 / BT-44 - naziv, obavezno */
   name: string;
@@ -53,6 +63,11 @@ export interface Party {
   /** BT-34 / BT-49 - elektronska adresa; shema je obavezna (BR-62/BR-63) */
   electronicAddress?: { value: string; scheme: string };
   address: Address;
+  /**
+   * cac:SellerContact / cac:Contact - podaci o operateru.
+   * Obavezno za hrvatski eRačun: HR-BR-37 (naziv) i HR-BR-9 (ispravan OIB).
+   */
+  contact?: Contact;
 }
 
 export interface InvoiceLine {
@@ -81,7 +96,10 @@ export interface InvoiceLine {
   allowances?: LineCharge[];
   /** BG-28 - troškovi na stavci */
   charges?: LineCharge[];
-  /** BT-158 - klasifikacijska oznaka (npr. HR KPD 2025, šesteroznamenkasta) */
+  /**
+   * BT-158 - klasifikacijska oznaka artikla.
+   * Za hrvatski eRačun: KPD 2025, šesteroznamenkasta, sa `scheme: "CG"` (HR-BR-25).
+   */
   classification?: { value: string; scheme: string };
 }
 
@@ -145,12 +163,20 @@ export interface Invoice {
    * Default je čisti EN 16931; za hrvatski eRačun koristi HR_CUSTOMIZATION_ID.
    */
   customizationId?: string;
-  /** BT-23 - identifikator poslovnog procesa */
+  /**
+   * BT-23 - identifikator poslovnog procesa.
+   * Za hrvatski eRačun mora biti P1-P12 ili P99:<oznaka kupca> (HR-BR-34).
+   */
   profileId?: string;
   /** BT-1 - broj fakture, obavezno */
   id: string;
   /** BT-2 - datum izdavanja, obavezno */
   issueDate: IsoDate;
+  /**
+   * HR-BT-2 - vrijeme izdavanja u formatu hh:mm:ss.
+   * Nije dio EN 16931, ali je obavezno za hrvatski eRačun (HR-BR-2).
+   */
+  issueTime?: string;
   /** BT-9 - datum dospijeća */
   dueDate?: IsoDate;
   /** BT-3 - šifra vrste dokumenta; 380 = faktura, 381 = odobrenje */
