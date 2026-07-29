@@ -7,9 +7,10 @@
   ],
   "scripts": {
     "prepare:sef": "node scripts/build-sef.mjs",
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w verifaktura && npm run build -w @verifaktura/build && npm run build -w @verifaktura/cius-hr && npm run build -w @verifaktura/cli",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build:core": "npm run build -w verifaktura"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
