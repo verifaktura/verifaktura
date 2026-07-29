@@ -71,6 +71,9 @@ jobs:
 
       - run: npm run build
 
+      - name: Provjeri validacione artefakte
+        run: node scripts/verify-artefacts.mjs
+
       - name: Validiraj kontrolne fakture
         run: node scripts/e2e.mjs
 

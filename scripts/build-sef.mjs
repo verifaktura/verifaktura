@@ -88,8 +88,12 @@ if (process.env.SKIP_HR === "1") {
     compileSchematron(sch, HR_OUT, join(ROOT, "vendor", "hr-build"), stages);
     console.log("Hrvatski profil spreman.");
   } catch (e) {
-    console.warn(`UPOZORENJE: hrvatski profil nije pripremljen (${e.message}).`);
-    console.warn("Jezgro i EN 16931 validacija rade normalno; postavi HR_VALIDATOR_URL ili SKIP_HR=1.");
+    // Tiho preskakanje je ranije omogućavalo objavu paketa bez schematrona.
+    // Ako profil svjesno ne treba, to se traži s SKIP_HR=1.
+    console.error(`GREŠKA: hrvatski profil nije pripremljen — ${e.message}`);
+    console.error("Postavi HR_VALIDATOR_URL ako se izvor promijenio, ili SKIP_HR=1 ako profil svjesno preskačeš.");
+    process.exitCode = 1;
+    throw e;
   }
 }
 

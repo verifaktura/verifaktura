@@ -77,6 +77,11 @@ jobs:
       - name: Round-trip (build -> validate)
         run: node scripts/roundtrip.mjs
 
+      # Posljednja brana prije objave: paket bez svog schematrona instalira se
+      # normalno, registruje profil i tiho ne validira ništa.
+      - name: Provjeri validacione artefakte
+        run: node scripts/verify-artefacts.mjs
+
       # --- podizanje verzije (samo pri ručnom pokretanju) ---
       # Commit i tag se prave LOKALNO; na remote idu tek nakon uspješne objave.
       # Inače neuspjela objava ostavi podignutu verziju na main-u, pa se broj

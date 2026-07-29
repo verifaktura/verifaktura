@@ -10,7 +10,8 @@
     "build": "npm run build -w verifaktura && npm run build -w @verifaktura/build && npm run build -w @verifaktura/cius-hr && npm run build -w @verifaktura/cli",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "build:core": "npm run build -w verifaktura"
+    "build:core": "npm run build -w verifaktura",
+    "verify:artefacts": "node scripts/verify-artefacts.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
