@@ -10,7 +10,14 @@
  *
  * `npm version --workspaces` ne ažurira pouzdano interne raspone zavisnosti,
  * pa ih postavljamo ovdje eksplicitno.
+ *
+ * Polazna verzija je VEĆA od one u repou i one objavljene na npm-u. Ako objava
+ * uspije a commit s podignutom verzijom ne dođe do main-a (prekinut posao,
+ * odbijen push), repo i registar se raziđu i svako sljedeće pokretanje pokušava
+ * objaviti verziju koja već postoji. Registar je jedini pouzdan izvor istine o
+ * tome šta je objavljeno.
  */
+import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -29,6 +36,31 @@ const read = (p) => JSON.parse(readFileSync(join(ROOT, p, "package.json"), "utf-
 const write = (p, d) =>
   writeFileSync(join(ROOT, p, "package.json"), JSON.stringify(d, null, 2) + "\n", "utf-8");
 
+/** Zadnja verzija paketa na npm-u, ili null ako paket još ne postoji. */
+function publishedVersion(pkgName) {
+  try {
+    const out = execFileSync("npm", ["view", pkgName, "version"], {
+      encoding: "utf-8",
+      stdio: ["ignore", "pipe", "ignore"],
+      timeout: 30_000,
+    }).trim();
+    return /^\d+\.\d+\.\d+/.test(out) ? out : null;
+  } catch {
+    return null; // paket nije objavljen ili registar nije dostupan
+  }
+}
+
+/** Vraća veću od dvije semver verzije. */
+function maxVersion(a, b) {
+  if (!b) return a;
+  const pa = a.split(".").map(Number);
+  const pb = b.split(".").map(Number);
+  for (let i = 0; i < 3; i++) {
+    if (pa[i] !== pb[i]) return pa[i] > pb[i] ? a : b;
+  }
+  return a;
+}
+
 function bump(current, kind) {
   if (/^\d+\.\d+\.\d+/.test(kind)) return kind;
   const [major, minor, patch] = current.split(".").map(Number);
@@ -38,7 +70,12 @@ function bump(current, kind) {
   throw new Error(`Nepoznat tip promjene: ${kind}`);
 }
 
-const current = read("packages/core").version;
+const local = read("packages/core").version;
+const published = publishedVersion(read("packages/core").name);
+const current = maxVersion(local, published);
+if (published && current !== local) {
+  console.log(`upozorenje: repo je na ${local}, a npm na ${published} — polazim od ${current}`);
+}
 const next = bump(current, arg);
 const names = new Set(PACKAGES.map((p) => read(p).name));
 
