@@ -1,140 +1,55 @@
 # Objavljivanje
 
-Objava ide preko **npm trusted publishing (OIDC)** — nema tokena u GitHub
-secrets. Svaka objava je kratkotrajni, workflow-specifičan kredencijal koji se
-ne može iscuriti ni ponovo upotrijebiti, i automatski nosi provenance.
+Sva četiri paketa idu na npm u lockstepu, iz GitHub Actions.
 
-## Jednokratno postavljanje
+## Nova verzija
 
-### 1. GitHub
+GitHub → Actions → **Release** → Run workflow → `patch`, `minor` ili `major`.
 
-```bash
-git push -u origin main
-```
+Pipeline: `npm ci` → typecheck → testovi → priprema artefakata → build → e2e →
+round-trip → podizanje verzije → objava → push commita i taga.
 
-Zatim **repo na public**: Settings → General → dno stranice → Change visibility.
+Verzija se diže tek nakon što prođu sve provjere, a commit i tag idu na remote
+tek nakon uspješne objave. Neuspjeh zato ne ostavlja potrošen broj verzije ni
+prazan tag.
 
-Ovo nije kozmetika. Provenance radi isključivo iz javnih repozitorija; iz
-privatnog npm vraća:
+Opcija `dry_run` prođe sve provjere i preskoči objavu — korisno kad se mijenja
+sam workflow.
 
-```
-E422 Unprocessable Entity — Error verifying sigstore provenance bundle:
-Unsupported GitHub Actions source repository visibility: "private".
-```
+Alternativno, push taga `v*` pokreće isti pipeline bez koraka verzionisanja.
 
-Workflow to sada prepozna sam i objavi bez provenance uz upozorenje, umjesto da
-padne — ali paket time gubi kriptografski dokaz porijekla, što je za proizvod
-čiji je pitch tačnost i povjerenje lošija zamjena nego što djeluje.
+## Autentifikacija
 
-Preporučeno uz to: zaštita tagova (Settings → Rules), da objavu može pokrenuti
-samo onaj ko smije praviti `v*` tagove.
+Objava koristi **npm trusted publishing (OIDC)** — bez tokena u secrets. Svaki
+publish dobija kratkotrajni, workflow-specifičan kredencijal i automatski
+provenance potpis.
 
-### 2. Prva objava — bootstrap
-
-Trusted publisher se podešava na stranici paketa, a stranica postoji tek kad
-paket postoji. Prvu objavu zato ne može odraditi OIDC. Dvije opcije:
-
-**A — jednokratni token, pipeline radi sve** (preporučeno ako ne želiš ništa
-lokalno). Workflow sam prepozna postoji li `NPM_TOKEN` secret i prebaci se na
-njega — nema izmjena u `release.yml`.
-
-1. npmjs.com → Access Tokens → **Granular access token**
-   - Packages and scopes: `Read and write`, opseg **All packages**
-     (unscoped paket `verifaktura` NIJE u scope-u `@verifaktura`)
-   - ✅ **Bypass two-factor authentication** — bez toga npm vraća
-     `E403 ... Two-factor authentication or granular access token with bypass
-     2fa enabled is required to publish packages`
-   - Expiration: **7 dana** — token živi samo koliko traje bootstrap
-2. GitHub → Settings → Secrets and variables → Actions → New repository secret
-   - Name: `NPM_TOKEN`
-   - Secret: *(token)*
-3. Actions → **Release** → Run workflow → `patch`, `dry_run: true`
-   Probni prolaz provjeri da sve prolazi bez objavljivanja.
-4. Ponovi bez `dry_run`. U sažetku posla piše koja je autentifikacija korištena.
-5. Nakon uspjeha: podesi trusted publishing (korak 3 ispod), **obriši secret**
-   i opozovi token. Workflow se sam vraća na OIDC.
-
-**B — jednom ručno s tvoje mašine:**
-
-```bash
-npm login                     # 2FA
-./scripts/publish-local.sh --otp
-```
-
-Skript prođe sve provjere pa traži svjež 2FA kod za svaki paket (kod vrijedi
-~30 s). Ručno je isto:
-
-```bash
-npm publish -w verifaktura --otp=123456
-npm publish -w @verifaktura/build --otp=123456
-npm publish -w @verifaktura/cius-hr --otp=123456
-npm publish -w @verifaktura/cli --otp=123456
-```
-
-Opcija B je manje koraka i ne traži da ijedan token ikad postoji. Opcija A je
-bolja ako nemaš npm postavljen lokalno ili želiš da sve ide kroz CI od prvog
-dana.
-
-### 3. Trusted publisher — za svaki od četiri paketa
-
-npmjs.com → Packages → *paket* → Settings → **Trusted Publisher** → GitHub Actions:
+Podešava se po paketu: npmjs.com → *paket* → Settings → **Trusted Publisher** →
+GitHub Actions:
 
 | Polje | Vrijednost |
 |---|---|
 | Organization or user | `verifaktura` |
 | Repository | `verifaktura` |
 | Workflow filename | `release.yml` |
-| Environment name | *(prazno)* |
 | Allowed actions | `npm publish` |
 
-Sva polja su osjetljiva na velika/mala slova i moraju biti tačna — npm ih ne
-provjerava pri spremanju, greška se vidi tek pri objavi.
+Sva polja su osjetljiva na velika i mala slova. npm ih ne provjerava pri
+spremanju — greška se vidi tek pri objavi, kao `ENEEDAUTH`.
 
-### 4. Zatvori vrata tokenima
+Ako je u repo secrets postavljen `NPM_TOKEN`, workflow će koristiti njega
+umjesto OIDC-a. To postoji samo za prvu objavu paketa koji još ne postoji na
+npm-u; poslije toga secret treba obrisati i token opozvati.
 
-Za svaki paket: Settings → **Publishing access** →
-*„Require two-factor authentication and disallow tokens"*.
+## Zahtjevi
 
-Trusted publishing nastavlja raditi (koristi OIDC, ne token), a klasični tokeni
-prestaju biti put do objave.
-
-## Svaka sljedeća objava
-
-**Ništa lokalno.** GitHub → Actions → **Release** → Run workflow → odaberi
-`patch`, `minor` ili `major`.
-
-Pipeline redom: `npm ci` → typecheck → testovi → priprema artefakata → build →
-e2e → round-trip → **tek onda** podigne verziju, commita, tagira i objavi.
-Redoslijed je namjeran: ako bilo šta padne, verzija se nije ni pomjerila, pa
-nema praznog taga ni preskočenog broja.
-
-Postoji i `dry_run` opcija — prođe sve provjere i preskoči objavu. Korisno kad
-mijenjaš sam workflow.
-
-Alternativno, ako verziju dižeš ručno, push taga `v*` pokreće isti pipeline bez
-koraka verzionisanja.
-
-### Verzionisanje u lockstepu
-
-Sva četiri paketa uvijek idu na istu verziju, a `scripts/version.mjs` usklađuje
-i interne raspone zavisnosti (`@verifaktura/cli` → `verifaktura: ^x.y.z`).
-`npm version --workspaces` to ne radi pouzdano, zato zaseban skript.
-
-## Zahtjevi i zamke
-
-- **Repozitorij mora biti public** da bi paketi imali provenance.
+- Repozitorij mora biti **public** — provenance se ne generiše iz privatnih.
 - Node ≥ 22.14 i npm ≥ 11.5.1 (workflow koristi Node 24).
-- npm najavljuje ograničenja za tokene koji zaobilaze 2FA — još jedan razlog da
-  bootstrap token ne ostane duže nego što mora.
-- Samo GitHub-hosted runneri; self-hosted nisu podržani.
-- `repository.url` u `package.json` mora **tačno** odgovarati GitHub repou —
-  inače objava pada na autentifikaciji.
-- `--provenance` se ne navodi; kod trusted publishinga se generiše sam.
-- Verzije paketa drži usklađene: `@verifaktura/cli` i `@verifaktura/cius-hr`
-  zavise od `verifaktura` preko `^` raspona.
+- Samo GitHub-hosted runneri; self-hosted ne podržavaju OIDC.
+- `repository.url` u `package.json` mora tačno odgovarati GitHub repou.
 
-## Ako objava padne s ENEEDAUTH
+## Verzionisanje
 
-Redom provjeri: naziv workflow fajla (uključujući `.yml`), organizaciju i
-repozitorij u trusted publisher konfiguraciji, `id-token: write` u workflowu, i
-`repository.url` u `package.json` paketa koji se objavljuje.
+`scripts/version.mjs` postavlja istu verziju na sve pakete i usklađuje interne
+raspone zavisnosti (`@verifaktura/cli` → `verifaktura: ^x.y.z`).
+`npm version --workspaces` to ne radi pouzdano, zato zaseban skript.

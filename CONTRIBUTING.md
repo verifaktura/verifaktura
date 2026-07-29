@@ -4,10 +4,11 @@
 
 ```bash
 npm install
-npm run prepare:sef   # preuzima CEN i HR artefakte, kompajlira u SEF (~1-2 min)
-npm test
+npm run prepare:sef         # preuzima i kompajlira artefakte, ~2 min
+npm test                    # unit testovi
 npm run build
-node scripts/e2e.mjs  # stvarna validacija kontrolnih faktura
+node scripts/e2e.mjs        # validacija kontrolnih faktura
+node scripts/roundtrip.mjs  # build -> validate
 ```
 
 `prepare:sef` traži mrežni pristup. Bez hrvatskog profila: `SKIP_HR=1 npm run prepare:sef`.
@@ -43,10 +44,15 @@ vodi u segfault.
 1. Novi paket `packages/cius-<zemlja>`.
 2. Izvezi `ProfileDefinition` i pozovi `registerProfile()`.
 3. Dodaj preuzimanje artefakata u `scripts/build-sef.mjs`.
-4. Dodaj kontrolnu fakturu u `packages/core/test/fixtures` i slučaj u `scripts/e2e.mjs`.
+4. Dodaj kontrolnu fakturu u `packages/core/test/fixtures` i slučaj u
+   `scripts/e2e.mjs` ili `scripts/roundtrip.mjs`.
 
-Nacionalni artefakti se **ne commit-uju** — preuzimaju se pri buildu da se nikad
-ne validira po zastarjelim pravilima.
+Ako profil zahtijeva element koji CEN-ovo sintaksno pravilo zabranjuje, navedi
+to pravilo u `overrides` — nalaz se spušta na `info` s objašnjenjem, umjesto da
+svaki ispravan dokument vraća upozorenje.
+
+Artefakti se **ne commit-uju** — preuzimaju se pri buildu da se nikad ne
+validira po zastarjelim pravilima.
 
 ## Format izvještaja
 
