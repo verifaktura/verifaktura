@@ -19,7 +19,7 @@ jobs:
       matrix:
         node: ["20", "22", "24"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v4
         with:
@@ -43,7 +43,7 @@ jobs:
     name: End-to-end validacija
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v4
         with:
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Ima li noviji CEN release od pinovanog
         run: |
