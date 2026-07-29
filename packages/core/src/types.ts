@@ -79,6 +79,8 @@ export interface ValidationReport {
     rulesFired: number;
     durationMs: number;
   };
+  /** Postavljeno kad je `maxIssues` odsjekao dio nalaza. */
+  truncated?: true;
   issues: Issue[];
 }
 
@@ -89,6 +91,9 @@ export interface ValidateOptions {
   profiles?: string[];
   /** Preskoči XSD provjeru šeme (brže, ali propušta strukturne greške). */
   skipSchema?: boolean;
-  /** Prekini nakon N nalaza (zaštita za API). */
+  /**
+   * Ograniči broj nalaza u `issues` (zaštita za API). `0` vraća samo sažetak.
+   * Sažetak i `valid` se uvijek računaju iz svih nalaza, bez obzira na limit.
+   */
   maxIssues?: number;
 }

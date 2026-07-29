@@ -56,6 +56,7 @@ Versioned through the `reportVersion` field. Currently **1.0**.
 | `issues[].message` | Message in the requested language, falling back to English. |
 | `issues[].messages` | All available translations. |
 | `issues[].hint` | Optional guidance. Also used when a national profile overrides a rule. |
+| `truncated` | Present when `maxIssues` cut the list. Summary and `valid` are always computed from all findings. |
 
 ## Design notes
 
@@ -74,6 +75,15 @@ differently.
 **`profiles[]` carries the artefact version.** The same document validated
 against a different rule version yields a different result. Without this the
 report is neither reproducible nor usable as an audit trail.
+
+**`maxIssues` never changes the verdict.** The summary and `valid` are computed
+from every finding; the option only shortens the list, and sets `truncated`.
+Deriving the verdict from a truncated list would silently turn large invalid
+documents into valid ones — exactly where a limit gets used.
+
+**A failed assertion without `@flag` is fatal.** Schematron makes the flag
+optional. Treating an unflagged failure as informational would let any profile
+whose rules omit it report a broken document as valid.
 
 **`rulesFired` is a sanity check.** A suspiciously low number means the document
 never went through real validation — usually a wrong namespace — rather than

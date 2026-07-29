@@ -111,8 +111,18 @@ export async function validate(
     }
   }
 
-  const limited = opts.maxIssues ? issues.slice(0, opts.maxIssues) : issues;
-  const count = (s: string): number => limited.filter((i) => i.severity === s).length;
+  // Sažetak i verdikt se računaju iz SVIH nalaza, ne iz skraćenog popisa.
+  // Ranije je `maxIssues` odsijecao i brojeve, pa je fatalni nalaz iza granice
+  // pretvarao dokument u valid:true - tiho, i to baš kod velikih dokumenata
+  // gdje se limit i koristi.
+  const count = (s: string): number => issues.filter((i) => i.severity === s).length;
+
+  // 0 je valjan limit (samo sažetak, bez nalaza); ranije se tretirao kao "bez limita".
+  const limited =
+    opts.maxIssues !== undefined && opts.maxIssues >= 0
+      ? issues.slice(0, opts.maxIssues)
+      : issues;
+  const truncated = limited.length < issues.length;
 
   return {
     reportVersion: "1.0",
@@ -128,6 +138,7 @@ export async function validate(
       rulesFired,
       durationMs: Date.now() - started,
     },
+    ...(truncated ? { truncated: true as const } : {}),
     issues: limited,
   };
 }

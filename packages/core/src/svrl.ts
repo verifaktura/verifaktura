@@ -3,19 +3,35 @@ import { messagesFor, pickMessage } from "./messages.js";
 
 const SVRL_NS = "http://purl.oclc.org/dsdl/svrl";
 
-/** SVRL @flag -> naša ozbiljnost. CEN koristi fatal/warning; ostalo tretiramo kao info. */
-function mapSeverity(flag: string | null): Severity {
-  switch ((flag ?? "").toLowerCase()) {
+/**
+ * SVRL @flag / @role -> naša ozbiljnost.
+ *
+ * `flag` je u Schematronu OPCION. Ranije se izostavljen ili nepoznat flag
+ * mapirao na `info`, pa bi profil čiji schematron ne postavlja flag imao sve
+ * svoje greške spuštene na informativne, a dokument bi ispao validan. Za
+ * neuspjelu tvrdnju to je pogrešna pretpostavka: ako izdavač pravila nije rekao
+ * drugačije, neuspjeh je greška.
+ */
+function mapSeverity(flag: string | null, role: string | null, kind: SvrlKind): Severity {
+  const value = (flag ?? role ?? "").toLowerCase();
+  switch (value) {
     case "fatal":
     case "error":
       return "fatal";
     case "warning":
     case "warn":
       return "warning";
-    default:
+    case "info":
+    case "information":
+    case "notice":
       return "info";
+    default:
+      // successful-report je po definiciji informativan; failed-assert nije.
+      return kind === "report" ? "info" : "fatal";
   }
 }
+
+type SvrlKind = "assert" | "report";
 
 /** Iz teksta pravila izvlači BT-/BG- reference: "[BR-02]-An Invoice shall have ... (BT-1)." */
 export function extractBusinessTerms(text: string): string[] {
@@ -48,7 +64,7 @@ export function parseSvrl(
   const reports = doc.getElementsByTagNameNS(SVRL_NS, "successful-report");
   const fired = doc.getElementsByTagNameNS(SVRL_NS, "fired-rule");
 
-  const collect = (nodes: HTMLCollectionOf<Element> | any) => {
+  const collect = (nodes: HTMLCollectionOf<Element> | any, kind: SvrlKind) => {
     for (let i = 0; i < nodes.length; i++) {
       const el = nodes[i] as Element;
       const textEl = el.getElementsByTagNameNS(SVRL_NS, "text")[0];
@@ -58,7 +74,7 @@ export function parseSvrl(
       const messages: RuleMessage = messagesFor(ruleId, cleanText);
       issues.push({
         ruleId,
-        severity: mapSeverity(el.getAttribute("flag")),
+        severity: mapSeverity(el.getAttribute("flag"), el.getAttribute("role"), kind),
         profile,
         businessTerms: extractBusinessTerms(rawText),
         location: { xpath: el.getAttribute("location") ?? "" },
@@ -68,8 +84,8 @@ export function parseSvrl(
     }
   };
 
-  collect(failed);
-  collect(reports);
+  collect(failed, "assert");
+  collect(reports, "report");
 
   return { issues, rulesFired: fired.length };
 }
