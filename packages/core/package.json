@@ -1,6 +1,6 @@
 {
   "name": "verifaktura",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "EN 16931 e-invoice validation for UBL and CII, with national CIUS profiles (HR, RS/SEF, BA/FBiH) and localized rule messages.",
   "type": "module",
   "main": "./dist/index.js",
