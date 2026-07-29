@@ -1,6 +1,6 @@
 {
   "name": "@verifaktura/cius-hr",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Hrvatski CIUS profil (Fiskalizacija 2.0) za verifaktura validator e-računa.",
   "type": "module",
   "main": "./dist/index.js",
@@ -34,6 +34,6 @@
     "access": "public"
   },
   "peerDependencies": {
-    "verifaktura": "^0.1.1"
+    "verifaktura": "^0.1.2"
   }
 }
