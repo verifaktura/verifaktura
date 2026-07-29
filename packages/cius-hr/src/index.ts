@@ -5,11 +5,14 @@ import { registerProfile, type ProfileDefinition } from "verifaktura";
  * Oznaka specifikacije (cbc:CustomizationID) koju propisuje Porezna uprava RH.
  * Hrvatski schematron se primjenjuje ISKLJUČIVO na UBL dokumente s ovom oznakom.
  *
- * Izvor: Porezna uprava, "Validator eRačuna" (30.10.2025.)
+ * Vrijednost je preuzeta iz samog schematrona (pravilo HR-BR-5), ne iz opisa na
+ * web stranici - tamo se u string uvukla fusnota pa je ispadalo "ext[1]2025".
+ *
+ * Izvor: HR-CIUS-EXT-EN16931-UBL.sch, Porezna uprava RH
  */
 export const HR_CUSTOMIZATION_ID =
   "urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0" +
-  "#conformant#urn:mfin.gov.hr:ext[1]2025:1.0";
+  "#conformant#urn:mfin.gov.hr:ext-2025:1.0";
 
 /**
  * Hrvatski CIUS profil.

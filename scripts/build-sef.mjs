@@ -10,6 +10,7 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, existsSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { compileSchematron, prepareSkeleton } from "./schematron.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VENDOR = join(ROOT, "vendor", "cen");
@@ -56,11 +57,13 @@ for (const t of targets) {
 }
 
 // --- hrvatski CIUS (Fiskalizacija 2.0) -----------------------------------
-// Porezna uprava distribuira schematron kao ZIP; sadržaj se smije prenositi uz
-// navođenje izvora, ali verziju kontrolira PU pa ga preuzimamo pri buildu.
+// Porezna uprava isporučuje SIROVI Schematron (.sch), za razliku od CEN-a koji
+// isporučuje prekompajlirani XSLT. Zato ide kroz ISO Schematron lanac.
+// Sadržaj se smije prenositi uz navođenje izvora, ali verziju kontroliše PU pa
+// se preuzima pri buildu.
 const HR_ZIP = process.env.HR_VALIDATOR_URL
   ?? "https://porezna.gov.hr/fiskalizacija/api/dokumenti/197";
-const HR_OUT = join(ROOT, "packages", "cius-hr", "sef");
+const HR_OUT = join(ROOT, "packages", "cius-hr", "sef", "hr-cius-ext-ubl.sef.json");
 const HR_TMP = join(ROOT, "vendor", "hr");
 
 if (process.env.SKIP_HR === "1") {
@@ -68,21 +71,22 @@ if (process.env.SKIP_HR === "1") {
 } else {
   try {
     mkdirSync(HR_TMP, { recursive: true });
-    mkdirSync(HR_OUT, { recursive: true });
     const zipPath = join(HR_TMP, "validator.zip");
-    console.log("Preuzimam hrvatski validator s porezna.gov.hr...");
-    const res = await fetch(HR_ZIP);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    writeFileSync(zipPath, Buffer.from(await res.arrayBuffer()));
+    if (!existsSync(zipPath)) {
+      console.log("Preuzimam hrvatski validator s porezna.gov.hr...");
+      const res = await fetch(HR_ZIP);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      writeFileSync(zipPath, Buffer.from(await res.arrayBuffer()));
+    }
     run("unzip", ["-o", "-q", zipPath, "-d", HR_TMP]);
 
-    // Naziv fajla propisuje PU: HR-CIUS-EXT-EN16931-UBL.sch
-    const sch = findFile(HR_TMP, /HR-CIUS-EXT-EN16931-UBL\.(sch|xslt?)$/i);
+    const sch = findFile(HR_TMP, /^HR-CIUS-EXT-EN16931-UBL\.sch$/i);
     if (!sch) throw new Error("HR-CIUS-EXT-EN16931-UBL.sch nije pronađen u ZIP-u");
 
-    const dest = join(HR_OUT, "hr-cius-ext-ubl.sef.json");
-    console.log("Kompajliram hrvatski profil...");
-    run("npx", ["xslt3", `-xsl:${sch}`, `-export:${dest}`, "-nogo"]);
+    console.log("Kompajliram hrvatski profil (ISO Schematron lanac)...");
+    const stages = prepareSkeleton(join(ROOT, "vendor"));
+    compileSchematron(sch, HR_OUT, join(ROOT, "vendor", "hr-build"), stages);
+    console.log("Hrvatski profil spreman.");
   } catch (e) {
     console.warn(`UPOZORENJE: hrvatski profil nije pripremljen (${e.message}).`);
     console.warn("Jezgro i EN 16931 validacija rade normalno; postavi HR_VALIDATOR_URL ili SKIP_HR=1.");

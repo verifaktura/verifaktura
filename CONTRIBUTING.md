@@ -25,6 +25,19 @@ Test `messages.test.ts` čuva pokrivenost i semantiku. Posebno pazi na sufikse
 oslobođenih kategorija (razlog oslobođenja je kod jednih zabranjen, kod drugih
 obavezan). Pogrešna poruka je gora od nikakve.
 
+## Artefakti: prekompajlirani vs sirovi Schematron
+
+Izvori se razlikuju i to određuje put kompajliranja:
+
+- **CEN** isporučuje prekompajlirani XSLT -> ide direktno u `xslt3 -export`.
+- **Porezna uprava RH** (i vjerovatno drugi nacionalni izvori) isporučuju sirovi
+  `.sch` -> ide kroz `scripts/schematron.mjs`: razrješavanje `<include>`,
+  `iso_abstract_expand`, `iso_svrl_for_xslt2`, pa tek onda `-export`.
+
+`<include>` se razrješava u JS-u, ne skeletonom `iso_dsdl_include.xsl` — taj
+pada na "Maximum call stack size exceeded" pod Saxon-JS, a podizanje Node stacka
+vodi u segfault.
+
 ## Novi CIUS profil
 
 1. Novi paket `packages/cius-<zemlja>`.
