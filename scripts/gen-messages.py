@@ -46,6 +46,9 @@ VAT_TPL = {
         "02": 'Račun sa stavkom (BG-25) u PDV kategoriji "{c}" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).',
         "03": 'Račun s popustom (BG-20) u PDV kategoriji "{c}" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).',
         "04": 'Račun s troškom (BG-21) u PDV kategoriji "{c}" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).',
+        "02-NE": 'Račun sa stavkom (BG-25) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).',
+        "03-NE": 'Račun s popustom (BG-20) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).',
+        "04-NE": 'Račun s troškom (BG-21) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).',
         "05": 'U stavci (BG-25) s PDV kategorijom "{c}" stopa PDV-a (BT-152) mora biti veća od nule.',
         "06": 'U popustu (BG-20) s PDV kategorijom "{c}" stopa PDV-a (BT-96) mora biti veća od nule.',
         "07": 'U trošku (BG-21) s PDV kategorijom "{c}" stopa PDV-a (BT-103) mora biti veća od nule.',
@@ -61,6 +64,9 @@ VAT_TPL = {
         "02": 'Faktura sa stavkom (BG-25) u PDV kategoriji "{c}" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).',
         "03": 'Faktura s popustom (BG-20) u PDV kategoriji "{c}" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).',
         "04": 'Faktura s troškom (BG-21) u PDV kategoriji "{c}" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).',
+        "02-NE": 'Faktura sa stavkom (BG-25) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).',
+        "03-NE": 'Faktura s popustom (BG-20) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).',
+        "04-NE": 'Faktura s troškom (BG-21) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).',
         "05": 'U stavci (BG-25) s PDV kategorijom "{c}" stopa PDV-a (BT-152) mora biti veća od nule.',
         "06": 'U popustu (BG-20) s PDV kategorijom "{c}" stopa PDV-a (BT-96) mora biti veća od nule.',
         "07": 'U trošku (BG-21) s PDV kategorijom "{c}" stopa PDV-a (BT-103) mora biti veća od nule.',
@@ -87,7 +93,9 @@ VAT_VARIANT = {
     "AE": {"09": "09-ZERO", "10": "10-HAS"},
     "G":  {"09": "09-ZERO", "10": "10-HAS"},
     "IC": {"09": "09-ZERO", "10": "10-HAS"},
-    "O":  {"09": "09-ZERO", "10": "10-HAS"},
+    # Kategorija "O" invertira i 02/03/04: kod ostalih je porezni identifikator
+    # OBAVEZAN, kod nje je ZABRANJEN. Isti obrazac kao kod 09 i 10.
+    "O":  {"02": "02-NE", "03": "03-NE", "04": "04-NE", "09": "09-ZERO", "10": "10-HAS"},
     "B":  {"09": "09-CALC", "10": "10-NO"},
 }
 

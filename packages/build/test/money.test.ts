@@ -18,7 +18,7 @@ describe("aritmetika novca", () => {
   });
 
   it("odbija smeće umjesto tihog nula-rezultata", () => {
-    expect(() => parseAmount("osam")).toThrow(/Neispravan iznos/);
+    expect(() => parseAmount("osam")).toThrow(/Neispravan broj/);
     expect(() => parseAmount("")).toThrow();
   });
 
@@ -38,6 +38,27 @@ describe("aritmetika novca", () => {
   it("množi količinu i cijenu sa zaokruživanjem", () => {
     expect(formatAmount(multiply("10", "80.00"))).toBe("800.00");
     expect(formatAmount(multiply("1.5", "9.99"))).toBe("14.99");
-    expect(formatAmount(multiply("3", "0.333"))).toBe("0.99");
+    // 3 x 0.333 = 0.999 -> 1.00. Raniji test je ovdje očekivao 0.99, što je
+    // bio rezultat buga: oba operanda su se prvo zaokruživala na dvije
+    // decimale (0.333 -> 0.33), pa je test čuvao pogrešno ponašanje.
+    expect(formatAmount(multiply("3", "0.333"))).toBe("1.00");
+  });
+
+  /**
+   * Regresija: cijena i količina su se zaokruživale prije množenja, pa su
+   * količine s više od dvije decimale davale tiho pogrešan iznos stavke.
+   */
+  it("čuva preciznost količine i jedinične cijene do rezultata", () => {
+    expect(formatAmount(multiply("0.001", "1000.00"))).toBe("1.00");
+    expect(formatAmount(multiply("2.345", "100.00"))).toBe("234.50");
+    expect(formatAmount(multiply("0.0001", "10000.00"))).toBe("1.00");
+    expect(formatAmount(multiply("-2.5", "10.00"))).toBe("-25.00");
+  });
+
+  it("normalizuje zarez prije serijalizacije", async () => {
+    const { normalizeDecimal } = await import("../src/money.js");
+    expect(normalizeDecimal("10,50")).toBe("10.50");
+    expect(normalizeDecimal("+7")).toBe("7");
+    expect(() => normalizeDecimal("10.5.1")).toThrow(/Neispravan broj/);
   });
 });

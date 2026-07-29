@@ -68,17 +68,84 @@ const CASES = [
     },
   },
   {
-    name: "prijenos porezne obaveze (AE) s razlogom oslobodjenja",
+    // NAMJERNO bez rucnog vatBreakdown-a: raniji test ga je navodio, pa je
+    // zaobilazio automatski put koji svi stvarno koriste - i propustio da taj
+    // put nikad nije popunjavao razlog oslobodjenja (BR-AE-10).
+    name: "prijenos porezne obaveze (AE), automatski breakdown",
     invoice: {
       id: "2026-004", issueDate: "2026-07-29", currency: "EUR",
       seller: eurSeller, buyer: eurBuyer,
       paymentMeans: { code: "30", accountId: "HR1210010051863000160" },
-      lines: [{ name: "Usluga u prijenosu", quantity: "1", unitPrice: "1000.00", vatCategory: "AE", vatRate: "0" }],
-      vatBreakdown: [{
-        category: "AE", rate: "0", taxableAmount: "1000.00", taxAmount: "0.00",
-        exemptionReason: "Prijenos porezne obveze",
-        exemptionReasonCode: "VATEX-EU-AE",
+      lines: [{
+        name: "Usluga u prijenosu", quantity: "1", unitPrice: "1000.00",
+        vatCategory: "AE", vatRate: "0",
+        vatExemptionReason: "Prijenos porezne obveze",
+        vatExemptionReasonCode: "VATEX-EU-AE",
       }],
+    },
+  },
+  {
+    name: "oslobodjeno PDV-a (E), automatski breakdown",
+    invoice: {
+      id: "2026-006", issueDate: "2026-07-29", currency: "EUR",
+      seller: eurSeller, buyer: eurBuyer,
+      paymentMeans: { code: "30", accountId: "HR1210010051863000160" },
+      lines: [{
+        name: "Oslobodjena usluga", quantity: "1", unitPrice: "500.00",
+        vatCategory: "E", vatRate: "0",
+        vatExemptionReason: "Oslobodjeno prema clanu 39.",
+      }],
+    },
+  },
+  {
+    // Kategorija "O" zabranjuje porezni identifikator prodavatelja (BR-O-02),
+    // suprotno od svih ostalih kategorija.
+    name: "nije predmet oporezivanja (O), bez stope i bez PDV ID-a",
+    invoice: {
+      id: "2026-007", issueDate: "2026-07-29", currency: "EUR",
+      seller: { ...eurSeller, vatId: undefined },
+      buyer: { ...eurBuyer, vatId: undefined },
+      paymentMeans: { code: "30", accountId: "HR1210010051863000160" },
+      lines: [{
+        name: "Izvan podrucja PDV-a", quantity: "1", unitPrice: "250.00",
+        vatCategory: "O",
+        vatExemptionReason: "Nije predmet oporezivanja PDV-om",
+      }],
+    },
+  },
+  {
+    name: "odobrenje (CreditNote) s datumom dospijeca",
+    invoice: {
+      id: "2026-008", issueDate: "2026-07-29", dueDate: "2026-08-28",
+      typeCode: "381", currency: "EUR",
+      seller: eurSeller, buyer: eurBuyer,
+      paymentMeans: { code: "30", accountId: "HR1210010051863000160" },
+      lines: [{ name: "Odobrenje", quantity: "1", unitPrice: "100.00", vatCategory: "S", vatRate: "25" }],
+    },
+  },
+  {
+    name: "popusti koji se ponistavaju u nulu",
+    invoice: {
+      id: "2026-009", issueDate: "2026-07-29", currency: "EUR",
+      seller: eurSeller, buyer: eurBuyer,
+      paymentMeans: { code: "30", accountId: "HR1210010051863000160" },
+      lines: [{ name: "Usluga", quantity: "1", unitPrice: "100.00", vatCategory: "S", vatRate: "25" }],
+      allowances: [
+        { amount: "10.00", reason: "Rabat", vatCategory: "S", vatRate: "25" },
+        { amount: "-10.00", reason: "Ispravak rabata", vatCategory: "S", vatRate: "25" },
+      ],
+    },
+  },
+  {
+    name: "sitne kolicine i zarez kao separator",
+    invoice: {
+      id: "2026-010", issueDate: "2026-07-29", currency: "EUR",
+      seller: eurSeller, buyer: eurBuyer,
+      paymentMeans: { code: "30", accountId: "HR1210010051863000160" },
+      lines: [
+        { name: "Materijal po gramu", quantity: "0,001", unitPrice: "1000,00", vatCategory: "S", vatRate: "25" },
+        { name: "Sati", quantity: "2.345", unitPrice: "100.00", vatCategory: "S", vatRate: "25", unitCode: "HUR" },
+      ],
     },
   },
   {

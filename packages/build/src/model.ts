@@ -90,8 +90,19 @@ export interface InvoiceLine {
   netAmount?: Amount;
   /** BT-151 - PDV kategorija stavke, obavezno */
   vatCategory: VatCategory;
-  /** BT-152 - PDV stopa u procentima, npr. "17" */
-  vatRate: string;
+  /**
+   * BT-152 - PDV stopa u procentima, npr. "17".
+   * Za kategoriju "O" (nije predmet oporezivanja) stopa se NE navodi (BR-O-05).
+   */
+  vatRate?: string;
+  /**
+   * BT-120 - razlog oslobođenja od PDV-a.
+   * Obavezan za kategorije E, AE, K, G i O (BR-E-10, BR-AE-10, ...). Prenosi se
+   * u rekapitulaciju PDV-a kad se ona računa automatski.
+   */
+  vatExemptionReason?: string;
+  /** BT-121 - šifra razloga oslobođenja (CEF VATEX). */
+  vatExemptionReasonCode?: string;
   /** BG-27 - popusti na stavci */
   allowances?: LineCharge[];
   /** BG-28 - troškovi na stavci */
@@ -115,8 +126,12 @@ export interface LineCharge {
 export interface DocumentCharge extends LineCharge {
   /** BT-95 / BT-102 - PDV kategorija, obavezna na razini dokumenta */
   vatCategory: VatCategory;
-  /** BT-96 / BT-103 - PDV stopa */
-  vatRate: string;
+  /** BT-96 / BT-103 - PDV stopa; izostavlja se za kategoriju "O" */
+  vatRate?: string;
+  /** BT-120 - razlog oslobođenja, kao na stavci */
+  vatExemptionReason?: string;
+  /** BT-121 - šifra razloga oslobođenja */
+  vatExemptionReasonCode?: string;
   /** BT-93 / BT-100 - osnovica za procentualni popust/trošak */
   baseAmount?: Amount;
 }
@@ -136,7 +151,8 @@ export interface PaymentMeans {
 
 export interface VatBreakdownEntry {
   /** BT-118 */ category: VatCategory;
-  /** BT-119 */ rate: string;
+  /** BT-119 - izostavlja se za kategoriju "O" (BR-48 dopušta izuzetak) */
+  rate?: string;
   /** BT-116 */ taxableAmount: Amount;
   /** BT-117 */ taxAmount: Amount;
   /** BT-120 - obavezan za oslobođene kategorije (BR-E-10, BR-AE-10, ...) */

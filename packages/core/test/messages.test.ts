@@ -66,6 +66,21 @@ describe("semantika PDV kategorija (regresija)", () => {
     expect(RULES[id].en).toMatch(/shall be 0/i);
   });
 
+  // Isti obrazac inverzije javlja se i na sufiksima 02/03/04: kod većine
+  // kategorija je porezni identifikator prodavca OBAVEZAN, kod "O" je ZABRANJEN.
+  const ID_OBAVEZAN = ["BR-S-02", "BR-Z-02", "BR-E-02", "BR-AE-02", "BR-G-02", "BR-IC-02"];
+  const ID_ZABRANJEN = ["BR-O-02", "BR-O-03", "BR-O-04"];
+
+  it.each(ID_OBAVEZAN)("%s traži porezni identifikator", (id) => {
+    expect(RULES[id].bs).toMatch(/mora sadržavati PDV broj prodavca/);
+    expect(RULES[id].en).toMatch(/shall contain the Seller VAT/i);
+  });
+
+  it.each(ID_ZABRANJEN)("%s zabranjuje porezni identifikator", (id) => {
+    expect(RULES[id].bs).toMatch(/NE SMIJE sadržavati PDV broj prodavca/);
+    expect(RULES[id].en).toMatch(/shall not contain the Seller VAT/i);
+  });
+
   it("BR-S-09 računa PDV, ne postavlja ga na nulu", () => {
     expect(RULES["BR-S-09"].bs).toMatch(/pomnoženoj sa stopom/);
     expect(RULES["BR-S-09"].bs).not.toMatch(/mora biti 0/);

@@ -1330,25 +1330,25 @@
   "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"nije predmet oporezivanja PDV-om\"."
  },
  "BR-O-02": {
-  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).",
   "en": "An Invoice that contains an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Not subject to VAT\" shall not contain the Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer VAT identifier (BT-48).",
   "flag": "fatal",
-  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).",
+  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-O-03": {
-  "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).",
   "en": "An Invoice that contains a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Not subject to VAT\" shall not contain the Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer VAT identifier (BT-48).",
   "flag": "fatal",
-  "hr": "Račun s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).",
+  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-O-04": {
-  "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).",
   "en": "An Invoice that contains a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Not subject to VAT\" shall not contain the Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer VAT identifier (BT-48).",
   "flag": "fatal",
-  "hr": "Račun s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).",
+  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-O-05": {
   "bs": "U stavci (BG-25) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-152) mora biti veća od nule.",

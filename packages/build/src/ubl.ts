@@ -1,6 +1,6 @@
 import { XmlWriter } from "./xml.js";
 import { computeTotals, computeVatBreakdown } from "./totals.js";
-import { formatAmount, parseAmount } from "./money.js";
+import { formatAmount, normalizeDecimal, parseAmount } from "./money.js";
 import { lineNetAmount } from "./totals.js";
 import type {
   Address,
@@ -22,6 +22,18 @@ const NS = {
 const DEFAULT_CUSTOMIZATION = "urn:cen.eu:en16931:2017";
 const DEFAULT_PROFILE = "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0";
 
+/**
+ * Broj u obliku koji XML smije nositi.
+ *
+ * Ulaz smije koristiti zarez (parseAmount ga tolerira), ali serijalizacija ga
+ * ne smije proslijediti - Saxon na "10,50" baca XError i ruši proces umjesto da
+ * vrati nalaz. Vrijednosti su se ranije pisale doslovno, pa se ono što je
+ * ulazno prihvaćeno razilazilo s onim što je izračunato.
+ */
+function num(value: string | undefined): string | undefined {
+  return value === undefined || value === "" ? undefined : normalizeDecimal(value);
+}
+
 function writeAddress(w: XmlWriter, a: Address): void {
   w.block("cac:PostalAddress", () => {
     w.leaf("cbc:StreetName", a.street);
@@ -42,8 +54,14 @@ function writeContact(w: XmlWriter, tag: string, c: Contact): void {
   });
 }
 
-function writeParty(w: XmlWriter, wrapper: string, p: Party): void {
+function writeParty(
+  w: XmlWriter,
+  wrapper: string,
+  p: Party,
+  sellerContactOutsideParty = false,
+): void {
   const isSupplier = wrapper === "cac:AccountingSupplierParty";
+  const asSellerContact = isSupplier && sellerContactOutsideParty;
   w.block(wrapper, () => {
     w.block("cac:Party", () => {
       if (p.electronicAddress) {
@@ -74,11 +92,14 @@ function writeParty(w: XmlWriter, wrapper: string, p: Party): void {
         w.leaf("cbc:RegistrationName", p.name);
         w.leaf("cbc:CompanyID", p.legalId, { schemeID: p.legalIdScheme });
       });
-      // Kupčev kontakt ide unutar Party; prodavčev ide kao cac:SellerContact
-      // izvan Party - tako to traži UBL i tako ga HR schematron traži.
-      if (!isSupplier && p.contact) writeContact(w, "cac:Contact", p.contact);
+      // BG-6 se po EN 16931 mapira na cac:Party/cac:Contact. Hrvatski CIUS
+      // umjesto toga traži cac:SellerContact izvan Party (HR-BR-37, HR-BR-9),
+      // što CEN-ovo UBL-CR-200 prijavljuje. Zato se ta lokacija koristi samo
+      // kad dokument stvarno ide po hrvatskoj specifikaciji - inače bi svaki
+      // običan EN 16931 račun s kontaktom nosio nepotrebno upozorenje.
+      if (p.contact && !asSellerContact) writeContact(w, "cac:Contact", p.contact);
     });
-    if (isSupplier && p.contact) writeContact(w, "cac:SellerContact", p.contact);
+    if (p.contact && asSellerContact) writeContact(w, "cac:SellerContact", p.contact);
   });
 }
 
@@ -92,11 +113,12 @@ function writeDocumentCharge(
     w.leaf("cbc:ChargeIndicator", isCharge ? "true" : "false");
     w.leaf(isCharge ? "cbc:AllowanceChargeReasonCode" : "cbc:AllowanceChargeReasonCode", c.reasonCode);
     w.leaf("cbc:AllowanceChargeReason", c.reason);
-    w.leaf("cbc:Amount", c.amount, { currencyID: currency });
-    w.leaf("cbc:BaseAmount", c.baseAmount, { currencyID: currency });
+    w.leaf("cbc:Amount", num(c.amount), { currencyID: currency });
+    w.leaf("cbc:BaseAmount", num(c.baseAmount), { currencyID: currency });
     w.block("cac:TaxCategory", () => {
       w.leaf("cbc:ID", c.vatCategory);
-      w.leaf("cbc:Percent", c.vatRate);
+      // Kategorija "O" ne smije nositi stopu (BR-O-05/06/07)
+      if (c.vatCategory !== "O") w.leaf("cbc:Percent", num(c.vatRate));
       w.block("cac:TaxScheme", () => w.leaf("cbc:ID", "VAT"));
     });
   });
@@ -112,11 +134,11 @@ function writeVatBreakdown(
     w.leaf("cbc:TaxAmount", formatAmount(total), { currencyID: currency });
     for (const e of entries) {
       w.block("cac:TaxSubtotal", () => {
-        w.leaf("cbc:TaxableAmount", e.taxableAmount, { currencyID: currency });
-        w.leaf("cbc:TaxAmount", e.taxAmount, { currencyID: currency });
+        w.leaf("cbc:TaxableAmount", num(e.taxableAmount), { currencyID: currency });
+        w.leaf("cbc:TaxAmount", num(e.taxAmount), { currencyID: currency });
         w.block("cac:TaxCategory", () => {
           w.leaf("cbc:ID", e.category);
-          w.leaf("cbc:Percent", e.rate);
+          if (e.category !== "O") w.leaf("cbc:Percent", num(e.rate));
           w.leaf("cbc:TaxExemptionReasonCode", e.exemptionReasonCode);
           w.leaf("cbc:TaxExemptionReason", e.exemptionReason);
           w.block("cac:TaxScheme", () => w.leaf("cbc:ID", "VAT"));
@@ -135,7 +157,7 @@ function writeLine(
 ): void {
   w.block(isCreditNote ? "cac:CreditNoteLine" : "cac:InvoiceLine", () => {
     w.leaf("cbc:ID", line.id ?? String(index + 1));
-    w.leaf(isCreditNote ? "cbc:CreditedQuantity" : "cbc:InvoicedQuantity", line.quantity, {
+    w.leaf(isCreditNote ? "cbc:CreditedQuantity" : "cbc:InvoicedQuantity", num(line.quantity), {
       unitCode: line.unitCode ?? "H87",
     });
     w.leaf("cbc:LineExtensionAmount", formatAmount(lineNetAmount(line)), {
@@ -146,7 +168,7 @@ function writeLine(
         w.leaf("cbc:ChargeIndicator", "false");
         w.leaf("cbc:AllowanceChargeReasonCode", a.reasonCode);
         w.leaf("cbc:AllowanceChargeReason", a.reason);
-        w.leaf("cbc:Amount", a.amount, { currencyID: currency });
+        w.leaf("cbc:Amount", num(a.amount), { currencyID: currency });
       });
     }
     for (const c of line.charges ?? []) {
@@ -154,7 +176,7 @@ function writeLine(
         w.leaf("cbc:ChargeIndicator", "true");
         w.leaf("cbc:AllowanceChargeReasonCode", c.reasonCode);
         w.leaf("cbc:AllowanceChargeReason", c.reason);
-        w.leaf("cbc:Amount", c.amount, { currencyID: currency });
+        w.leaf("cbc:Amount", num(c.amount), { currencyID: currency });
       });
     }
     w.block("cac:Item", () => {
@@ -169,12 +191,12 @@ function writeLine(
       }
       w.block("cac:ClassifiedTaxCategory", () => {
         w.leaf("cbc:ID", line.vatCategory);
-        w.leaf("cbc:Percent", line.vatRate);
+        if (line.vatCategory !== "O") w.leaf("cbc:Percent", num(line.vatRate));
         w.block("cac:TaxScheme", () => w.leaf("cbc:ID", "VAT"));
       });
     });
     w.block("cac:Price", () =>
-      w.leaf("cbc:PriceAmount", line.unitPrice, { currencyID: currency }),
+      w.leaf("cbc:PriceAmount", num(line.unitPrice), { currencyID: currency }),
     );
   });
 }
@@ -207,7 +229,9 @@ export function buildUbl(invoice: Invoice): string {
   w.leaf("cbc:IssueDate", invoice.issueDate);
   // HR-BT-2: hrvatski eRačun traži vrijeme izdavanja (HR-BR-2)
   w.leaf("cbc:IssueTime", invoice.issueTime);
-  w.leaf("cbc:DueDate", invoice.dueDate);
+  // UBL 2.1 CreditNote nema cbc:DueDate - tamo BT-9 ide kao
+  // cac:PaymentMeans/cbc:PaymentDueDate, inače je izlaz XSD-nevalidan.
+  if (!isCreditNote) w.leaf("cbc:DueDate", invoice.dueDate);
   w.leaf(isCreditNote ? "cbc:CreditNoteTypeCode" : "cbc:InvoiceTypeCode", invoice.typeCode ?? "380");
   for (const note of invoice.notes ?? []) w.leaf("cbc:Note", note);
   w.leaf("cbc:DocumentCurrencyCode", currency);
@@ -217,7 +241,9 @@ export function buildUbl(invoice: Invoice): string {
     w.block("cac:OrderReference", () => w.leaf("cbc:ID", invoice.orderReference));
   }
 
-  writeParty(w, "cac:AccountingSupplierParty", invoice.seller);
+  // Hrvatski CIUS mijenja mjesto kontakta prodavatelja
+  const isHrProfile = (invoice.customizationId ?? "").includes("mfin.gov.hr");
+  writeParty(w, "cac:AccountingSupplierParty", invoice.seller, isHrProfile);
   writeParty(w, "cac:AccountingCustomerParty", invoice.buyer);
 
   if (invoice.deliveryDate) {
@@ -228,6 +254,7 @@ export function buildUbl(invoice: Invoice): string {
     const pm = invoice.paymentMeans;
     w.block("cac:PaymentMeans", () => {
       w.leaf("cbc:PaymentMeansCode", pm.code, { name: pm.description });
+      if (isCreditNote) w.leaf("cbc:PaymentDueDate", invoice.dueDate);
       w.leaf("cbc:PaymentID", invoice.paymentReference);
       if (pm.accountId) {
         w.block("cac:PayeeFinancialAccount", () => {
@@ -247,14 +274,14 @@ export function buildUbl(invoice: Invoice): string {
   writeVatBreakdown(w, breakdown, currency);
 
   w.block("cac:LegalMonetaryTotal", () => {
-    w.leaf("cbc:LineExtensionAmount", totals.lineNetTotal, { currencyID: currency });
-    w.leaf("cbc:TaxExclusiveAmount", totals.netTotal, { currencyID: currency });
-    w.leaf("cbc:TaxInclusiveAmount", totals.grossTotal, { currencyID: currency });
-    w.leaf("cbc:AllowanceTotalAmount", totals.allowanceTotal, { currencyID: currency });
-    w.leaf("cbc:ChargeTotalAmount", totals.chargeTotal, { currencyID: currency });
-    w.leaf("cbc:PrepaidAmount", totals.paidAmount, { currencyID: currency });
-    w.leaf("cbc:PayableRoundingAmount", totals.roundingAmount, { currencyID: currency });
-    w.leaf("cbc:PayableAmount", totals.payableAmount, { currencyID: currency });
+    w.leaf("cbc:LineExtensionAmount", num(totals.lineNetTotal), { currencyID: currency });
+    w.leaf("cbc:TaxExclusiveAmount", num(totals.netTotal), { currencyID: currency });
+    w.leaf("cbc:TaxInclusiveAmount", num(totals.grossTotal), { currencyID: currency });
+    w.leaf("cbc:AllowanceTotalAmount", num(totals.allowanceTotal), { currencyID: currency });
+    w.leaf("cbc:ChargeTotalAmount", num(totals.chargeTotal), { currencyID: currency });
+    w.leaf("cbc:PrepaidAmount", num(totals.paidAmount), { currencyID: currency });
+    w.leaf("cbc:PayableRoundingAmount", num(totals.roundingAmount), { currencyID: currency });
+    w.leaf("cbc:PayableAmount", num(totals.payableAmount), { currencyID: currency });
   });
 
   invoice.lines.forEach((line, i) => writeLine(w, line, i, currency, isCreditNote));

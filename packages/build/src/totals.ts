@@ -11,8 +11,8 @@ export function lineNetAmount(line: InvoiceLine): bigint {
 }
 
 /** Ključ grupisanja u rekapitulaciji PDV-a: kategorija + stopa (BG-23). */
-function vatKey(category: string, rate: string): string {
-  return `${category}|${formatAmount(parseAmount(rate))}`;
+function vatKey(category: string, rate: string | undefined): string {
+  return `${category}|${rate === undefined ? "" : formatAmount(parseAmount(rate))}`;
 }
 
 /**
@@ -25,23 +25,45 @@ function vatKey(category: string, rate: string): string {
  *  - BR-AE-09 / BR-G-09 / BR-IC-09 / BR-O-09: iznos PDV-a je 0 za te kategorije
  */
 export function computeVatBreakdown(invoice: Invoice): VatBreakdownEntry[] {
-  const buckets = new Map<string, { category: string; rate: string; taxable: bigint }>();
+  interface Bucket {
+    category: string;
+    rate?: string;
+    taxable: bigint;
+    reason?: string;
+    reasonCode?: string;
+  }
+  const buckets = new Map<string, Bucket>();
 
-  const add = (category: string, rate: string, amount: bigint): void => {
+  const add = (
+    category: string,
+    rate: string | undefined,
+    amount: bigint,
+    reason?: string,
+    reasonCode?: string,
+  ): void => {
     const key = vatKey(category, rate);
     const hit = buckets.get(key);
-    if (hit) hit.taxable += amount;
-    else buckets.set(key, { category, rate, taxable: amount });
+    if (hit) {
+      hit.taxable += amount;
+      // prvi naveden razlog vrijedi za cijelu grupu
+      hit.reason ??= reason;
+      hit.reasonCode ??= reasonCode;
+    } else {
+      buckets.set(key, { category, rate, taxable: amount, reason, reasonCode });
+    }
   };
 
   for (const line of invoice.lines) {
-    add(line.vatCategory, line.vatRate, lineNetAmount(line));
+    add(line.vatCategory, line.vatRate, lineNetAmount(line),
+        line.vatExemptionReason, line.vatExemptionReasonCode);
   }
   for (const a of invoice.allowances ?? []) {
-    add(a.vatCategory, a.vatRate, -parseAmount(a.amount));
+    add(a.vatCategory, a.vatRate, -parseAmount(a.amount),
+        a.vatExemptionReason, a.vatExemptionReasonCode);
   }
   for (const c of invoice.charges ?? []) {
-    add(c.vatCategory, c.vatRate, parseAmount(c.amount));
+    add(c.vatCategory, c.vatRate, parseAmount(c.amount),
+        c.vatExemptionReason, c.vatExemptionReasonCode);
   }
 
   /** Kategorije kod kojih je iznos PDV-a nula bez obzira na stopu. */
@@ -49,10 +71,14 @@ export function computeVatBreakdown(invoice: Invoice): VatBreakdownEntry[] {
 
   return [...buckets.values()].map((b) => ({
     category: b.category as VatBreakdownEntry["category"],
-    rate: formatAmount(parseAmount(b.rate)),
+    rate: b.rate === undefined ? undefined : formatAmount(parseAmount(b.rate)),
     taxableAmount: formatAmount(b.taxable),
-    taxAmount: formatAmount(ZERO_TAX.has(b.category) ? 0n : applyRate(b.taxable, b.rate)),
-  }));
+    taxAmount: formatAmount(
+      ZERO_TAX.has(b.category) || b.rate === undefined ? 0n : applyRate(b.taxable, b.rate),
+    ),
+    exemptionReason: b.reason,
+    exemptionReasonCode: b.reasonCode,
+  })) as VatBreakdownEntry[];
 }
 
 /**
@@ -74,10 +100,16 @@ export function computeTotals(invoice: Invoice, breakdown: VatBreakdownEntry[]):
   const paid = invoice.totals?.paidAmount ? parseAmount(invoice.totals.paidAmount) : 0n;
   const rounding = invoice.totals?.roundingAmount ? parseAmount(invoice.totals.roundingAmount) : 0n;
 
+  // BT-107/BT-108 se navode kad god postoje elementi popusta/troška, i onda kad
+  // se međusobno ponište u nulu: BR-CO-11 i BR-CO-12 uspoređuju zbroj s
+  // elementima, pa izostavljeno polje uz prisutne elemente ruši dokument.
+  const hasAllowances = (invoice.allowances ?? []).length > 0;
+  const hasCharges = (invoice.charges ?? []).length > 0;
+
   return {
     lineNetTotal: formatAmount(lineNet),
-    allowanceTotal: allowances !== 0n ? formatAmount(allowances) : undefined,
-    chargeTotal: charges !== 0n ? formatAmount(charges) : undefined,
+    allowanceTotal: hasAllowances ? formatAmount(allowances) : undefined,
+    chargeTotal: hasCharges ? formatAmount(charges) : undefined,
     netTotal: formatAmount(net),
     vatTotal: formatAmount(vat),
     grossTotal: formatAmount(gross),
