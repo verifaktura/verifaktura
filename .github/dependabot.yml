@@ -1,9 +1,22 @@
 version: 2
 updates:
+  # Jedan grupisani PR mjesečno umjesto 2-3 sedmično. Svaki PR pokreće CI,
+  # a CI klonovi su do sada bili većina "prometa" na repou.
   - package-ecosystem: npm
     directory: /
-    schedule: { interval: weekly }
-    open-pull-requests-limit: 5
+    schedule: { interval: monthly }
+    open-pull-requests-limit: 3
+    groups:
+      minor-patch:
+        update-types: [minor, patch]
+    ignore:
+      # @types/node prati najstariji podržani Node (engines), ne najnoviji.
+      # Major skok bi dozvolio API-je kojih nema na runtime-u korisnika.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: monthly }
+    groups:
+      actions:
+        patterns: ["*"]
