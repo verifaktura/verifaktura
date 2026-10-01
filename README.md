@@ -52,8 +52,9 @@ verifaktura does not copy rules. It pulls the official artefacts (CEN/TC 434,
 Croatian Tax Administration) at build time, and CI warns when a new release
 appears.
 
-Schematron runs through Saxon-JS as a precompiled SEF — no JVM, ~250 ms per
-document.
+Schematron runs through Saxon-JS as a precompiled SEF — no JVM. The first
+document in a process takes about 1.3 s while the rules load; each one after
+about 200–270 ms (measured on a small UBL invoice; larger invoices take longer).
 
 ## Status
 

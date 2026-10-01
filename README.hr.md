@@ -31,8 +31,9 @@ verifaktura ne prepisuje pravila. Preuzima službene artefakte s
 [porezna.gov.hr](https://porezna.gov.hr/fiskalizacija/bezgotovinski-racuni/eracun)
 i CEN/TC 434 pri buildu, a CI javlja kad izađe nova verzija.
 
-Schematron se izvršava kroz Saxon-JS kao prekompilirani SEF — bez JVM-a,
-~250 ms po dokumentu.
+Schematron se izvršava kroz Saxon-JS kao prekompilirani SEF — bez JVM-a. Prvi
+dokument u procesu traje oko 1,3 s dok se pravila učitavaju, a svaki sljedeći
+oko 200–270 ms (mjereno na malom UBL računu; veći računi traju duže).
 
 ## Hrvatski profil
 

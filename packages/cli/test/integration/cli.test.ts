@@ -30,7 +30,14 @@ describe("CLI", () => {
   it("validan dokument daje izlazni kod 0", async () => {
     const r = await cli(join(FIX, "invoice-valid.xml"));
     expect(r.code).toBe(0);
-    expect(r.out).toContain("VALIDNO");
+    expect(r.out).toContain("VALID - 0 errors");
+  });
+
+  it("--lang bs daje bosanski okvir i ispravnu množinu", async () => {
+    const r = await cli(join(FIX, "invoice-missing-id-date.xml"), "--lang", "bs");
+    expect(r.code).toBe(1);
+    expect(r.out).toContain("NEVALIDNO - 2 greške, 0 upozorenja");
+    expect(r.out).toContain("Izdavalac:");
   });
 
   it("nevalidan dokument daje izlazni kod 1", async () => {
@@ -54,7 +61,7 @@ describe("CLI", () => {
 
   it("sažetak navodi koji su profili izvršeni", async () => {
     const r = await cli(join(FIX, "invoice-valid.xml"));
-    expect(r.out).toMatch(/profili: en16931/);
+    expect(r.out).toMatch(/profiles: en16931/);
   });
 
   /** Regresija: `--lang racun.xml` je progutao datoteku kao vrijednost jezika. */

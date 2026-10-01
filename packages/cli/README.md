@@ -14,15 +14,24 @@ npx verifaktura eracun.xml --lang hr
 ```
 
 ```
-Faktura 12115118 - UBL
+Račun (bez broja) - UBL
   Izdavatelj: De Koksmaat
   Za plaćanje: 250.33 EUR
 
 GREŠKA  BR-02        Račun mora sadržavati broj računa (BT-1).
-                     termovi: BT-1
+                     pojmovi: BT-1
+GREŠKA  BR-03        Račun mora sadržavati datum izdavanja (BT-2).
+                     pojmovi: BT-2
 
-NEVALIDNO - 1 grešaka, 0 upozorenja (profili: en16931; 211 pravila, 272 ms)
+NEVALIDNO - 2 greške, 0 upozorenja (profili: en16931; 211 pravila, 1262 ms)
 ```
+
+The report frame follows `--lang` too, with correct plural forms
+(`1 greška`, `2 greške`, `5 grešaka`). Without `--lang` the output is English.
+
+Each call starts a new process and loads the rules, so expect about 1.3 s per
+call. To validate many files, use the library from one process — after the
+first document each one takes about 200–270 ms.
 
 ## Options
 

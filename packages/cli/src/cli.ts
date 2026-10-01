@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { LANGS, validateFile } from "verifaktura";
-import type { Lang, ValidationReport } from "verifaktura";
+import type { Lang } from "verifaktura";
+import { renderText } from "./text.js";
 
 const USAGE = `verifaktura - validacija e-faktura (EN 16931)
 
@@ -89,31 +90,6 @@ function writeOut(text: string): Promise<void> {
   });
 }
 
-function renderText(r: ValidationReport): string {
-  const lines: string[] = [];
-  const d = r.document;
-  lines.push(`${d.type === "creditNote" ? "Odobrenje" : "Faktura"} ${d.id ?? "(bez broja)"} - ${d.syntax.toUpperCase()}`);
-  if (d.supplier?.name) lines.push(`  Izdavatelj: ${d.supplier.name}`);
-  if (d.payableAmount) lines.push(`  Za plaćanje: ${d.payableAmount} ${d.currency ?? ""}`);
-  lines.push("");
-  if (r.issues.length === 0) {
-    lines.push("Nema nalaza.");
-  } else {
-    for (const i of r.issues) {
-      const tag = i.severity === "fatal" ? "GREŠKA " : i.severity === "warning" ? "UPOZOR." : "INFO   ";
-      lines.push(`${tag} ${i.ruleId.padEnd(12)} ${i.message}`);
-      if (i.businessTerms.length) lines.push(`${" ".repeat(9)}${" ".repeat(12)} termovi: ${i.businessTerms.join(", ")}`);
-    }
-  }
-  lines.push("");
-  lines.push(
-    `${r.valid ? "VALIDNO" : "NEVALIDNO"} - ${r.summary.fatal} grešaka, ${r.summary.warning} upozorenja ` +
-      `(profili: ${r.profiles.map((p) => p.id).join(", ")}; ` +
-      `${r.summary.rulesFired} pravila, ${r.summary.durationMs} ms)`,
-  );
-  return lines.join("\n");
-}
-
 async function main() {
   if (process.argv.includes("-h") || process.argv.includes("--help")) {
     await writeOut(USAGE);
@@ -142,7 +118,7 @@ async function main() {
   const report = await validateFile(file, { lang: lang as Lang });
   if (!process.argv.includes("--quiet")) {
     await writeOut(
-      format === "json" ? JSON.stringify(report, null, 2) : renderText(report),
+      format === "json" ? JSON.stringify(report, null, 2) : renderText(report, lang as Lang),
     );
   }
   process.exit(report.valid ? 0 : 1);

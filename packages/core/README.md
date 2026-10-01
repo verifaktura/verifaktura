@@ -104,8 +104,9 @@ computed automatically, using integer arithmetic.
 ## No JVM
 
 Schematron runs through Saxon-JS as a precompiled SEF — no Java, plain Node.
-Roughly 250 ms for the first document (loading the stylesheet) and ~25 ms for
-each one after, since compiled stylesheets are cached in process.
+About 1.3 s for the first document in a process (loading the stylesheet) and
+about 200–270 ms for each one after, since compiled stylesheets are cached in
+process. Measured on a small UBL invoice; larger invoices take longer.
 
 ## Licence
 
