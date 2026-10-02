@@ -357,37 +357,37 @@
   "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"prijenos porezne obaveze\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
   "en": "An Invoice that contains an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Reverse charge\" shall contain the Seller VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) and/or the Buyer legal registration identifier (BT-47).",
   "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"prijenos porezne obveze\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
-  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47)."
+  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili matični broj kupca (BT-47)."
  },
  "BR-AE-03": {
   "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"prijenos porezne obaveze\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
   "en": "An Invoice that contains a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Reverse charge\" shall contain the Seller VAT Identifier (BT-31), the Seller tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) and/or the Buyer legal registration identifier (BT-47).",
   "hr": "Račun s popustom (BG-20) u PDV kategoriji \"prijenos porezne obveze\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
-  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47)."
+  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili matični broj kupca (BT-47)."
  },
  "BR-AE-04": {
   "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"prijenos porezne obaveze\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
   "en": "An Invoice that contains a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Reverse charge\" shall contain the Seller VAT Identifier (BT-31), the Seller tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) and/or the Buyer legal registration identifier (BT-47).",
   "hr": "Račun s troškom (BG-21) u PDV kategoriji \"prijenos porezne obveze\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
-  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47)."
+  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili matični broj kupca (BT-47)."
  },
  "BR-AE-05": {
-  "bs": "U stavci (BG-25) s PDV kategorijom \"prijenos porezne obaveze\" stopa PDV-a (BT-152) mora biti veća od nule.",
+  "bs": "U stavci (BG-25) s PDV kategorijom \"prijenos porezne obaveze\" stopa PDV-a (BT-152) mora biti 0.",
   "en": "In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Reverse charge\" the Invoiced item VAT rate (BT-152) shall be 0 (zero).",
-  "hr": "U stavci (BG-25) s PDV kategorijom \"prijenos porezne obveze\" stopa PDV-a (BT-152) mora biti veća od nule.",
-  "sr": "U stavci (BG-25) s PDV kategorijom \"prenos poreske obaveze\" stopa PDV-a (BT-152) mora da bude veća od nule."
+  "hr": "U stavci (BG-25) s PDV kategorijom \"prijenos porezne obveze\" stopa PDV-a (BT-152) mora biti 0.",
+  "sr": "U stavci (BG-25) s PDV kategorijom \"prenos poreske obaveze\" stopa PDV-a (BT-152) mora da bude 0."
  },
  "BR-AE-06": {
-  "bs": "U popustu (BG-20) s PDV kategorijom \"prijenos porezne obaveze\" stopa PDV-a (BT-96) mora biti veća od nule.",
+  "bs": "U popustu (BG-20) s PDV kategorijom \"prijenos porezne obaveze\" stopa PDV-a (BT-96) mora biti 0.",
   "en": "In a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Reverse charge\" the Document level allowance VAT rate (BT-96) shall be 0 (zero).",
-  "hr": "U popustu (BG-20) s PDV kategorijom \"prijenos porezne obveze\" stopa PDV-a (BT-96) mora biti veća od nule.",
-  "sr": "U popustu (BG-20) s PDV kategorijom \"prenos poreske obaveze\" stopa PDV-a (BT-96) mora da bude veća od nule."
+  "hr": "U popustu (BG-20) s PDV kategorijom \"prijenos porezne obveze\" stopa PDV-a (BT-96) mora biti 0.",
+  "sr": "U popustu (BG-20) s PDV kategorijom \"prenos poreske obaveze\" stopa PDV-a (BT-96) mora da bude 0."
  },
  "BR-AE-07": {
-  "bs": "U trošku (BG-21) s PDV kategorijom \"prijenos porezne obaveze\" stopa PDV-a (BT-103) mora biti veća od nule.",
+  "bs": "U trošku (BG-21) s PDV kategorijom \"prijenos porezne obaveze\" stopa PDV-a (BT-103) mora biti 0.",
   "en": "In a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Reverse charge\" the Document level charge VAT rate (BT-103) shall be 0 (zero).",
-  "hr": "U trošku (BG-21) s PDV kategorijom \"prijenos porezne obveze\" stopa PDV-a (BT-103) mora biti veća od nule.",
-  "sr": "U trošku (BG-21) s PDV kategorijom \"prenos poreske obaveze\" stopa PDV-a (BT-103) mora da bude veća od nule."
+  "hr": "U trošku (BG-21) s PDV kategorijom \"prijenos porezne obveze\" stopa PDV-a (BT-103) mora biti 0.",
+  "sr": "U trošku (BG-21) s PDV kategorijom \"prenos poreske obaveze\" stopa PDV-a (BT-103) mora da bude 0."
  },
  "BR-AE-08": {
   "bs": "Za kategoriju \"prijenos porezne obaveze\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
@@ -405,7 +405,7 @@
   "bs": "Rekapitulacija PDV-a (BG-23) s kategorijom \"prijenos porezne obaveze\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).",
   "en": "A VAT breakdown (BG-23) with VAT Category code (BT-118) \"Reverse charge\" shall have a VAT exemption reason code (BT-121), meaning \"Reverse charge\" or the VAT exemption reason text (BT-120) \"Reverse charge\" (or the equivalent standard text in another language).",
   "hr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"prijenos porezne obveze\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).",
-  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"prenos poreske obaveze\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
+  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"prenos poreske obaveze\" mora da ima šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
  },
  "BR-AF-01": {
   "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"IGIC (Kanarska ostrva)\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"IGIC (Kanarska ostrva)\".",
@@ -432,28 +432,28 @@
   "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"IGIC (Kanarska ostrva)\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-AF-05": {
-  "bs": "U stavci (BG-25) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-152) mora biti veća od nule.",
+  "bs": "U stavci (BG-25) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-152) mora biti 0 ili veća od nule.",
   "en": "In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"IGIC\" the invoiced item VAT rate (BT-152) shall be 0 (zero) or greater than zero.",
-  "hr": "U stavci (BG-25) s PDV kategorijom \"IGIC (Kanarski otoci)\" stopa PDV-a (BT-152) mora biti veća od nule.",
-  "sr": "U stavci (BG-25) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-152) mora da bude veća od nule."
+  "hr": "U stavci (BG-25) s PDV kategorijom \"IGIC (Kanarski otoci)\" stopa PDV-a (BT-152) mora biti 0 ili veća od nule.",
+  "sr": "U stavci (BG-25) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-152) mora da bude 0 ili veća od nule."
  },
  "BR-AF-06": {
-  "bs": "U popustu (BG-20) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-96) mora biti veća od nule.",
+  "bs": "U popustu (BG-20) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-96) mora biti 0 ili veća od nule.",
   "en": "In a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"IGIC\" the Document level allowance VAT rate (BT-96) shall be 0 (zero) or greater than zero.",
-  "hr": "U popustu (BG-20) s PDV kategorijom \"IGIC (Kanarski otoci)\" stopa PDV-a (BT-96) mora biti veća od nule.",
-  "sr": "U popustu (BG-20) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-96) mora da bude veća od nule."
+  "hr": "U popustu (BG-20) s PDV kategorijom \"IGIC (Kanarski otoci)\" stopa PDV-a (BT-96) mora biti 0 ili veća od nule.",
+  "sr": "U popustu (BG-20) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-96) mora da bude 0 ili veća od nule."
  },
  "BR-AF-07": {
-  "bs": "U trošku (BG-21) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-103) mora biti veća od nule.",
+  "bs": "U trošku (BG-21) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-103) mora biti 0 ili veća od nule.",
   "en": "In a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"IGIC\" the Document level charge VAT rate (BT-103) shall be 0 (zero) or greater than zero.",
-  "hr": "U trošku (BG-21) s PDV kategorijom \"IGIC (Kanarski otoci)\" stopa PDV-a (BT-103) mora biti veća od nule.",
-  "sr": "U trošku (BG-21) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-103) mora da bude veća od nule."
+  "hr": "U trošku (BG-21) s PDV kategorijom \"IGIC (Kanarski otoci)\" stopa PDV-a (BT-103) mora biti 0 ili veća od nule.",
+  "sr": "U trošku (BG-21) s PDV kategorijom \"IGIC (Kanarska ostrva)\" stopa PDV-a (BT-103) mora da bude 0 ili veća od nule."
  },
  "BR-AF-08": {
-  "bs": "Za kategoriju \"IGIC (Kanarska ostrva)\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
+  "bs": "Za svaku stopu PDV-a (BT-119) u kategoriji \"IGIC (Kanarska ostrva)\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom.",
   "en": "For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is \"IGIC\", the VAT category taxable amount (BT-116) in a VAT breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is \"IGIC\" and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).",
-  "hr": "Za kategoriju \"IGIC (Kanarski otoci)\" osnovica (BT-116) mora biti jednaka zbroju neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
-  "sr": "Za kategoriju \"IGIC (Kanarska ostrva)\" osnovica (BT-116) mora da bude jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije."
+  "hr": "Za svaku stopu PDV-a (BT-119) u kategoriji \"IGIC (Kanarski otoci)\" osnovica (BT-116) mora biti jednaka zbroju neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom.",
+  "sr": "Za svaku stopu PDV-a (BT-119) u kategoriji \"IGIC (Kanarska ostrva)\" osnovica (BT-116) mora da bude jednaka zbiru neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom."
  },
  "BR-AF-09": {
   "bs": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"IGIC (Kanarska ostrva)\" mora biti jednak osnovici (BT-116) pomnoženoj sa stopom (BT-119).",
@@ -492,28 +492,28 @@
   "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"IPSI (Seuta i Melilja)\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-AG-05": {
-  "bs": "U stavci (BG-25) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-152) mora biti veća od nule.",
+  "bs": "U stavci (BG-25) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-152) mora biti 0 ili veća od nule.",
   "en": "In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"IPSI\" the Invoiced item VAT rate (BT-152) shall be 0 (zero) or greater than zero.",
-  "hr": "U stavci (BG-25) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-152) mora biti veća od nule.",
-  "sr": "U stavci (BG-25) s PDV kategorijom \"IPSI (Seuta i Melilja)\" stopa PDV-a (BT-152) mora da bude veća od nule."
+  "hr": "U stavci (BG-25) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-152) mora biti 0 ili veća od nule.",
+  "sr": "U stavci (BG-25) s PDV kategorijom \"IPSI (Seuta i Melilja)\" stopa PDV-a (BT-152) mora da bude 0 ili veća od nule."
  },
  "BR-AG-06": {
-  "bs": "U popustu (BG-20) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-96) mora biti veća od nule.",
+  "bs": "U popustu (BG-20) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-96) mora biti 0 ili veća od nule.",
   "en": "In a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"IPSI\" the Document level allowance VAT rate (BT-96) shall be 0 (zero) or greater than zero.",
-  "hr": "U popustu (BG-20) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-96) mora biti veća od nule.",
-  "sr": "U popustu (BG-20) s PDV kategorijom \"IPSI (Seuta i Melilja)\" stopa PDV-a (BT-96) mora da bude veća od nule."
+  "hr": "U popustu (BG-20) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-96) mora biti 0 ili veća od nule.",
+  "sr": "U popustu (BG-20) s PDV kategorijom \"IPSI (Seuta i Melilja)\" stopa PDV-a (BT-96) mora da bude 0 ili veća od nule."
  },
  "BR-AG-07": {
-  "bs": "U trošku (BG-21) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-103) mora biti veća od nule.",
+  "bs": "U trošku (BG-21) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-103) mora biti 0 ili veća od nule.",
   "en": "In a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"IPSI\" the Document level charge VAT rate (BT-103) shall be 0 (zero) or greater than zero.",
-  "hr": "U trošku (BG-21) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-103) mora biti veća od nule.",
-  "sr": "U trošku (BG-21) s PDV kategorijom \"IPSI (Seuta i Melilja)\" stopa PDV-a (BT-103) mora da bude veća od nule."
+  "hr": "U trošku (BG-21) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" stopa PDV-a (BT-103) mora biti 0 ili veća od nule.",
+  "sr": "U trošku (BG-21) s PDV kategorijom \"IPSI (Seuta i Melilja)\" stopa PDV-a (BT-103) mora da bude 0 ili veća od nule."
  },
  "BR-AG-08": {
-  "bs": "Za kategoriju \"IPSI (Ceuta i Melilla)\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
+  "bs": "Za svaku stopu PDV-a (BT-119) u kategoriji \"IPSI (Ceuta i Melilla)\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom.",
   "en": "For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is \"IPSI\", the VAT category taxable amount (BT-116) in a VAT breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is \"IPSI\" and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).",
-  "hr": "Za kategoriju \"IPSI (Ceuta i Melilla)\" osnovica (BT-116) mora biti jednaka zbroju neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
-  "sr": "Za kategoriju \"IPSI (Seuta i Melilja)\" osnovica (BT-116) mora da bude jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije."
+  "hr": "Za svaku stopu PDV-a (BT-119) u kategoriji \"IPSI (Ceuta i Melilla)\" osnovica (BT-116) mora biti jednaka zbroju neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom.",
+  "sr": "Za svaku stopu PDV-a (BT-119) u kategoriji \"IPSI (Seuta i Melilja)\" osnovica (BT-116) mora da bude jednaka zbiru neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom."
  },
  "BR-AG-09": {
   "bs": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"IPSI (Ceuta i Melilla)\" mora biti jednak osnovici (BT-116) pomnoženoj sa stopom (BT-119).",
@@ -534,10 +534,10 @@
   "sr": "Faktura sa PDV kategorijom (BT-151, BT-95 ili BT-102) \"podeljeno plaćanje\" mora da bude domaća italijanska faktura."
  },
  "BR-B-02": {
-  "bs": "Faktura sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podijeljeno plaćanje\" ne smije imati stavku, popust ni trošak u kategoriji \"standardna stopa\".",
+  "bs": "Faktura sa stavkom (BG-25), popustom (BG-20), troškom (BG-21) ili rekapitulacijom PDV-a (BG-23) u kategoriji \"podijeljeno plaćanje\" ne smije imati ništa od toga u kategoriji \"standardna stopa\".",
   "en": "An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95, BT-118 or BT-102) is “Split payment\" shall not contain an invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95, BT-118 or BT-102) is “Standard rated”.",
-  "hr": "Račun sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podijeljeno plaćanje\" ne smije imati stavku, popust ni trošak u kategoriji \"standardna stopa\".",
-  "sr": "Faktura sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podeljeno plaćanje\" ne sme da ima stavku, popust ni trošak u kategoriji \"standardna stopa\"."
+  "hr": "Račun sa stavkom (BG-25), popustom (BG-20), troškom (BG-21) ili rekapitulacijom PDV-a (BG-23) u kategoriji \"podijeljeno plaćanje\" ne smije imati ništa od toga u kategoriji \"standardna stopa\".",
+  "sr": "Faktura sa stavkom (BG-25), popustom (BG-20), troškom (BG-21) ili rekapitulacijom PDV-a (BG-23) u kategoriji \"podeljeno plaćanje\" ne sme da ima ništa od toga u kategoriji \"standardna stopa\"."
  },
  "BR-CL-01": {
   "bs": "Šifra vrste dokumenta mora biti iz UNTDID 1001 liste za fakture i odobrenja.",
@@ -966,22 +966,22 @@
   "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"oslobođeno PDV-a\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-E-05": {
-  "bs": "U stavci (BG-25) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-152) mora biti veća od nule.",
+  "bs": "U stavci (BG-25) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-152) mora biti 0.",
   "en": "In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Exempt from VAT\", the Invoiced item VAT rate (BT-152) shall be 0 (zero).",
-  "hr": "U stavci (BG-25) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-152) mora biti veća od nule.",
-  "sr": "U stavci (BG-25) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-152) mora da bude veća od nule."
+  "hr": "U stavci (BG-25) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-152) mora biti 0.",
+  "sr": "U stavci (BG-25) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-152) mora da bude 0."
  },
  "BR-E-06": {
-  "bs": "U popustu (BG-20) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-96) mora biti veća od nule.",
+  "bs": "U popustu (BG-20) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-96) mora biti 0.",
   "en": "In a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Exempt from VAT\", the Document level allowance VAT rate (BT-96) shall be 0 (zero).",
-  "hr": "U popustu (BG-20) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-96) mora biti veća od nule.",
-  "sr": "U popustu (BG-20) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-96) mora da bude veća od nule."
+  "hr": "U popustu (BG-20) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-96) mora biti 0.",
+  "sr": "U popustu (BG-20) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-96) mora da bude 0."
  },
  "BR-E-07": {
-  "bs": "U trošku (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-103) mora biti veća od nule.",
+  "bs": "U trošku (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-103) mora biti 0.",
   "en": "In a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Exempt from VAT\", the Document level charge VAT rate (BT-103) shall be 0 (zero).",
-  "hr": "U trošku (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-103) mora biti veća od nule.",
-  "sr": "U trošku (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-103) mora da bude veća od nule."
+  "hr": "U trošku (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-103) mora biti 0.",
+  "sr": "U trošku (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" stopa PDV-a (BT-103) mora da bude 0."
  },
  "BR-E-08": {
   "bs": "Za kategoriju \"oslobođeno PDV-a\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
@@ -990,16 +990,16 @@
   "sr": "Za kategoriju \"oslobođeno PDV-a\" osnovica (BT-116) mora da bude jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije."
  },
  "BR-E-09": {
-  "bs": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"oslobođeno PDV-a\" mora odgovarati osnovici (BT-116) te kategorije.",
+  "bs": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"oslobođeno PDV-a\" mora biti 0.",
   "en": "The VAT category tax amount (BT-117) In a VAT breakdown (BG-23) where the VAT category code (BT-118) equals \"Exempt from VAT\" shall equal 0 (zero).",
-  "hr": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"oslobođeno PDV-a\" mora odgovarati osnovici (BT-116) te kategorije.",
-  "sr": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"oslobođeno PDV-a\" mora odgovarati osnovici (BT-116) te kategorije."
+  "hr": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"oslobođeno PDV-a\" mora biti 0.",
+  "sr": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"oslobođeno PDV-a\" mora da bude 0."
  },
  "BR-E-10": {
   "bs": "Rekapitulacija PDV-a (BG-23) s kategorijom \"oslobođeno PDV-a\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).",
   "en": "A VAT breakdown (BG-23) with VAT Category code (BT-118) \"Exempt from VAT\" shall have a VAT exemption reason code (BT-121) or a VAT exemption reason text (BT-120).",
   "hr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"oslobođeno PDV-a\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).",
-  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"oslobođeno PDV-a\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
+  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"oslobođeno PDV-a\" mora da ima šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
  },
  "BR-G-01": {
   "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"izvoz izvan EU\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"izvoz izvan EU\".",
@@ -1026,22 +1026,22 @@
   "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"izvoz izvan EU\" mora da sadrži PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-G-05": {
-  "bs": "U stavci (BG-25) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-152) mora biti veća od nule.",
+  "bs": "U stavci (BG-25) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-152) mora biti 0.",
   "en": "In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Export outside the EU\" the Invoiced item VAT rate (BT-152) shall be 0 (zero).",
-  "hr": "U stavci (BG-25) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-152) mora biti veća od nule.",
-  "sr": "U stavci (BG-25) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-152) mora da bude veća od nule."
+  "hr": "U stavci (BG-25) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-152) mora biti 0.",
+  "sr": "U stavci (BG-25) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-152) mora da bude 0."
  },
  "BR-G-06": {
-  "bs": "U popustu (BG-20) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-96) mora biti veća od nule.",
+  "bs": "U popustu (BG-20) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-96) mora biti 0.",
   "en": "In a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Export outside the EU\" the Document level allowance VAT rate (BT-96) shall be 0 (zero).",
-  "hr": "U popustu (BG-20) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-96) mora biti veća od nule.",
-  "sr": "U popustu (BG-20) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-96) mora da bude veća od nule."
+  "hr": "U popustu (BG-20) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-96) mora biti 0.",
+  "sr": "U popustu (BG-20) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-96) mora da bude 0."
  },
  "BR-G-07": {
-  "bs": "U trošku (BG-21) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-103) mora biti veća od nule.",
+  "bs": "U trošku (BG-21) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-103) mora biti 0.",
   "en": "In a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Export outside the EU\" the Document level charge VAT rate (BT-103) shall be 0 (zero).",
-  "hr": "U trošku (BG-21) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-103) mora biti veća od nule.",
-  "sr": "U trošku (BG-21) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-103) mora da bude veća od nule."
+  "hr": "U trošku (BG-21) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-103) mora biti 0.",
+  "sr": "U trošku (BG-21) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-103) mora da bude 0."
  },
  "BR-G-08": {
   "bs": "Za kategoriju \"izvoz izvan EU\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
@@ -1059,7 +1059,7 @@
   "bs": "Rekapitulacija PDV-a (BG-23) s kategorijom \"izvoz izvan EU\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).",
   "en": "A VAT breakdown (BG-23) with the VAT Category code (BT-118) \"Export outside the EU\" shall have a VAT exemption reason code (BT-121), meaning \"Export outside the EU\" or the VAT exemption reason text (BT-120) \"Export outside the EU\" (or the equivalent standard text in another language).",
   "hr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"izvoz izvan EU\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).",
-  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"izvoz izvan EU\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
+  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"izvoz izvan EU\" mora da ima šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
  },
  "BR-IC-01": {
   "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"isporuka unutar EU\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"isporuka unutar EU\".",
@@ -1086,22 +1086,22 @@
   "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"isporuka unutar EU\" mora da sadrži PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48)."
  },
  "BR-IC-05": {
-  "bs": "U stavci (BG-25) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-152) mora biti veća od nule.",
+  "bs": "U stavci (BG-25) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-152) mora biti 0.",
   "en": "In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Intracommunity supply\" the Invoiced item VAT rate (BT-152) shall be 0 (zero).",
-  "hr": "U stavci (BG-25) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-152) mora biti veća od nule.",
-  "sr": "U stavci (BG-25) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-152) mora da bude veća od nule."
+  "hr": "U stavci (BG-25) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-152) mora biti 0.",
+  "sr": "U stavci (BG-25) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-152) mora da bude 0."
  },
  "BR-IC-06": {
-  "bs": "U popustu (BG-20) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-96) mora biti veća od nule.",
+  "bs": "U popustu (BG-20) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-96) mora biti 0.",
   "en": "In a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Intra-community supply\" the Document level allowance VAT rate (BT-96) shall be 0 (zero).",
-  "hr": "U popustu (BG-20) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-96) mora biti veća od nule.",
-  "sr": "U popustu (BG-20) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-96) mora da bude veća od nule."
+  "hr": "U popustu (BG-20) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-96) mora biti 0.",
+  "sr": "U popustu (BG-20) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-96) mora da bude 0."
  },
  "BR-IC-07": {
-  "bs": "U trošku (BG-21) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-103) mora biti veća od nule.",
+  "bs": "U trošku (BG-21) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-103) mora biti 0.",
   "en": "In a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Intra-community supply\" the Document level charge VAT rate (BT-103) shall be 0 (zero).",
-  "hr": "U trošku (BG-21) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-103) mora biti veća od nule.",
-  "sr": "U trošku (BG-21) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-103) mora da bude veća od nule."
+  "hr": "U trošku (BG-21) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-103) mora biti 0.",
+  "sr": "U trošku (BG-21) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-103) mora da bude 0."
  },
  "BR-IC-08": {
   "bs": "Za kategoriju \"isporuka unutar EU\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
@@ -1119,7 +1119,7 @@
   "bs": "Rekapitulacija PDV-a (BG-23) s kategorijom \"isporuka unutar EU\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).",
   "en": "A VAT breakdown (BG-23) with the VAT Category code (BT-118) \"Intra-community supply\" shall have a VAT exemption reason code (BT-121), meaning \"Intra-community supply\" or the VAT exemption reason text (BT-120) \"Intra-community supply\" (or the equivalent standard text in another language).",
   "hr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"isporuka unutar EU\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).",
-  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"isporuka unutar EU\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
+  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"isporuka unutar EU\" mora da ima šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
  },
  "BR-IC-11": {
   "bs": "Ako rekapitulacija PDV-a (BG-23) ima kategoriju „isporuka unutar EU“, mora biti popunjen stvarni datum isporuke (BT-72) ili period obračuna (BG-14).",
@@ -1158,22 +1158,22 @@
   "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SME da sadrži PDV broj prodavca (BT-31), PDV broj poreskog zastupnika (BT-63) ni PDV broj kupca (BT-48)."
  },
  "BR-O-05": {
-  "bs": "U stavci (BG-25) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-152) mora biti veća od nule.",
+  "bs": "Stavka (BG-25) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" ne smije imati stopu PDV-a (BT-152).",
   "en": "An Invoice line (BG-25) where the VAT category code (BT-151) is \"Not subject to VAT\" shall not contain an Invoiced item VAT rate (BT-152).",
-  "hr": "U stavci (BG-25) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-152) mora biti veća od nule.",
-  "sr": "U stavci (BG-25) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-152) mora da bude veća od nule."
+  "hr": "Stavka (BG-25) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" ne smije imati stopu PDV-a (BT-152).",
+  "sr": "Stavka (BG-25) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" ne sme da ima stopu PDV-a (BT-152)."
  },
  "BR-O-06": {
-  "bs": "U popustu (BG-20) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-96) mora biti veća od nule.",
+  "bs": "Popust (BG-20) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" ne smije imati stopu PDV-a (BT-96).",
   "en": "A Document level allowance (BG-20) where VAT category code (BT-95) is \"Not subject to VAT\" shall not contain a Document level allowance VAT rate (BT-96).",
-  "hr": "U popustu (BG-20) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-96) mora biti veća od nule.",
-  "sr": "U popustu (BG-20) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-96) mora da bude veća od nule."
+  "hr": "Popust (BG-20) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" ne smije imati stopu PDV-a (BT-96).",
+  "sr": "Popust (BG-20) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" ne sme da ima stopu PDV-a (BT-96)."
  },
  "BR-O-07": {
-  "bs": "U trošku (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-103) mora biti veća od nule.",
+  "bs": "Trošak (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" ne smije imati stopu PDV-a (BT-103).",
   "en": "A Document level charge (BG-21) where the VAT category code (BT-102) is \"Not subject to VAT\" shall not contain a Document level charge VAT rate (BT-103).",
-  "hr": "U trošku (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-103) mora biti veća od nule.",
-  "sr": "U trošku (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-103) mora da bude veća od nule."
+  "hr": "Trošak (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" ne smije imati stopu PDV-a (BT-103).",
+  "sr": "Trošak (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" ne sme da ima stopu PDV-a (BT-103)."
  },
  "BR-O-08": {
   "bs": "Za kategoriju \"nije predmet oporezivanja PDV-om\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
@@ -1191,7 +1191,7 @@
   "bs": "Rekapitulacija PDV-a (BG-23) s kategorijom \"nije predmet oporezivanja PDV-om\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).",
   "en": "A VAT breakdown (BG-23) with VAT Category code (BT-118) \" Not subject to VAT\" shall have a VAT exemption reason code (BT-121), meaning \" Not subject to VAT\" or a VAT exemption reason text (BT-120) \" Not subject to VAT\" (or the equivalent standard text in another language).",
   "hr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"nije predmet oporezivanja PDV-om\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).",
-  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"nije predmet oporezivanja PDV-om\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
+  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"nije predmet oporezivanja PDV-om\" mora da ima šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
  },
  "BR-O-11": {
   "bs": "Faktura s rekapitulacijom PDV-a (BG-23) u kategoriji „nije predmet oporezivanja PDV-om“ ne smije sadržavati druge rekapitulacije PDV-a.",
@@ -1260,10 +1260,10 @@
   "sr": "U trošku (BG-21) s PDV kategorijom \"standardna stopa\" stopa PDV-a (BT-103) mora da bude veća od nule."
  },
  "BR-S-08": {
-  "bs": "Za kategoriju \"standardna stopa\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
+  "bs": "Za svaku stopu PDV-a (BT-119) u kategoriji \"standardna stopa\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom.",
   "en": "For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is \"Standard rated\", the VAT category taxable amount (BT-116) in a VAT breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is \"Standard rated\" and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).",
-  "hr": "Za kategoriju \"standardna stopa\" osnovica (BT-116) mora biti jednaka zbroju neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
-  "sr": "Za kategoriju \"standardna stopa\" osnovica (BT-116) mora da bude jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije."
+  "hr": "Za svaku stopu PDV-a (BT-119) u kategoriji \"standardna stopa\" osnovica (BT-116) mora biti jednaka zbroju neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom.",
+  "sr": "Za svaku stopu PDV-a (BT-119) u kategoriji \"standardna stopa\" osnovica (BT-116) mora da bude jednaka zbiru neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom."
  },
  "BR-S-09": {
   "bs": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"standardna stopa\" mora biti jednak osnovici (BT-116) pomnoženoj sa stopom (BT-119).",
@@ -1302,22 +1302,22 @@
   "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"nulta stopa\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-Z-05": {
-  "bs": "U stavci (BG-25) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-152) mora biti veća od nule.",
+  "bs": "U stavci (BG-25) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-152) mora biti 0.",
   "en": "In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Zero rated\" the Invoiced item VAT rate (BT-152) shall be 0 (zero).",
-  "hr": "U stavci (BG-25) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-152) mora biti veća od nule.",
-  "sr": "U stavci (BG-25) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-152) mora da bude veća od nule."
+  "hr": "U stavci (BG-25) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-152) mora biti 0.",
+  "sr": "U stavci (BG-25) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-152) mora da bude 0."
  },
  "BR-Z-06": {
-  "bs": "U popustu (BG-20) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-96) mora biti veća od nule.",
+  "bs": "U popustu (BG-20) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-96) mora biti 0.",
   "en": "In a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Zero rated\" the Document level allowance VAT rate (BT-96) shall be 0 (zero).",
-  "hr": "U popustu (BG-20) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-96) mora biti veća od nule.",
-  "sr": "U popustu (BG-20) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-96) mora da bude veća od nule."
+  "hr": "U popustu (BG-20) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-96) mora biti 0.",
+  "sr": "U popustu (BG-20) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-96) mora da bude 0."
  },
  "BR-Z-07": {
-  "bs": "U trošku (BG-21) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-103) mora biti veća od nule.",
+  "bs": "U trošku (BG-21) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-103) mora biti 0.",
   "en": "In a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Zero rated\" the Document level charge VAT rate (BT-103) shall be 0 (zero).",
-  "hr": "U trošku (BG-21) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-103) mora biti veća od nule.",
-  "sr": "U trošku (BG-21) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-103) mora da bude veća od nule."
+  "hr": "U trošku (BG-21) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-103) mora biti 0.",
+  "sr": "U trošku (BG-21) s PDV kategorijom \"nulta stopa\" stopa PDV-a (BT-103) mora da bude 0."
  },
  "BR-Z-08": {
   "bs": "Za kategoriju \"nulta stopa\" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.",
@@ -1326,10 +1326,10 @@
   "sr": "Za kategoriju \"nulta stopa\" osnovica (BT-116) mora da bude jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije."
  },
  "BR-Z-09": {
-  "bs": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"nulta stopa\" mora odgovarati osnovici (BT-116) te kategorije.",
+  "bs": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"nulta stopa\" mora biti 0.",
   "en": "The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where VAT category code (BT-118) is \"Zero rated\" shall equal 0 (zero).",
-  "hr": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"nulta stopa\" mora odgovarati osnovici (BT-116) te kategorije.",
-  "sr": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"nulta stopa\" mora odgovarati osnovici (BT-116) te kategorije."
+  "hr": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"nulta stopa\" mora biti 0.",
+  "sr": "Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju \"nulta stopa\" mora da bude 0."
  },
  "BR-Z-10": {
   "bs": "Rekapitulacija PDV-a (BG-23) s kategorijom \"nulta stopa\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).",

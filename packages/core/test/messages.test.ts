@@ -137,3 +137,28 @@ describe("srpske poruke su ekavske", () => {
     expect(ijekavica).toEqual([]);
   });
 });
+
+/**
+ * Regresija: 05-07 su svima rekli "stopa veća od nule", a Z/E/AE/G/IC traže 0,
+ * AF/AG 0 ili više, O zabranjuje stopu; 08 za S/AF/AG ide po stopi; 09 za Z i E traži PDV 0.
+ */
+describe("PDV kategorije 05-09: isti smisao kao izvornik", () => {
+  const MEANING: [RegExp, Record<"hr" | "bs" | "sr", string>][] = [
+    [/shall be 0 \(zero\) or greater than zero/i, { hr: "0 ili veća od nule", bs: "0 ili veća od nule", sr: "0 ili veća od nule" }],
+    [/shall not contain an? .*VAT rate/i, { hr: "ne smije", bs: "ne smije", sr: "ne sme" }],
+    [/(shall be|shall equal) 0 \(zero\)/i, { hr: "mora biti 0", bs: "mora biti 0", sr: "mora da bude 0" }],
+    [/greater than zero/i, { hr: "veća od nule", bs: "veća od nule", sr: "veća od nule" }],
+    [/For each different value of VAT category rate/i, { hr: "Za svaku stopu", bs: "Za svaku stopu", sr: "Za svaku stopu" }],
+  ];
+  const rules = Object.entries(RULES).filter(([k]) => /^BR-[A-Z]{1,2}-(0[5-9])$/.test(k));
+
+  for (const lang of ["hr", "bs", "sr"] as const) {
+    it(`${lang}: stopa i iznos PDV-a odgovaraju engleskom tekstu`, () => {
+      const razlike = rules.flatMap(([k, v]) => {
+        const hit = MEANING.find(([re]) => re.test(v.en));
+        return hit && !v[lang]!.includes(hit[1][lang]) ? [`${k}: ${v[lang]}`] : [];
+      });
+      expect(razlike).toEqual([]);
+    });
+  }
+});
