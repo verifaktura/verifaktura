@@ -51,12 +51,7 @@ main { max-width: 760px; }
   padding-top: 16px; padding-bottom: 16px;
 }
 .brand { font-weight: 650; letter-spacing: -0.01em; color: var(--fg); text-decoration: none; }
-.langs { display: flex; gap: 4px; }
-.langs button {
-  min-height: 44px; min-width: 44px; padding: 4px 8px; border-radius: 6px; cursor: pointer;
-  background: none; color: var(--muted); border: 1px solid transparent; font-size: 13px; font-weight: 400;
-}
-.langs button[aria-pressed="true"] { color: var(--fg); border-color: var(--line); background: var(--panel); }
+.lang { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
 select, button, textarea { font: inherit; color: inherit; }
 select {
   background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px;
