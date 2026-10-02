@@ -200,38 +200,32 @@ try {
   if (sources.includes("unknown")) fail(`verzija pravila nije učitana: ${sources}`);
   else console.log("ok   verzija pravila u footeru");
 
-  // Promjena jezika ponavlja provjeru: poruke moraju biti na novom jeziku.
   const missing = CASES[1].xml;
-  const enMsg = (await validate(missing, { lang: "en" })).issues.find((i) => i.ruleId === "BR-02").message;
+  const srMsg = (await validate(missing, { lang: "sr" })).issues.find((i) => i.ruleId === "BR-02").message;
+  await send("Page.navigate", { url: `${base}?lang=hr` });
+  await until("document.readyState === 'complete' && !!window.SaxonJS");
   await ev(`(() => {
     const x = document.getElementById('xml');
     x.value = ${JSON.stringify(missing)};
     x.dispatchEvent(new Event('input'));
-    document.getElementById('result').hidden = true;
     document.getElementById('run').click();
   })()`);
-  await until("!document.getElementById('result').hidden");
-  await ev("document.getElementById('lang').value = 'en'; document.getElementById('lang').dispatchEvent(new Event('change'))");
-  try {
-    await until(`[...document.querySelectorAll('#issues .msg')].some((n) => n.textContent === ${JSON.stringify(enMsg)})`, 30_000);
-    console.log("ok   promjena jezika ponavlja provjeru");
-  } catch {
-    fail("promjena jezika: poruke nisu prevedene");
-  }
-
-  // Dva brza pokretanja: prikazuje se samo drugo.
-  await ev(`(() => {
-    const x = document.getElementById('xml'), b = document.getElementById('run');
-    document.getElementById('result').hidden = true;
-    x.value = ${JSON.stringify(missing)}; b.disabled = false; b.click();
-    x.value = ${JSON.stringify(valid)}; b.disabled = false; b.click();
-  })()`);
+  await until("document.getElementById('status').textContent !== ''");
+  await ev("for (const v of ['en', 'sr']) { const l = document.getElementById('lang'); l.value = v; l.dispatchEvent(new Event('change')); }");
   await until("!document.getElementById('run').disabled && !document.getElementById('result').hidden");
-  await new Promise((r) => setTimeout(r, 1500));
-  if (!(await ev("document.getElementById('verdict').classList.contains('ok')"))) fail("utrka: prikazan je rezultat starijeg pokretanja");
-  else console.log("ok   prikazuje se samo posljednje pokretanje");
+  const msgs = await ev("[...document.querySelectorAll('#issues .msg')].map((n) => n.textContent)");
+  if (!msgs.includes(srMsg)) fail(`jezik promijenjen tokom prve provjere: ${JSON.stringify(msgs)}, očekivano ${srMsg}`);
+  else if (!(await ev("location.search === '?lang=sr'"))) fail("promjena jezika nije upisana u URL");
+  else console.log("ok   jezik promijenjen tokom prve provjere");
 
-  await ev("document.getElementById('lang').value = 'hr'; document.getElementById('lang').dispatchEvent(new Event('change'))");
+  const enMsg = (await validate(missing, { lang: "en" })).issues.find((i) => i.ruleId === "BR-02").message;
+  await ev("const x = document.getElementById('xml'); x.value = ''; x.dispatchEvent(new Event('input'))");
+  await ev("const l = document.getElementById('lang'); l.value = 'en'; l.dispatchEvent(new Event('change'))");
+  await until("!document.getElementById('run').disabled");
+  const after = await ev("({ msgs: [...document.querySelectorAll('#issues .msg')].map((n) => n.textContent), hidden: document.getElementById('result').hidden })");
+  if (after.hidden || !after.msgs.includes(enMsg)) fail(`promjena jezika nakon pražnjenja polja: ${JSON.stringify(after)}`);
+  else console.log("ok   promjena jezika prevodi dokument iz izvještaja");
+
   await ev("document.getElementById('result').hidden = true; document.getElementById('sample').click()");
   await until("!document.getElementById('result').hidden || document.getElementById('status').classList.contains('error')");
   const sample = await ev("[...document.querySelectorAll('#issues .rule')].map((n) => n.textContent)");
