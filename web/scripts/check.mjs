@@ -226,11 +226,21 @@ try {
   if (after.hidden || !after.msgs.includes(enMsg)) fail(`promjena jezika nakon pražnjenja polja: ${JSON.stringify(after)}`);
   else console.log("ok   promjena jezika prevodi dokument iz izvještaja");
 
+  await ev("(() => { const x = document.getElementById('xml'); x.value = '   '; x.dispatchEvent(new Event('input')); document.getElementById('run').click(); })()");
+  await until("document.getElementById('status').classList.contains('error')");
+  await ev("(() => { const l = document.getElementById('lang'); l.value = 'hr'; l.dispatchEvent(new Event('change')); })()");
+  await new Promise((r) => setTimeout(r, 1000));
+  if (!(await ev("document.getElementById('result').hidden"))) fail("prazno polje pa promjena jezika: vratio se stari izvještaj");
+  else console.log("ok   prazno polje briše zapamćeni dokument");
+
   await ev("document.getElementById('result').hidden = true; document.getElementById('sample').click()");
   await until("!document.getElementById('result').hidden || document.getElementById('status').classList.contains('error')");
   const sample = await ev("[...document.querySelectorAll('#issues .rule')].map((n) => n.textContent)");
   if (!sample.includes("BR-02")) fail(`primjer računa: očekivan BR-02, dobijeno ${JSON.stringify(sample)}`);
   else console.log("ok   primjer računa");
+  const link = await ev("document.querySelector('#issues a[href^=\"/pravila/BR-02/\"]')?.textContent");
+  if (link !== "BR-02") fail(`link na stranicu pravila: ${link}`);
+  else console.log("ok   BR-02 vodi na /pravila/BR-02/");
 
   if (problems.length) fail(`greške u konzoli (CSP, izuzeci):\n  ${problems.join("\n  ")}`);
 } finally {
