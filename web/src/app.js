@@ -10,7 +10,7 @@ const HOME = { hr: "/", bs: "/bs/", sr: "/sr/", en: "/en/" };
 
 const T = {
   hr: {
-    title: "Provjera eRačuna",
+    lang: "Jezik", title: "Provjera eRačuna",
     lead: "Provjerava eRačune prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Račun ostaje u vašem pregledniku.",
     pasteLabel: "Zalijepite XML računa", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na računu s greškama",
     privacy: "Račun se ne šalje na server. Nema kolačića.",
@@ -28,7 +28,7 @@ const T = {
     rules: ["pravilo", "pravila", "pravila"],
   },
   bs: {
-    title: "Provjera e-fakture",
+    lang: "Jezik", title: "Provjera e-fakture",
     lead: "Provjerava e-fakture prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Faktura ostaje u vašem pregledniku.",
     pasteLabel: "Zalijepite XML fakture", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na fakturi s greškama",
     privacy: "Faktura se ne šalje na server. Nema kolačića.",
@@ -46,7 +46,7 @@ const T = {
     rules: ["pravilo", "pravila", "pravila"],
   },
   sr: {
-    title: "Provera e-fakture",
+    lang: "Jezik", title: "Provera e-fakture",
     lead: "Proverava e-fakture prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Faktura ostaje u vašem pregledaču.",
     pasteLabel: "Nalepite XML fakture", validate: "Proveri", chooseFile: "ili izaberite datoteku", sample: "Isprobaj na fakturi sa greškama",
     privacy: "Faktura se ne šalje na server. Nema kolačića.",
@@ -64,7 +64,7 @@ const T = {
     rules: ["pravilo", "pravila", "pravila"],
   },
   en: {
-    title: "E-invoice check",
+    lang: "Language", title: "E-invoice check",
     lead: "Checks e-invoices against EN 16931 (UBL and CII) and the Croatian CIUS. The invoice stays in your browser.",
     pasteLabel: "Paste the invoice XML", validate: "Check", chooseFile: "or choose a file", sample: "Try an invoice with errors",
     privacy: "The invoice is never uploaded. No cookies.",
@@ -117,9 +117,7 @@ function initialLang() {
 function applyLang() {
   const L = T[lang];
   document.documentElement.lang = lang;
-  for (const b of document.querySelectorAll("[data-lang]")) {
-    b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
-  }
+  $("lang").value = lang;
   document.querySelector(".brand").href = HOME[lang];
   for (const n of document.querySelectorAll("[data-t]")) n.textContent = L[n.dataset.t];
   document.title = `verifaktura · ${L.title}`;
@@ -375,19 +373,15 @@ $("sample").addEventListener("click", async () => {
     setStatus(e.message, true);
   }
 });
-function setLang(next) {
-  if (next === lang) return;
-  lang = next;
+$("lang").addEventListener("change", () => {
+  lang = $("lang").value;
   try { localStorage.setItem("vf-lang", lang); } catch { /* privatni prozor */ }
   applyLang();
   const url = new URL(location.href);
   url.searchParams.set("lang", lang);
   history.replaceState(null, "", url);
   if (lastInput) check(undefined, lastInput);
-}
-for (const b of document.querySelectorAll("[data-lang]")) {
-  b.addEventListener("click", () => setLang(b.dataset.lang));
-}
+});
 
 for (const type of ["dragover", "drop"]) {
   document.addEventListener(type, (e) => {
