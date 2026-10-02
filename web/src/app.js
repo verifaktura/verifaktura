@@ -10,9 +10,9 @@ const LANGS = ["hr", "bs", "sr", "en"];
 const T = {
   hr: {
     lang: "Jezik", title: "Provjera eRačuna",
-    lead: "EN 16931 (UBL i CII) i hrvatski CIUS za Fiskalizaciju 2.0. Provjera se izvodi u vašem pregledniku: račun se nikamo ne šalje.",
-    pasteLabel: "Zalijepite XML računa", validate: "Provjeri", chooseFile: "ili odaberite datoteku",
-    privacy: "Sadržaj računa obrađuje se samo u ovom pregledniku i ne šalje se na server. Nema kolačića.",
+    lead: "Provjerava eRačune prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Račun ostaje u vašem pregledniku.",
+    pasteLabel: "Zalijepite XML računa", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na primjeru",
+    privacy: "Račun se ne šalje na server. Nema kolačića.",
     license: "licenca", loading: "Učitavam pravila…", running: "Provjeravam…",
     empty: "Zalijepite XML ili odaberite datoteku.",
     tooBig: (mb) => `Datoteka je veća od ${mb} MB.`,
@@ -29,9 +29,9 @@ const T = {
   },
   bs: {
     lang: "Jezik", title: "Provjera e-fakture",
-    lead: "EN 16931 (UBL i CII) i hrvatski CIUS za Fiskalizaciju 2.0. Provjera se izvodi u vašem pregledniku: faktura se nikamo ne šalje.",
-    pasteLabel: "Zalijepite XML fakture", validate: "Provjeri", chooseFile: "ili odaberite datoteku",
-    privacy: "Sadržaj fakture obrađuje se samo u ovom pregledniku i ne šalje se na server. Nema kolačića.",
+    lead: "Provjerava e-fakture prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Faktura ostaje u vašem pregledniku.",
+    pasteLabel: "Zalijepite XML fakture", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na primjeru",
+    privacy: "Faktura se ne šalje na server. Nema kolačića.",
     license: "licenca", loading: "Učitavam pravila…", running: "Provjeravam…",
     empty: "Zalijepite XML ili odaberite datoteku.",
     tooBig: (mb) => `Datoteka je veća od ${mb} MB.`,
@@ -48,9 +48,9 @@ const T = {
   },
   sr: {
     lang: "Jezik", title: "Provera e-fakture",
-    lead: "EN 16931 (UBL i CII) i hrvatski CIUS za Fiskalizaciju 2.0. Provera se izvodi u vašem pregledaču: faktura se nikuda ne šalje.",
-    pasteLabel: "Nalepite XML fakture", validate: "Proveri", chooseFile: "ili izaberite datoteku",
-    privacy: "Sadržaj fakture obrađuje se samo u ovom pregledaču i ne šalje se na server. Nema kolačića.",
+    lead: "Proverava e-fakture prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Faktura ostaje u vašem pregledaču.",
+    pasteLabel: "Nalepite XML fakture", validate: "Proveri", chooseFile: "ili izaberite datoteku", sample: "Isprobaj na primeru",
+    privacy: "Faktura se ne šalje na server. Nema kolačića.",
     license: "licenca", loading: "Učitavam pravila…", running: "Proveravam…",
     empty: "Nalepite XML ili izaberite datoteku.",
     tooBig: (mb) => `Datoteka je veća od ${mb} MB.`,
@@ -67,9 +67,9 @@ const T = {
   },
   en: {
     lang: "Language", title: "E-invoice check",
-    lead: "EN 16931 (UBL and CII) and the Croatian CIUS for Fiskalizacija 2.0. The check runs in your browser: the invoice is never sent anywhere.",
-    pasteLabel: "Paste the invoice XML", validate: "Check", chooseFile: "or choose a file",
-    privacy: "The invoice content is processed only in this browser and is never uploaded. No cookies.",
+    lead: "Checks e-invoices against EN 16931 (UBL and CII) and the Croatian CIUS. The invoice stays in your browser.",
+    pasteLabel: "Paste the invoice XML", validate: "Check", chooseFile: "or choose a file", sample: "Try a sample invoice",
+    privacy: "The invoice is never uploaded. No cookies.",
     license: "licence", loading: "Loading rules…", running: "Checking…",
     empty: "Paste XML or choose a file.",
     tooBig: (mb) => `The file is larger than ${mb} MB.`,
@@ -111,7 +111,8 @@ function initialLang() {
     if (LANGS.includes(saved)) return saved;
   } catch { /* privatni prozor */ }
   const nav = (navigator.language || "").slice(0, 2).toLowerCase();
-  return LANGS.includes(nav) ? nav : nav === "sh" ? "hr" : "en";
+  if (nav === "sh") return "hr";
+  return LANGS.includes(nav) ? nav : "en";
 }
 
 function applyLang() {
@@ -269,11 +270,23 @@ function render(report) {
     if (i.hint) li.append(el("p", "hint", i.hint));
     const facts = el("dl", "facts");
     if (i.businessTerms.length) facts.append(el("dt", "", L.terms), el("dd", "", i.businessTerms.join(", ")));
-    if (i.location.xpath) facts.append(el("dt", "", L.where), el("dd", "xpath", i.location.xpath));
+    if (i.location.xpath) {
+      const where = el("dd", "xpath", shortXpath(i.location.xpath));
+      where.title = i.location.xpath;
+      facts.append(el("dt", "", L.where), where);
+    }
     if (facts.childElementCount) li.append(facts);
     list.append(li);
   }
   $("result").hidden = false;
+}
+
+/** "/*:Invoice[namespace-uri()='…'][1]/*:AccountingSupplierParty[…][1]" -> "/Invoice/AccountingSupplierParty" */
+function shortXpath(xpath) {
+  return xpath
+    .replace(/\[namespace-uri\(\)='[^']*'\]/g, "")
+    .replace(/\[1\]/g, "")
+    .replace(/\*:/g, "");
 }
 
 function setStatus(text, isError = false) {
@@ -322,6 +335,18 @@ $("file").addEventListener("change", () => {
   }
 });
 $("xml").addEventListener("input", () => { $("file").value = ""; });
+$("sample").addEventListener("click", async () => {
+  try {
+    const res = await fetch("sample-invoice.xml");
+    if (!res.ok) throw new Error(`sample-invoice.xml: HTTP ${res.status}`);
+    $("xml").value = await res.text();
+    $("file").value = "";
+    check();
+  } catch (e) {
+    console.error("verifaktura:", e);
+    setStatus(e.message, true);
+  }
+});
 $("lang").addEventListener("change", () => {
   lang = $("lang").value;
   try { localStorage.setItem("vf-lang", lang); } catch { /* privatni prozor */ }

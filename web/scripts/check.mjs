@@ -189,6 +189,12 @@ try {
   else if (!latin.doc.includes(LATIN2_ID)) fail(`ISO-8859-2 datoteka: broj računa ${JSON.stringify(latin.doc)}, očekivan ${LATIN2_ID}`);
   else console.log("ok   ISO-8859-2 datoteka dekodirana");
 
+  await ev("document.getElementById('result').hidden = true; document.getElementById('sample').click()");
+  await until("!document.getElementById('result').hidden || document.getElementById('status').classList.contains('error')");
+  const sample = await ev("[...document.querySelectorAll('#issues .rule')].map((n) => n.textContent)");
+  if (!sample.includes("BR-02")) fail(`primjer računa: očekivan BR-02, dobijeno ${JSON.stringify(sample)}`);
+  else console.log("ok   primjer računa");
+
   if (problems.length) fail(`greške u konzoli (CSP, izuzeci):\n  ${problems.join("\n  ")}`);
 } finally {
   ws.close();
