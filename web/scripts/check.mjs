@@ -141,11 +141,11 @@ try {
   await send("Log.enable");
   await send("Page.navigate", { url: `${base}?lang=sr` });
   await until("document.readyState === 'complete'");
-  if ((await ev("document.getElementById('lang').value")) !== "sr") fail("?lang=sr nije postavio jezik");
+  if ((await ev("document.querySelector('[data-lang][aria-pressed=\"true\"]').dataset.lang")) !== "sr") fail("?lang=sr nije postavio jezik");
   else console.log("ok   ?lang=sr bira jezik");
   await send("Page.navigate", { url: base });
   await until("document.readyState === 'complete' && !!window.SaxonJS");
-  await ev("document.getElementById('lang').value = 'hr'; document.getElementById('lang').dispatchEvent(new Event('change'))");
+  await ev("document.querySelector('[data-lang=hr]').click()");
 
   for (const c of CASES) {
     const expected = await validate(c.xml, { lang: "hr" });
@@ -211,7 +211,7 @@ try {
     document.getElementById('run').click();
   })()`);
   await until("document.getElementById('status').textContent !== ''");
-  await ev("for (const v of ['en', 'sr']) { const l = document.getElementById('lang'); l.value = v; l.dispatchEvent(new Event('change')); }");
+  await ev("for (const v of ['en', 'sr']) document.querySelector(`[data-lang=${v}]`).click()");
   await until("!document.getElementById('run').disabled && !document.getElementById('result').hidden");
   const msgs = await ev("[...document.querySelectorAll('#issues .msg')].map((n) => n.textContent)");
   if (!msgs.includes(srMsg)) fail(`jezik promijenjen tokom prve provjere: ${JSON.stringify(msgs)}, očekivano ${srMsg}`);
@@ -220,7 +220,7 @@ try {
 
   const enMsg = (await validate(missing, { lang: "en" })).issues.find((i) => i.ruleId === "BR-02").message;
   await ev("const x = document.getElementById('xml'); x.value = ''; x.dispatchEvent(new Event('input'))");
-  await ev("const l = document.getElementById('lang'); l.value = 'en'; l.dispatchEvent(new Event('change'))");
+  await ev("document.querySelector('[data-lang=en]').click()");
   await until("!document.getElementById('run').disabled");
   const after = await ev("({ msgs: [...document.querySelectorAll('#issues .msg')].map((n) => n.textContent), hidden: document.getElementById('result').hidden })");
   if (after.hidden || !after.msgs.includes(enMsg)) fail(`promjena jezika nakon pražnjenja polja: ${JSON.stringify(after)}`);
@@ -228,7 +228,7 @@ try {
 
   await ev("(() => { const x = document.getElementById('xml'); x.value = '   '; x.dispatchEvent(new Event('input')); document.getElementById('run').click(); })()");
   await until("document.getElementById('status').classList.contains('error')");
-  await ev("(() => { const l = document.getElementById('lang'); l.value = 'hr'; l.dispatchEvent(new Event('change')); })()");
+  await ev("document.querySelector('[data-lang=hr]').click()");
   await until("!document.getElementById('run').disabled");
   if (!(await ev("document.getElementById('result').hidden"))) fail("prazno polje pa promjena jezika: vratio se stari izvještaj");
   else console.log("ok   prazno polje briše zapamćeni dokument");
