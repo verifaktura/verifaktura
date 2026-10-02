@@ -12,7 +12,7 @@ const T = {
   hr: {
     lang: "Jezik", title: "Provjera eRačuna",
     lead: "Provjerava eRačune prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Račun ostaje u vašem pregledniku.",
-    pasteLabel: "Zalijepite XML računa", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na računu s greškama",
+    pasteLabel: "Zalijepite XML računa", validate: "Provjeri", chooseFile: "ili odaberite XML datoteku", sample: "Isprobaj na računu s greškama",
     rulesLabel: "Pravila", rulesHr: "Hrvatski eRačun (EN 16931 + HR CIUS)", rulesAuto: "Prema CustomizationID-u računa",
     privacy: "Račun se ne šalje na server. Nema kolačića.",
     license: "licenca", privacyLink: "Privatnost", loading: "Učitavam pravila…", running: "Provjeravam…",
@@ -31,7 +31,7 @@ const T = {
   bs: {
     lang: "Jezik", title: "Provjera e-fakture",
     lead: "Provjerava e-fakture prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Faktura ostaje u vašem pregledniku.",
-    pasteLabel: "Zalijepite XML fakture", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na fakturi s greškama",
+    pasteLabel: "Zalijepite XML fakture", validate: "Provjeri", chooseFile: "ili odaberite XML datoteku", sample: "Isprobaj na fakturi s greškama",
     rulesLabel: "Pravila", rulesHr: "Hrvatski eRačun (EN 16931 + HR CIUS)", rulesAuto: "Prema CustomizationID-u fakture",
     privacy: "Faktura se ne šalje na server. Nema kolačića.",
     license: "licenca", privacyLink: "Privatnost", loading: "Učitavam pravila…", running: "Provjeravam…",
@@ -50,7 +50,7 @@ const T = {
   sr: {
     lang: "Jezik", title: "Provera e-fakture",
     lead: "Proverava e-fakture prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Faktura ostaje u vašem pregledaču.",
-    pasteLabel: "Nalepite XML fakture", validate: "Proveri", chooseFile: "ili izaberite datoteku", sample: "Isprobaj na fakturi sa greškama",
+    pasteLabel: "Nalepite XML fakture", validate: "Proveri", chooseFile: "ili izaberite XML datoteku", sample: "Isprobaj na fakturi sa greškama",
     rulesLabel: "Pravila", rulesHr: "Hrvatski eRačun (EN 16931 + HR CIUS)", rulesAuto: "Prema CustomizationID-u fakture",
     privacy: "Faktura se ne šalje na server. Nema kolačića.",
     license: "licenca", privacyLink: "Privatnost", loading: "Učitavam pravila…", running: "Proveravam…",
@@ -69,7 +69,7 @@ const T = {
   en: {
     lang: "Language", title: "E-invoice check",
     lead: "Checks e-invoices against EN 16931 (UBL and CII) and the Croatian CIUS. The invoice stays in your browser.",
-    pasteLabel: "Paste the invoice XML", validate: "Check", chooseFile: "or choose a file", sample: "Try an invoice with errors",
+    pasteLabel: "Paste the invoice XML", validate: "Check", chooseFile: "or choose an XML file", sample: "Try an invoice with errors",
     rulesLabel: "Rules", rulesHr: "Croatian eRačun (EN 16931 + HR CIUS)", rulesAuto: "By the invoice CustomizationID",
     privacy: "The invoice is never uploaded. No cookies.",
     license: "licence", privacyLink: "Privacy", loading: "Loading rules…", running: "Checking…",
