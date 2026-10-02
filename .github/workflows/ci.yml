@@ -22,9 +22,9 @@ jobs:
         # granica onoga što KORISNIK treba provjerava se u poslu "runtime-floor".
         node: ["20.19", "22", "24"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
           cache: npm
@@ -49,9 +49,9 @@ jobs:
     name: End-to-end validacija
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: npm
@@ -64,7 +64,7 @@ jobs:
 
       - name: Cache SEF fajlova
         id: sef-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             packages/core/sef
@@ -96,9 +96,9 @@ jobs:
     name: Najniza podrzana Node verzija
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "20.10"
 
@@ -116,7 +116,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Ima li noviji CEN release od pinovanog
         run: |
