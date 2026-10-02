@@ -77,6 +77,4 @@ cpSync(join(unpacked, "saxon-js/SaxonJS2.rt.js"), join(DIST, "vendor/SaxonJS2.rt
 cpSync(join(unpacked, "saxon-js/LICENSE.txt"), join(DIST, "vendor/SaxonJS-LICENSE.txt"));
 
 const { version } = JSON.parse(readFileSync(join(ROOT, "packages/core/package.json"), "utf-8"));
-writeFileSync(join(DIST, "build.json"), JSON.stringify({ engineVersion: version }) + "\n");
-
 console.log(`web/dist spreman (verifaktura ${version})`);

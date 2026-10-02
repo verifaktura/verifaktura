@@ -79,6 +79,7 @@ const base = `http://127.0.0.1:${server.address().port}/`;
 const profile = mkdtempSync(join(tmpdir(), "vf-chrome-"));
 const chrome = spawn(CHROME, ["--headless=new", "--remote-debugging-port=0", `--user-data-dir=${profile}`, "--no-first-run", "--no-sandbox", "about:blank"], { stdio: ["ignore", "ignore", "pipe"] });
 const wsUrl = await new Promise((resolve, reject) => {
+  setTimeout(() => reject(new Error("Chrome nije pokrenuo DevTools u 30 s")), 30_000).unref();
   let buf = "";
   chrome.stderr.on("data", (d) => {
     buf += d;
@@ -100,7 +101,20 @@ ws.addEventListener("message", (ev) => {
   if (m.method === "Log.entryAdded" && m.params.entry.level === "error") problems.push(m.params.entry.text);
   if (m.method === "Runtime.exceptionThrown") problems.push(m.params.exceptionDetails.exception?.description ?? m.params.exceptionDetails.text);
 });
-const send = (method, params = {}) => new Promise((r) => { const id = ++seq; pending.set(id, r); ws.send(JSON.stringify({ id, method, params })); });
+const send = (method, params = {}) =>
+  new Promise((resolve, reject) => {
+    const id = ++seq;
+    const timer = setTimeout(() => {
+      pending.delete(id);
+      reject(new Error(`CDP ${method}: nema odgovora 60 s (tab pao?)`));
+    }, 60_000);
+    pending.set(id, (m) => {
+      clearTimeout(timer);
+      if (m.error) reject(new Error(`CDP ${method}: ${m.error.message}`));
+      else resolve(m);
+    });
+    ws.send(JSON.stringify({ id, method, params }));
+  });
 const ev = async (expression) => {
   const r = await send("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true });
   if (r.result?.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description);
@@ -152,23 +166,27 @@ try {
     }
   }
 
-  // Datoteka u ISO-8859-2: "Šđčćž" mora stići neoštećeno, ne kao mojibake.
+  // Datoteka u ISO-8859-2: broj računa "Šđčćž" mora stići neoštećen, ne kao mojibake.
+  const LATIN2_ID = "Šđčćž";
   const latin2 = valid
     .replace('encoding="UTF-8"', 'encoding="ISO-8859-2"')
-    .replace(/<cbc:Note>[^<]*<\/cbc:Note>|(<cbc:IssueDate>)/, (m, d) => (d ? `<cbc:Note>Šđčćž</cbc:Note>${d}` : "<cbc:Note>Šđčćž</cbc:Note>"));
+    .replace(/<cbc:ID>[^<]*<\/cbc:ID>/, `<cbc:ID>${LATIN2_ID}</cbc:ID>`);
   const bytes = Array.from(latin2, (ch) => ({ Š: 0xa9, đ: 0xf0, č: 0xe8, ć: 0xe6, ž: 0xbe })[ch] ?? ch.charCodeAt(0));
-  const decoded = await ev(`(async () => {
+  await ev(`(() => {
     const dt = new DataTransfer();
     dt.items.add(new File([new Uint8Array(${JSON.stringify(bytes)})], "latin2.xml", { type: "application/xml" }));
     const input = document.getElementById('file');
     document.getElementById('result').hidden = true;
     input.files = dt.files;
     input.dispatchEvent(new Event('change'));
-    return true;
   })()`);
   await until("!document.getElementById('result').hidden || document.getElementById('status').classList.contains('error')");
-  const latinErr = await ev("document.getElementById('status').classList.contains('error') && document.getElementById('status').textContent");
-  if (!decoded || latinErr) fail(`ISO-8859-2 datoteka: ${latinErr}`);
+  const latin = await ev(`({
+    error: document.getElementById('status').classList.contains('error') && document.getElementById('status').textContent,
+    doc: [...document.querySelectorAll('#doc dd')].map((n) => n.textContent),
+  })`);
+  if (latin.error) fail(`ISO-8859-2 datoteka: ${latin.error}`);
+  else if (!latin.doc.includes(LATIN2_ID)) fail(`ISO-8859-2 datoteka: broj računa ${JSON.stringify(latin.doc)}, očekivan ${LATIN2_ID}`);
   else console.log("ok   ISO-8859-2 datoteka dekodirana");
 
   if (problems.length) fail(`greške u konzoli (CSP, izuzeci):\n  ${problems.join("\n  ")}`);

@@ -71,12 +71,8 @@ export function clearSefCache(): void {
   SEF_CACHE.clear();
 }
 
-/**
- * Saxon vraća SVRL kao string, ne kao dokument: `destination: "document"` bi
- * uštedio jedno parsiranje, ali Saxon tada vraća vlastitu DOM implementaciju
- * bez `getElementsByTagNameNS`, pa bi parser SVRL-a morao raditi s dva
- * različita DOM-a. Glavni trošak je ionako učitavanje SEF-a, koje ide iz keša.
- */
+// "serialized", ne "document": Saxonov DOM nema getElementsByTagNameNS, a
+// parseSvrl treba jedan DOM.
 const NODE_RUNTIME: EngineRuntime = {
   engineVersion: ENGINE_VERSION,
   artefacts: ARTEFACTS,

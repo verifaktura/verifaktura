@@ -41,7 +41,7 @@ function stripBom(xml: string): string {
   return xml.charCodeAt(0) === 0xfeff ? xml.slice(1) : xml;
 }
 
-/** Validira dokument uz dati runtime. Javni ulaz je `validate()`. */
+/** Validira dokument uz dati runtime. U Nodeu isto radi `validate()`. */
 export async function runValidation(
   xml: string,
   opts: ValidateOptions,
@@ -120,13 +120,11 @@ export async function runValidation(
     }
   }
 
-  // Sažetak i verdikt se računaju iz SVIH nalaza, ne iz skraćenog popisa.
-  // Ranije je `maxIssues` odsijecao i brojeve, pa je fatalni nalaz iza granice
-  // pretvarao dokument u valid:true - tiho, i to baš kod velikih dokumenata
-  // gdje se limit i koristi.
+  // Sažetak i verdikt se računaju iz SVIH nalaza: fatalni nalaz iza `maxIssues`
+  // granice i dalje obara dokument.
   const count = (s: string): number => issues.filter((i) => i.severity === s).length;
 
-  // 0 je valjan limit (samo sažetak, bez nalaza); ranije se tretirao kao "bez limita".
+  // 0 je valjan limit: samo sažetak, bez nalaza.
   const limited =
     opts.maxIssues !== undefined && opts.maxIssues >= 0
       ? issues.slice(0, opts.maxIssues)
