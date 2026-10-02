@@ -15,16 +15,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Izuzeće ide po nalogu koji je otvorio PR: email u commitu postavlja autor sam.
+      # Vlasnikovi commitovi su izuzeti samo u PR-u koji je otvorio vlasnik: email u
+      # commitu autor postavlja sam, nalog koji otvara PR ne može lažirati.
       - name: Provjeri potpis svakog commita
-        if: ${{ !contains(fromJSON('["jasenkoh", "dependabot[bot]"]'), github.event.pull_request.user.login) }}
+        if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
           HEAD: ${{ github.event.pull_request.head.sha }}
+          OPENER: ${{ github.event.pull_request.user.login }}
         run: |
           missing=0
           for sha in $(git rev-list --no-merges "$BASE..$HEAD"); do
             email=$(git log -1 --format=%ae "$sha")
+            if [ "$OPENER" = jasenkoh ] && [ "$email" = jasenko@outlook.com ]; then
+              echo "izuzet (vlasnik): $sha"
+              continue
+            fi
             if ! git log -1 --format=%B "$sha" | grep -qiE "^Signed-off-by: .+ <.+>$"; then
               echo "::error title=Nema Signed-off-by::$sha ($email): $(git log -1 --format=%s "$sha")"
               missing=1
