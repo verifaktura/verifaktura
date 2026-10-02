@@ -6,12 +6,13 @@ import { hrProfileBase } from "./lib/cius-hr/profile.js";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 const LANGS = ["hr", "bs", "sr", "en"];
+const HOME = { hr: "/", bs: "/bs/", sr: "/sr/", en: "/en/" };
 
 const T = {
   hr: {
     lang: "Jezik", title: "Provjera eRačuna",
     lead: "Provjerava eRačune prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Račun ostaje u vašem pregledniku.",
-    pasteLabel: "Zalijepite XML računa", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na primjeru",
+    pasteLabel: "Zalijepite XML računa", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na računu s greškama",
     privacy: "Račun se ne šalje na server. Nema kolačića.",
     license: "licenca", loading: "Učitavam pravila…", running: "Provjeravam…",
     empty: "Zalijepite XML ili odaberite datoteku.",
@@ -20,7 +21,7 @@ const T = {
     badBytes: (e) => `Datoteka nije ispravno kodirana kao ${e}.`,
     valid: "Račun je ispravan", invalid: "Račun nije ispravan",
     fatal: "Greška", warning: "Upozorenje", info: "Napomena",
-    invoice: "Račun", creditNote: "Odobrenje", unknown: "Dokument",
+    invoice: "Račun", creditNote: "Odobrenje", unknown: "Dokument", type: "Vrsta",
     number: "Broj", date: "Datum", supplier: "Izdavatelj", customer: "Primatelj", payable: "Za plaćanje",
     profiles: "Pravila", terms: "Pojmovi", where: "Mjesto", noFindings: "Nema nalaza.",
     errors: ["greška", "greške", "grešaka"], warnings: ["upozorenje", "upozorenja", "upozorenja"],
@@ -30,7 +31,7 @@ const T = {
   bs: {
     lang: "Jezik", title: "Provjera e-fakture",
     lead: "Provjerava e-fakture prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Faktura ostaje u vašem pregledniku.",
-    pasteLabel: "Zalijepite XML fakture", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na primjeru",
+    pasteLabel: "Zalijepite XML fakture", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na fakturi s greškama",
     privacy: "Faktura se ne šalje na server. Nema kolačića.",
     license: "licenca", loading: "Učitavam pravila…", running: "Provjeravam…",
     empty: "Zalijepite XML ili odaberite datoteku.",
@@ -39,17 +40,17 @@ const T = {
     badBytes: (e) => `Datoteka nije ispravno kodirana kao ${e}.`,
     valid: "Faktura je ispravna", invalid: "Faktura nije ispravna",
     fatal: "Greška", warning: "Upozorenje", info: "Napomena",
-    invoice: "Faktura", creditNote: "Odobrenje", unknown: "Dokument",
+    invoice: "Faktura", creditNote: "Odobrenje", unknown: "Dokument", type: "Vrsta",
     number: "Broj", date: "Datum", supplier: "Izdavalac", customer: "Primalac", payable: "Za plaćanje",
     profiles: "Pravila", terms: "Termini", where: "Mjesto", noFindings: "Nema nalaza.",
     errors: ["greška", "greške", "grešaka"], warnings: ["upozorenje", "upozorenja", "upozorenja"],
     rules: ["pravilo", "pravila", "pravila"],
-    sources: "Pravila: CEN/TC 434 (EUPL 1.2) i Porezna uprava RH.",
+    sources: "Pravila: CEN/TC 434 (EUPL 1.2) i Porezna uprava Hrvatske.",
   },
   sr: {
     lang: "Jezik", title: "Provera e-fakture",
     lead: "Proverava e-fakture prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Faktura ostaje u vašem pregledaču.",
-    pasteLabel: "Nalepite XML fakture", validate: "Proveri", chooseFile: "ili izaberite datoteku", sample: "Isprobaj na primeru",
+    pasteLabel: "Nalepite XML fakture", validate: "Proveri", chooseFile: "ili izaberite datoteku", sample: "Isprobaj na fakturi sa greškama",
     privacy: "Faktura se ne šalje na server. Nema kolačića.",
     license: "licenca", loading: "Učitavam pravila…", running: "Proveravam…",
     empty: "Nalepite XML ili izaberite datoteku.",
@@ -58,7 +59,7 @@ const T = {
     badBytes: (e) => `Datoteka nije ispravno kodirana kao ${e}.`,
     valid: "Faktura je ispravna", invalid: "Faktura nije ispravna",
     fatal: "Greška", warning: "Upozorenje", info: "Napomena",
-    invoice: "Faktura", creditNote: "Odobrenje", unknown: "Dokument",
+    invoice: "Faktura", creditNote: "Odobrenje", unknown: "Dokument", type: "Vrsta",
     number: "Broj", date: "Datum", supplier: "Izdavalac", customer: "Primalac", payable: "Za plaćanje",
     profiles: "Pravila", terms: "Termini", where: "Mesto", noFindings: "Nema nalaza.",
     errors: ["greška", "greške", "grešaka"], warnings: ["upozorenje", "upozorenja", "upozorenja"],
@@ -68,7 +69,7 @@ const T = {
   en: {
     lang: "Language", title: "E-invoice check",
     lead: "Checks e-invoices against EN 16931 (UBL and CII) and the Croatian CIUS. The invoice stays in your browser.",
-    pasteLabel: "Paste the invoice XML", validate: "Check", chooseFile: "or choose a file", sample: "Try a sample invoice",
+    pasteLabel: "Paste the invoice XML", validate: "Check", chooseFile: "or choose a file", sample: "Try an invoice with errors",
     privacy: "The invoice is never uploaded. No cookies.",
     license: "licence", loading: "Loading rules…", running: "Checking…",
     empty: "Paste XML or choose a file.",
@@ -77,7 +78,7 @@ const T = {
     badBytes: (e) => `The file is not valid ${e}.`,
     valid: "The invoice is valid", invalid: "The invoice is not valid",
     fatal: "Error", warning: "Warning", info: "Note",
-    invoice: "Invoice", creditNote: "Credit note", unknown: "Document",
+    invoice: "Invoice", creditNote: "Credit note", unknown: "Document", type: "Type",
     number: "Number", date: "Date", supplier: "Seller", customer: "Buyer", payable: "Amount due",
     profiles: "Rules", terms: "Terms", where: "Location", noFindings: "No findings.",
     errors: ["error", "errors", "errors"], warnings: ["warning", "warnings", "warnings"],
@@ -121,6 +122,7 @@ function applyLang() {
   const L = T[lang];
   document.documentElement.lang = lang;
   $("lang").value = lang;
+  document.querySelector(".brand").href = HOME[lang];
   for (const n of document.querySelectorAll("[data-t]")) n.textContent = L[n.dataset.t];
   document.title = `verifaktura · ${L.title}`;
   renderSources();
@@ -252,7 +254,7 @@ function render(report) {
     if (!v) return;
     dl.append(el("dt", "", k), el("dd", "", v));
   };
-  row(L[d.type] ?? L.unknown, d.syntax.toUpperCase());
+  row(L.type, `${L[d.type] ?? L.unknown} (${d.syntax.toUpperCase()})`);
   row(L.number, d.id);
   row(L.date, d.issueDate);
   row(L.supplier, d.supplier?.name);
@@ -298,20 +300,26 @@ function setStatus(text, isError = false) {
 }
 
 let runId = 0;
+let lastInput = null;
 
-/** Samo posljednje pokretanje smije prikazati rezultat; ranija koja kasne se odbacuju. */
-async function check(event) {
+/**
+ * Samo posljednje pokretanje smije prikazati rezultat; ranija koja kasne se odbacuju.
+ * `input` zaobilazi formu: promjena jezika ponavlja provjeru dokumenta iz izvještaja.
+ */
+async function check(event, input) {
   event?.preventDefault();
   const id = ++runId;
   const button = $("run");
   button.disabled = true;
   try {
-    const xml = await readInput();
+    const xml = input ?? (await readInput());
     if (id !== runId) return;
     if (!xml.trim()) {
+      $("result").hidden = true;
       setStatus(T[lang].empty, true);
       return;
     }
+    lastInput = xml;
     setStatus(sefCache.size ? T[lang].running : T[lang].loading);
     await meta;
     const report = await runValidation(xml, { lang }, runtime);
@@ -352,8 +360,10 @@ $("lang").addEventListener("change", () => {
   lang = $("lang").value;
   try { localStorage.setItem("vf-lang", lang); } catch { /* privatni prozor */ }
   applyLang();
-  // Poruke izvještaja nose jezik iz pokretanja, pa se provjera ponavlja.
-  if (runId > 0) check();
+  const url = new URL(location.href);
+  url.searchParams.set("lang", lang);
+  history.replaceState(null, "", url);
+  if (lastInput) check(undefined, lastInput);
 });
 
 for (const type of ["dragover", "drop"]) {
