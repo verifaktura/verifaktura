@@ -13,3 +13,6 @@ samples/
 
 # SaxonJS runtime za preglednik, preuzima se ručno (vidi tools/browser-check)
 tools/browser-check/SaxonJS2.rt.js
+
+# lokalni plan rada
+.tracker/

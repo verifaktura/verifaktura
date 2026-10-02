@@ -19,7 +19,7 @@ node scripts/roundtrip.mjs   # build -> validate
 
 - **Published packages:** `>= 20.10` — the version that supports
   `import ... with { type: "json" }`, which the rule catalogue uses.
-- **This repository:** `>= 20.19` — vitest 4 runs on rolldown, which needs it.
+- **This repository:** `>= 20.19` — vitest runs on rolldown, which needs it.
 
 The main test matrix therefore cannot verify the floor the packages claim. The
 `runtime-floor` CI job installs on 20.10, builds, and runs `npm run smoke` —
@@ -85,3 +85,8 @@ validation never runs against stale rules.
 
 `FORMAT.md` is an API contract. New optional fields are a minor change;
 everything else requires bumping `reportVersion`.
+
+## Pull requests
+
+`main` accepts changes only through a pull request approved by a code owner
+(`.github/CODEOWNERS`). Force pushes and branch deletion are blocked.
