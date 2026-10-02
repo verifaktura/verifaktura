@@ -106,6 +106,8 @@ const el = (tag, cls, text) => {
 let lang = initialLang();
 
 function initialLang() {
+  const param = new URLSearchParams(location.search).get("lang");
+  if (LANGS.includes(param)) return param;
   try {
     const saved = localStorage.getItem("vf-lang");
     if (LANGS.includes(saved)) return saved;
