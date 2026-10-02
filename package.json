@@ -13,7 +13,9 @@
     "build:core": "npm run build -w verifaktura",
     "verify:artefacts": "node scripts/verify-artefacts.mjs",
     "test:integration": "vitest run --config vitest.integration.config.ts",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "build:web": "node web/scripts/build.mjs",
+    "check:web": "node web/scripts/check.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.20.4",

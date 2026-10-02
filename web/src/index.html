@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>verifaktura · provjera eRačuna</title>
+<meta name="description" content="Provjera eRačuna prema EN 16931 i hrvatskom CIUS-u, s porukama na hrvatskom, bosanskom i srpskom. Račun ne napušta vaš preglednik.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="./">verifaktura</a>
+  <label class="lang">
+    <span data-t="lang">Jezik</span>
+    <select id="lang">
+      <option value="hr">Hrvatski</option>
+      <option value="bs">Bosanski</option>
+      <option value="sr">Srpski</option>
+      <option value="en">English</option>
+    </select>
+  </label>
+</header>
+
+<main>
+  <h1 data-t="title">Provjera eRačuna</h1>
+  <p class="lead" data-t="lead">EN 16931 (UBL i CII) i hrvatski CIUS za Fiskalizaciju 2.0. Provjera se izvodi u vašem pregledniku: račun se nikamo ne šalje.</p>
+
+  <form id="form" novalidate>
+    <label class="field" for="xml" data-t="pasteLabel">Zalijepite XML računa</label>
+    <textarea id="xml" spellcheck="false" autocomplete="off" rows="12" placeholder="&lt;Invoice xmlns=&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2&quot;&gt;…"></textarea>
+    <div class="actions">
+      <button type="submit" id="run" data-t="validate">Provjeri</button>
+      <label class="file">
+        <input type="file" id="file" accept=".xml,application/xml,text/xml">
+        <span data-t="chooseFile">ili odaberite datoteku</span>
+      </label>
+    </div>
+  </form>
+
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+
+  <section id="result" hidden>
+    <div id="verdict" class="verdict"></div>
+    <dl id="doc" class="doc"></dl>
+    <ol id="issues" class="issues"></ol>
+  </section>
+</main>
+
+<footer class="foot">
+  <p data-t="privacy">Sadržaj računa obrađuje se samo u ovom pregledniku i ne šalje se na server. Nema kolačića.</p>
+  <p id="sources" class="muted"></p>
+  <p class="muted">
+    <a href="https://github.com/verifaktura/verifaktura">verifaktura</a> · Apache-2.0 ·
+    SaxonJS © Saxonica Ltd, <a href="vendor/SaxonJS-LICENSE.txt" data-t="license">licenca</a>
+  </p>
+</footer>
+
+<script src="vendor/SaxonJS2.rt.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

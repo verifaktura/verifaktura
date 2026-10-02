@@ -10,6 +10,8 @@ npm run build
 npm run test:integration     # tests that actually run Schematron
 node scripts/e2e.mjs         # validate reference invoices
 node scripts/roundtrip.mjs   # build -> validate
+npm run build:web            # web validator -> web/dist
+npm run check:web            # same findings in headless Chrome as in Node
 ```
 
 `prepare:sef` needs network access. Skip the Croatian profile with

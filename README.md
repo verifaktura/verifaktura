@@ -38,6 +38,8 @@ FATAL  BR-02   Račun mora sadržavati broj računa (BT-1).   terms: BT-1
 | [`@verifaktura/cius-hr`](./packages/cius-hr) | Croatian profile (Fiskalizacija 2.0) |
 | [`@verifaktura/cli`](./packages/cli) | command line interface |
 
+A browser validator built on the same engine lives in [`web/`](./web).
+
 Planned: `@verifaktura/cius-rs` (Serbia, SEF), `@verifaktura/cius-ba`
 (Bosnia and Herzegovina, pending implementing regulations).
 

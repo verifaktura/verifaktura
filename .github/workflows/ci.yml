@@ -66,10 +66,12 @@ jobs:
         id: sef-cache
         uses: actions/cache@v6
         with:
+          # CEN primjeri trebaju web provjeri (CII dokument).
           path: |
             packages/core/sef
             packages/cius-hr/sef
-          key: sef-${{ steps.cen.outputs.tag }}-${{ hashFiles('scripts/build-sef.mjs') }}
+            vendor/cen/cii/examples
+          key: sef-v2-${{ steps.cen.outputs.tag }}-${{ hashFiles('scripts/build-sef.mjs') }}
 
       - name: Pripremi SEF
         if: steps.sef-cache.outputs.cache-hit != 'true'
@@ -88,6 +90,12 @@ jobs:
 
       - name: Round-trip (build -> validate)
         run: node scripts/roundtrip.mjs
+
+      - name: Web validator (build)
+        run: npm run build:web
+
+      - name: Web validator u Chromeu (isti nalazi kao Node)
+        run: npm run check:web
 
   # Objavljeni paketi tvrde engines >= 20.10 zbog `import ... with { type: "json" }`.
   # Tu tvrdnju ne moze provjeriti glavna matrica jer njen alat trazi noviji Node,
