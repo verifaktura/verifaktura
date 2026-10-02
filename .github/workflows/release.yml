@@ -139,6 +139,17 @@ jobs:
             echo "::warning title=Bez provenance::Repozitorij je \"$VISIBILITY\". Paketi se objavljuju bez provenance potpisa. Prebaci repo na public pa ponovi objavu da bi ga dobili."
           fi
 
+      # Token se uzima prije objave: bez njega push na main pada, a tada
+      # paketi ne smiju već biti na npm-u.
+      - name: Token za push na main
+        id: app
+        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dry_run }}
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_KEY }}
+          permission-contents: write
+
       # Provenance: kod trusted publishinga se generiše sam (pa se --provenance
       # ne navodi), kod objave tokenom se traži eksplicitno. U oba slučaja se
       # gasi ako repozitorij nije javan.
@@ -175,9 +186,16 @@ jobs:
 
       - name: Objavi commit i tag
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dry_run }}
+        env:
+          APP_TOKEN: ${{ steps.app.outputs.token }}
         run: |
-          # push s GITHUB_TOKEN ne pokreće ponovo ovaj workflow
-          git push origin HEAD:${GITHUB_REF_NAME} --follow-tags
+          # main štiti ruleset; bypass ima verifaktura-release app. Prazan
+          # extraheader gasi GITHUB_TOKEN koji je checkout ostavio u git configu.
+          git -c http.https://github.com/.extraheader= \
+            push "https://x-access-token:${APP_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            HEAD:${GITHUB_REF_NAME}
+          # tag ide s GITHUB_TOKEN: push app tokenom bi ponovo okinuo ovaj workflow
+          git push origin "v${{ steps.v.outputs.version }}"
 
       # GitHub Release je prvo što se gleda pri procjeni je li projekat živ.
       # Bilješke se generišu iz commitova od prethodnog taga.
