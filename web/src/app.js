@@ -269,7 +269,15 @@ function render(report) {
   for (const i of [...report.issues].sort((a, b) => order[a.severity] - order[b.severity])) {
     const li = el("li", `issue ${i.severity}`);
     const head = el("div", "head");
-    head.append(el("span", "sev", L[i.severity]), el("code", "rule", i.ruleId));
+    const rule = el("code", "rule", i.ruleId);
+    if (/^BR-[A-Z0-9-]+$/.test(i.ruleId)) {
+      const a = el("a");
+      a.href = `/pravila/${i.ruleId}/`;
+      a.append(rule);
+      head.append(el("span", "sev", L[i.severity]), a);
+    } else {
+      head.append(el("span", "sev", L[i.severity]), rule);
+    }
     li.append(head, el("p", "msg", i.message));
     if (i.hint) li.append(el("p", "hint", i.hint));
     const facts = el("dl", "facts");
@@ -315,6 +323,7 @@ async function check(event, input) {
     const xml = input ?? (await readInput());
     if (id !== runId) return;
     if (!xml.trim()) {
+      lastInput = null;
       $("result").hidden = true;
       setStatus(T[lang].empty, true);
       return;
@@ -329,6 +338,7 @@ async function check(event, input) {
   } catch (e) {
     if (id !== runId) return;
     console.error("verifaktura:", e);
+    lastInput = null;
     $("result").hidden = true;
     setStatus(e instanceof Error ? e.message : String(e), true);
   } finally {
