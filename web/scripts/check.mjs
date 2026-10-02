@@ -197,7 +197,7 @@ try {
   else console.log("ok   ISO-8859-2 datoteka dekodirana");
 
   const sources = await ev("document.getElementById('sources').textContent");
-  if (sources.includes("unknown")) fail(`verzija pravila nije učitana: ${sources}`);
+  if (sources.includes("unknown") || !sources.startsWith("CEN/TC 434")) fail(`verzija pravila nije učitana: ${sources}`);
   else console.log("ok   verzija pravila u footeru");
 
   const missing = CASES[1].xml;
@@ -229,7 +229,7 @@ try {
   await ev("(() => { const x = document.getElementById('xml'); x.value = '   '; x.dispatchEvent(new Event('input')); document.getElementById('run').click(); })()");
   await until("document.getElementById('status').classList.contains('error')");
   await ev("(() => { const l = document.getElementById('lang'); l.value = 'hr'; l.dispatchEvent(new Event('change')); })()");
-  await new Promise((r) => setTimeout(r, 1000));
+  await until("!document.getElementById('run').disabled");
   if (!(await ev("document.getElementById('result').hidden"))) fail("prazno polje pa promjena jezika: vratio se stari izvještaj");
   else console.log("ok   prazno polje briše zapamćeni dokument");
 

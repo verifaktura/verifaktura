@@ -135,3 +135,4 @@ button.link {
   h1 { font-size: 24px; }
   .facts { grid-template-columns: 1fr; }
 }
+.term { white-space: nowrap; }

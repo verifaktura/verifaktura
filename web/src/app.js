@@ -26,7 +26,6 @@ const T = {
     profiles: "Pravila", terms: "Pojmovi", where: "Mjesto", noFindings: "Nema nalaza.",
     errors: ["greška", "greške", "grešaka"], warnings: ["upozorenje", "upozorenja", "upozorenja"],
     rules: ["pravilo", "pravila", "pravila"],
-    sources: "Pravila: CEN/TC 434 (EUPL 1.2) i Porezna uprava RH.",
   },
   bs: {
     lang: "Jezik", title: "Provjera e-fakture",
@@ -45,7 +44,6 @@ const T = {
     profiles: "Pravila", terms: "Termini", where: "Mjesto", noFindings: "Nema nalaza.",
     errors: ["greška", "greške", "grešaka"], warnings: ["upozorenje", "upozorenja", "upozorenja"],
     rules: ["pravilo", "pravila", "pravila"],
-    sources: "Pravila: CEN/TC 434 (EUPL 1.2) i Porezna uprava Hrvatske.",
   },
   sr: {
     lang: "Jezik", title: "Provera e-fakture",
@@ -64,7 +62,6 @@ const T = {
     profiles: "Pravila", terms: "Termini", where: "Mesto", noFindings: "Nema nalaza.",
     errors: ["greška", "greške", "grešaka"], warnings: ["upozorenje", "upozorenja", "upozorenja"],
     rules: ["pravilo", "pravila", "pravila"],
-    sources: "Pravila: CEN/TC 434 (EUPL 1.2) i Poreska uprava Republike Hrvatske.",
   },
   en: {
     lang: "Language", title: "E-invoice check",
@@ -83,7 +80,6 @@ const T = {
     profiles: "Rules", terms: "Terms", where: "Location", noFindings: "No findings.",
     errors: ["error", "errors", "errors"], warnings: ["warning", "warnings", "warnings"],
     rules: ["rule", "rules", "rules"],
-    sources: "Rules: CEN/TC 434 (EUPL 1.2) and the Croatian Tax Administration.",
   },
 };
 
@@ -187,7 +183,8 @@ const meta = fetchJson("sef/artefacts.json")
   .finally(renderSources);
 
 function renderSources() {
-  $("sources").textContent = `${T[lang].sources} EN 16931 ${artefacts.version}, HR ${hrProfileBase.version}.`;
+  $("sources").textContent =
+    `CEN/TC 434 (EUPL 1.2) · Porezna uprava Hrvatske · EN 16931 ${artefacts.version} · HR ${hrProfileBase.version}`;
 }
 
 // --- ulaz -------------------------------------------------------------------
@@ -278,7 +275,7 @@ function render(report) {
     } else {
       head.append(el("span", "sev", L[i.severity]), rule);
     }
-    li.append(head, el("p", "msg", i.message));
+    li.append(head, withTerms(el("p", "msg"), i.message));
     if (i.hint) li.append(el("p", "hint", i.hint));
     const facts = el("dl", "facts");
     if (i.businessTerms.length) facts.append(el("dt", "", L.terms), el("dd", "", i.businessTerms.join(", ")));
@@ -291,6 +288,14 @@ function render(report) {
     list.append(li);
   }
   $("result").hidden = false;
+}
+
+/** Dodaje tekst u čvor, s oznakama BT-/BG- u <span class="term"> da se ne lome. */
+function withTerms(node, text) {
+  for (const part of text.split(/\b((?:BT|BG)-\d+)\b/)) {
+    node.append(/^(?:BT|BG)-\d+$/.test(part) ? el("span", "term", part) : document.createTextNode(part));
+  }
+  return node;
 }
 
 /** "/*:Invoice[namespace-uri()='…'][1]/*:AccountingSupplierParty[…][1]" -> "/Invoice/AccountingSupplierParty" */
@@ -363,6 +368,8 @@ $("sample").addEventListener("click", async () => {
     check();
   } catch (e) {
     console.error("verifaktura:", e);
+    lastInput = null;
+    $("result").hidden = true;
     setStatus(e.message, true);
   }
 });
