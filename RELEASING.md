@@ -70,3 +70,20 @@ the App token would trigger this workflow again.
 `scripts/version.mjs` sets the same version across all packages and aligns
 internal dependency ranges (`@verifaktura/cli` → `verifaktura: ^x.y.z`).
 `npm version --workspaces` does not do this reliably, hence the separate script.
+
+## New rules
+
+`.github/workflows/rules-watch.yml` runs daily and calls `scripts/watch-rules.mjs`.
+It compares the latest CEN `validation-*` tag, the content of the Croatian Tax
+Administration's validator and CIUS specification (documents 196 and 197), and
+the list of documents on its eRačun page with `scripts/watch-rules.json`.
+
+- A difference opens (or comments on) an issue labelled `nova-pravila`.
+- A failed check opens one labelled `provjera-pravila-ne-radi`, so a silent stop
+  is not mistaken for "no changes".
+
+After updating the rules and releasing, record the new state:
+
+```bash
+node scripts/watch-rules.mjs --update
+```

@@ -1,0 +1,50 @@
+name: Nova pravila
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Provjeri CEN i Poreznu upravu
+        id: watch
+        run: |
+          set +e
+          node scripts/watch-rules.mjs > report.md 2>&1
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          cat report.md
+
+      # Issue stiže vlasniku mailom. Otvoreni issue s istom oznakom se dopunjuje, ne duplira.
+      - name: Javi promjenu ili kvar
+        if: steps.watch.outputs.code != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CODE: ${{ steps.watch.outputs.code }}
+        run: |
+          if [ "$CODE" = 2 ]; then
+            label=nova-pravila; title="Nova pravila: CEN ili Porezna uprava"
+          else
+            label=provjera-pravila-ne-radi; title="Provjera novih pravila ne radi"
+          fi
+          gh label create "$label" --force --color B60205 >/dev/null
+          open=$(gh issue list --label "$label" --state open --json number --jq '.[0].number')
+          if [ -n "$open" ]; then
+            gh issue comment "$open" --body-file report.md
+          else
+            gh issue create --title "$title" --label "$label" --body-file report.md
+          fi
+          [ "$CODE" = 2 ]
