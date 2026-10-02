@@ -15,8 +15,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Vlasnik i botovi su izuzeti; svaki drugi autor potvrđuje DCO (CONTRIBUTING.md).
+      # Izuzeće ide po nalogu koji je otvorio PR: email u commitu postavlja autor sam.
       - name: Provjeri potpis svakog commita
+        if: ${{ !contains(fromJSON('["jasenkoh", "dependabot[bot]"]'), github.event.pull_request.user.login) }}
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
           HEAD: ${{ github.event.pull_request.head.sha }}
@@ -24,9 +25,6 @@ jobs:
           missing=0
           for sha in $(git rev-list --no-merges "$BASE..$HEAD"); do
             email=$(git log -1 --format=%ae "$sha")
-            case "$email" in
-              jasenko@outlook.com|*\[bot\]@users.noreply.github.com) continue ;;
-            esac
             if ! git log -1 --format=%B "$sha" | grep -qiE "^Signed-off-by: .+ <.+>$"; then
               echo "::error title=Nema Signed-off-by::$sha ($email): $(git log -1 --format=%s "$sha")"
               missing=1
