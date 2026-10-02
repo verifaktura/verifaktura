@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="bs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>verifaktura: provjera u pregledniku (VF-06)</title>
+<style>
+  :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+  body { max-width: 720px; margin: 0 auto; padding: 16px; line-height: 1.45; }
+  button { font: inherit; padding: 10px 16px; min-height: 44px; cursor: pointer; }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; background: rgba(127,127,127,.12); padding: 12px; border-radius: 6px; }
+  .muted { opacity: .7; font-size: .9em; }
+</style>
+</head>
+<body>
+<h1>Provjera u pregledniku</h1>
+<p class="muted">Učitava službena pravila (SEF) i pokreće ih nad primjerom računa, bez servera. Rezultat kopiraj i pošalji nazad.</p>
+<p><button id="run">Pokreni provjeru</button></p>
+<pre id="out" aria-live="polite">Čeka se pokretanje.</pre>
+
+<script src="SaxonJS2.rt.js"></script>
+<script>
+const ROOT = "../../";
+const STYLESHEETS = [
+  { name: "EN 16931 UBL", path: "packages/core/sef/en16931-ubl.sef.json" },
+  { name: "HR CIUS", path: "packages/cius-hr/sef/hr-cius-ext-ubl.sef.json" },
+];
+const SAMPLES = [
+  "packages/core/test/fixtures/invoice-valid.xml",
+  "packages/core/test/fixtures/invoice-missing-id-date.xml",
+];
+const WARM_RUNS = 5;
+
+const out = document.getElementById("out");
+const lines = [];
+const log = (s) => { lines.push(s); out.textContent = lines.join("\n"); };
+const ms = (t) => Math.round(performance.now() - t);
+const kb = (n) => Math.round(n / 1024);
+
+function heap() {
+  // Samo Chromium izlaže performance.memory; ostali vraćaju "n/a".
+  const m = performance.memory;
+  return m ? Math.round(m.usedJSHeapSize / 1048576) + " MB" : "n/a";
+}
+
+function failedAsserts(svrl) {
+  const doc = new DOMParser().parseFromString(svrl, "text/xml");
+  return doc.getElementsByTagNameNS("http://purl.oclc.org/dsdl/svrl", "failed-assert").length;
+}
+
+async function fetchText(path) {
+  const t = performance.now();
+  const res = await fetch(ROOT + path, { cache: "no-store" });
+  if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);
+  const text = await res.text();
+  return { text, ms: ms(t), bytes: new Blob([text]).size, wire: res.headers.get("content-length") };
+}
+
+async function run() {
+  lines.length = 0;
+  document.getElementById("run").disabled = true;
+  try {
+    if (typeof SaxonJS === "undefined") {
+      throw new Error("SaxonJS2.rt.js nije učitan. Vidi README.md u ovom folderu.");
+    }
+    log(`Preglednik: ${navigator.userAgent}`);
+    log(`Jezgre: ${navigator.hardwareConcurrency ?? "n/a"}, memorija uređaja: ${navigator.deviceMemory ?? "n/a"} GB, SaxonJS: ${SaxonJS.getProcessorInfo?.().productVersion ?? "?"}`);
+    log(`Heap na startu: ${heap()}`);
+    log("");
+
+    const samples = [];
+    for (const p of SAMPLES) samples.push({ path: p, ...(await fetchText(p)) });
+
+    for (const s of STYLESHEETS) {
+      const f = await fetchText(s.path);
+      let t = performance.now();
+      const sef = JSON.parse(f.text);
+      const parseMs = ms(t);
+      log(`${s.name}: ${kb(f.bytes)} KB (preneseno ${f.wire ? kb(Number(f.wire)) + " KB" : "?"}), preuzimanje ${f.ms} ms, JSON.parse ${parseMs} ms`);
+
+      for (const sample of samples) {
+        const runs = [];
+        let failed = 0;
+        for (let i = 0; i <= WARM_RUNS; i++) {
+          t = performance.now();
+          const r = await SaxonJS.transform(
+            { stylesheetInternal: sef, sourceText: sample.text, destination: "serialized" },
+            "async",
+          );
+          runs.push(ms(t));
+          failed = failedAsserts(r.principalResult);
+        }
+        const name = sample.path.split("/").pop();
+        log(`  ${name}: prvi ${runs[0]} ms, zatim ${runs.slice(1).join(" ")} ms, palih pravila ${failed}`);
+      }
+      log(`  heap: ${heap()}`);
+    }
+    log("");
+    log("Gotovo. Kopiraj cijeli ovaj tekst.");
+  } catch (e) {
+    log(`GREŠKA: ${e.message}`);
+  } finally {
+    document.getElementById("run").disabled = false;
+  }
+}
+
+document.getElementById("run").addEventListener("click", run);
+</script>
+</body>
+</html>

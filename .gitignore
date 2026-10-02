@@ -10,3 +10,6 @@ vitest.config.ts.timestamp-*
 
 # nalazi i testni dokumenti, nisu dio biblioteke
 samples/
+
+# SaxonJS runtime za preglednik, preuzima se ručno (vidi tools/browser-check)
+tools/browser-check/SaxonJS2.rt.js
