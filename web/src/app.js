@@ -104,7 +104,6 @@ const el = (tag, cls, text) => {
 };
 
 let lang = initialLang();
-let lastReport = null;
 
 function initialLang() {
   try {
@@ -128,12 +127,15 @@ function applyLang() {
 
 const sefCache = new Map();
 let artefacts = { version: "unknown", source: "CEN/TC 434" };
-let engineVersion = "unknown";
 
 async function fetchJson(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
-  return res.json();
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (e) {
+    throw new Error(`${url}: ${e instanceof Error ? e.message : e}`);
+  }
 }
 
 /** Parser preglednika ne učitava vanjske DTD-ove ni entitete. */
@@ -146,7 +148,7 @@ function parseXml(text) {
 }
 
 const runtime = {
-  get engineVersion() { return engineVersion; },
+  engineVersion: "web",
   get artefacts() { return artefacts; },
   baseSef: { ubl: "sef/en16931-ubl.sef.json", cii: "sef/en16931-cii.sef.json" },
   async loadSef(url) {
@@ -169,14 +171,15 @@ const runtime = {
 
 registerProfile({ ...hrProfileBase, sefPath: "sef/hr-cius-ext-ubl.sef.json" });
 
-const meta = Promise.all([
-  fetchJson("sef/artefacts.json").then((a) => {
+// Bez metapodataka izvještaj kaže "unknown", ali validacija radi, kao u Nodeu.
+const meta = fetchJson("sef/artefacts.json")
+  .then((a) => {
     if (a.en16931?.version) {
       artefacts = { version: a.en16931.version, source: a.en16931.source ?? "CEN/TC 434" };
     }
-  }),
-  fetchJson("build.json").then((b) => { engineVersion = b.engineVersion; }),
-]).finally(renderSources);
+  })
+  .catch((e) => console.warn("verifaktura:", e.message))
+  .finally(renderSources);
 
 function renderSources() {
   $("sources").textContent = `${T[lang].sources} EN 16931 ${artefacts.version}, HR ${hrProfileBase.version}.`;
@@ -280,13 +283,16 @@ function setStatus(text, isError = false) {
 }
 
 let lastInput = null;
+let runId = 0;
 
-async function check(event) {
+/** Samo posljednje pokretanje smije prikazati rezultat; ranija koja kasne se odbacuju. */
+async function check(event, input) {
   event?.preventDefault();
+  const id = ++runId;
   const button = $("run");
   button.disabled = true;
   try {
-    const xml = await readInput();
+    const xml = input ?? (await readInput());
     if (!xml.trim()) {
       setStatus(T[lang].empty, true);
       return;
@@ -294,14 +300,17 @@ async function check(event) {
     lastInput = xml;
     setStatus(sefCache.size ? T[lang].running : T[lang].loading);
     await meta;
-    lastReport = await runValidation(xml, { lang }, runtime);
-    render(lastReport);
+    const report = await runValidation(xml, { lang }, runtime);
+    if (id !== runId) return;
+    render(report);
     setStatus("");
   } catch (e) {
+    if (id !== runId) return;
+    console.error("verifaktura:", e);
     $("result").hidden = true;
     setStatus(e instanceof Error ? e.message : String(e), true);
   } finally {
-    button.disabled = false;
+    if (id === runId) button.disabled = false;
   }
 }
 
@@ -313,15 +322,12 @@ $("file").addEventListener("change", () => {
   }
 });
 $("xml").addEventListener("input", () => { $("file").value = ""; });
-$("lang").addEventListener("change", async () => {
+$("lang").addEventListener("change", () => {
   lang = $("lang").value;
   try { localStorage.setItem("vf-lang", lang); } catch { /* privatni prozor */ }
   applyLang();
-  // Poruke pravila su u izvještaju već razriješene na jezik, pa se ponovi provjera.
-  if (lastReport && lastInput) {
-    lastReport = await runValidation(lastInput, { lang }, runtime);
-    render(lastReport);
-  }
+  // Poruke u izvještaju su već na starom jeziku, pa se provjera ponavlja.
+  if (!$("result").hidden && lastInput) check(undefined, lastInput);
 });
 
 for (const type of ["dragover", "drop"]) {
