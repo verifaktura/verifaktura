@@ -139,6 +139,10 @@ try {
   await send("Page.enable");
   await send("Runtime.enable");
   await send("Log.enable");
+  await send("Page.navigate", { url: `${base}?lang=sr` });
+  await until("document.readyState === 'complete'");
+  if ((await ev("document.getElementById('lang').value")) !== "sr") fail("?lang=sr nije postavio jezik");
+  else console.log("ok   ?lang=sr bira jezik");
   await send("Page.navigate", { url: base });
   await until("document.readyState === 'complete' && !!window.SaxonJS");
   await ev("document.getElementById('lang').value = 'hr'; document.getElementById('lang').dispatchEvent(new Event('change'))");
