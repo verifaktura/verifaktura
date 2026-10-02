@@ -47,10 +47,19 @@ VAT_TPL = {
         "05": 'U stavci (BG-25) s PDV kategorijom "{c}" stopa PDV-a (BT-152) mora biti veća od nule.',
         "06": 'U popustu (BG-20) s PDV kategorijom "{c}" stopa PDV-a (BT-96) mora biti veća od nule.',
         "07": 'U trošku (BG-21) s PDV kategorijom "{c}" stopa PDV-a (BT-103) mora biti veća od nule.',
+        "05-ZERO": 'U stavci (BG-25) s PDV kategorijom "{c}" stopa PDV-a (BT-152) mora biti 0.',
+        "06-ZERO": 'U popustu (BG-20) s PDV kategorijom "{c}" stopa PDV-a (BT-96) mora biti 0.',
+        "07-ZERO": 'U trošku (BG-21) s PDV kategorijom "{c}" stopa PDV-a (BT-103) mora biti 0.',
+        "05-MIN0": 'U stavci (BG-25) s PDV kategorijom "{c}" stopa PDV-a (BT-152) mora biti 0 ili veća od nule.',
+        "06-MIN0": 'U popustu (BG-20) s PDV kategorijom "{c}" stopa PDV-a (BT-96) mora biti 0 ili veća od nule.',
+        "07-MIN0": 'U trošku (BG-21) s PDV kategorijom "{c}" stopa PDV-a (BT-103) mora biti 0 ili veća od nule.',
+        "05-NONE": 'Stavka (BG-25) s PDV kategorijom "{c}" ne smije imati stopu PDV-a (BT-152).',
+        "06-NONE": 'Popust (BG-20) s PDV kategorijom "{c}" ne smije imati stopu PDV-a (BT-96).',
+        "07-NONE": 'Trošak (BG-21) s PDV kategorijom "{c}" ne smije imati stopu PDV-a (BT-103).',
+        "08-RATE": 'Za svaku stopu PDV-a (BT-119) u kategoriji "{c}" osnovica (BT-116) mora biti jednaka zbroju neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom.',
         "08": 'Za kategoriju "{c}" osnovica (BT-116) mora biti jednaka zbroju neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.',
         "09-CALC": 'Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju "{c}" mora biti jednak osnovici (BT-116) pomnoženoj sa stopom (BT-119).',
         "09-ZERO": 'Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju "{c}" mora biti 0.',
-        "09-SUM":  'Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju "{c}" mora odgovarati osnovici (BT-116) te kategorije.',
         "10-NO":   'Rekapitulacija PDV-a (BG-23) s kategorijom "{c}" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).',
         "10-HAS":  'Rekapitulacija PDV-a (BG-23) s kategorijom "{c}" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).',
     },
@@ -60,10 +69,19 @@ VAT_TPL = {
         "05": 'U stavci (BG-25) s PDV kategorijom "{c}" stopa PDV-a (BT-152) mora biti veća od nule.',
         "06": 'U popustu (BG-20) s PDV kategorijom "{c}" stopa PDV-a (BT-96) mora biti veća od nule.',
         "07": 'U trošku (BG-21) s PDV kategorijom "{c}" stopa PDV-a (BT-103) mora biti veća od nule.',
+        "05-ZERO": 'U stavci (BG-25) s PDV kategorijom "{c}" stopa PDV-a (BT-152) mora biti 0.',
+        "06-ZERO": 'U popustu (BG-20) s PDV kategorijom "{c}" stopa PDV-a (BT-96) mora biti 0.',
+        "07-ZERO": 'U trošku (BG-21) s PDV kategorijom "{c}" stopa PDV-a (BT-103) mora biti 0.',
+        "05-MIN0": 'U stavci (BG-25) s PDV kategorijom "{c}" stopa PDV-a (BT-152) mora biti 0 ili veća od nule.',
+        "06-MIN0": 'U popustu (BG-20) s PDV kategorijom "{c}" stopa PDV-a (BT-96) mora biti 0 ili veća od nule.',
+        "07-MIN0": 'U trošku (BG-21) s PDV kategorijom "{c}" stopa PDV-a (BT-103) mora biti 0 ili veća od nule.',
+        "05-NONE": 'Stavka (BG-25) s PDV kategorijom "{c}" ne smije imati stopu PDV-a (BT-152).',
+        "06-NONE": 'Popust (BG-20) s PDV kategorijom "{c}" ne smije imati stopu PDV-a (BT-96).',
+        "07-NONE": 'Trošak (BG-21) s PDV kategorijom "{c}" ne smije imati stopu PDV-a (BT-103).',
+        "08-RATE": 'Za svaku stopu PDV-a (BT-119) u kategoriji "{c}" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) s tom stopom, uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) s tom stopom.',
         "08": 'Za kategoriju "{c}" osnovica (BT-116) mora biti jednaka zbiru neto iznosa stavki (BT-131) uvećanom za troškove (BT-99) i umanjenom za popuste (BT-92) iste kategorije.',
         "09-CALC": 'Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju "{c}" mora biti jednak osnovici (BT-116) pomnoženoj sa stopom (BT-119).',
         "09-ZERO": 'Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju "{c}" mora biti 0.',
-        "09-SUM":  'Iznos PDV-a (BT-117) u rekapitulaciji (BG-23) za kategoriju "{c}" mora odgovarati osnovici (BT-116) te kategorije.',
         "10-NO":   'Rekapitulacija PDV-a (BG-23) s kategorijom "{c}" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).',
         "10-HAS":  'Rekapitulacija PDV-a (BG-23) s kategorijom "{c}" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).',
     },
@@ -99,24 +117,24 @@ for lang in ("hr", "bs"):
 
 def _sr(text: str) -> str:
     return (text.replace("mora biti", "mora da bude").replace("mora sadržavati", "mora da sadrži")
-            .replace("NE SMIJE sadržavati", "NE SME da sadrži").replace("ne smije imati", "ne sme da ima"))
+            .replace("NE SMIJE sadržavati", "NE SME da sadrži").replace("ne smije imati", "ne sme da ima")
+            .replace("mora imati", "mora da ima").replace("registracijski broj", "matični broj"))
 
 VAT_TPL["sr"] = {k: _sr(v) for k, v in VAT_TPL["bs"].items()}
 
-# Sufiksi 09 i 10 NEMAJU isto značenje za sve kategorije: kod oporezivih (S, Z, AF, AG)
-# PDV se računa i razlog oslobođenja je zabranjen; kod oslobođenih (E, AE, G, IC, O)
-# iznos PDV-a je nula, a razlog oslobođenja je OBAVEZAN. Zato se varijanta bira po kategoriji.
+# Isti sufiks ne znači isto za sve kategorije (stopa 0, veća od nule ili zabranjena;
+# PDV 0 ili izračunat; razlog oslobođenja obavezan ili zabranjen). Varijante prate
+# engleski tekst; messages.test.ts ih poredi s izvornikom.
 VAT_VARIANT = {
-    "S":  {"09": "09-CALC", "10": "10-NO"},
-    "AF": {"09": "09-CALC", "10": "10-NO"},
-    "AG": {"09": "09-CALC", "10": "10-NO"},
-    "Z":  {"01": "01-ONE", "09": "09-SUM",  "10": "10-NO"},
-    "E":  {"01": "01-ONE", "09": "09-SUM",  "10": "10-HAS"},
-    "AE": {"01": "01-ONE", "09": "09-ZERO", "10": "10-HAS"},
-    "G":  {"01": "01-ONE", "09": "09-ZERO", "10": "10-HAS"},
-    "IC": {"01": "01-ONE", "09": "09-ZERO", "10": "10-HAS"},
-    "O":  {"01": "01-ONE", "09": "09-ZERO", "10": "10-HAS"},
-    "B":  {"09": "09-CALC", "10": "10-NO"},
+    "S":  {"08": "08-RATE", "09": "09-CALC", "10": "10-NO"},
+    "AF": {"05": "05-MIN0", "06": "06-MIN0", "07": "07-MIN0", "08": "08-RATE", "09": "09-CALC", "10": "10-NO"},
+    "AG": {"05": "05-MIN0", "06": "06-MIN0", "07": "07-MIN0", "08": "08-RATE", "09": "09-CALC", "10": "10-NO"},
+    "Z":  {"01": "01-ONE", "05": "05-ZERO", "06": "06-ZERO", "07": "07-ZERO", "09": "09-ZERO", "10": "10-NO"},
+    "E":  {"01": "01-ONE", "05": "05-ZERO", "06": "06-ZERO", "07": "07-ZERO", "09": "09-ZERO", "10": "10-HAS"},
+    "AE": {"01": "01-ONE", "05": "05-ZERO", "06": "06-ZERO", "07": "07-ZERO", "09": "09-ZERO", "10": "10-HAS"},
+    "G":  {"01": "01-ONE", "05": "05-ZERO", "06": "06-ZERO", "07": "07-ZERO", "09": "09-ZERO", "10": "10-HAS"},
+    "IC": {"01": "01-ONE", "05": "05-ZERO", "06": "06-ZERO", "07": "07-ZERO", "09": "09-ZERO", "10": "10-HAS"},
+    "O":  {"01": "01-ONE", "05": "05-NONE", "06": "06-NONE", "07": "07-NONE", "09": "09-ZERO", "10": "10-HAS"},
 }
 
 DEC_TPL = {
@@ -167,8 +185,6 @@ def localize(rid: str, en: str) -> dict:
         if term:
             label, bt, n = term.group(1), term.group(2), term.group(3)
             tr = MANUAL.get("_terms", {}).get(bt)
-            for lang in ("hr", "bs", "sr"):
-                pass
             return {lang: DEC_TPL[lang].format(t=(tr[lang] if tr else label) + f" ({bt})", n=n)
                     for lang in ("hr", "bs", "sr")}
     return {}

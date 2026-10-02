@@ -663,8 +663,8 @@
     "sr": "Faktura sa PDV kategorijom (BT-151, BT-95 ili BT-102) \"podeljeno plaćanje\" mora da bude domaća italijanska faktura."
   },
   "BR-B-02": {
-    "hr": "Račun sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podijeljeno plaćanje\" ne smije imati stavku, popust ni trošak u kategoriji \"standardna stopa\".",
-    "bs": "Faktura sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podijeljeno plaćanje\" ne smije imati stavku, popust ni trošak u kategoriji \"standardna stopa\".",
-    "sr": "Faktura sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podeljeno plaćanje\" ne sme da ima stavku, popust ni trošak u kategoriji \"standardna stopa\"."
+    "hr": "Račun sa stavkom (BG-25), popustom (BG-20), troškom (BG-21) ili rekapitulacijom PDV-a (BG-23) u kategoriji \"podijeljeno plaćanje\" ne smije imati ništa od toga u kategoriji \"standardna stopa\".",
+    "bs": "Faktura sa stavkom (BG-25), popustom (BG-20), troškom (BG-21) ili rekapitulacijom PDV-a (BG-23) u kategoriji \"podijeljeno plaćanje\" ne smije imati ništa od toga u kategoriji \"standardna stopa\".",
+    "sr": "Faktura sa stavkom (BG-25), popustom (BG-20), troškom (BG-21) ili rekapitulacijom PDV-a (BG-23) u kategoriji \"podeljeno plaćanje\" ne sme da ima ništa od toga u kategoriji \"standardna stopa\"."
   }
 }
