@@ -1,4 +1,4 @@
-import { registerProfile, runValidation } from "./lib/core/portable.js";
+import { detectSyntax, registerProfile, runValidation } from "./lib/core/portable.js";
 import { hrProfileBase } from "./lib/cius-hr/profile.js";
 
 // Sve što stiže iz dokumenta (poruke, XPath, broj računa, greške parsera) ide
@@ -13,6 +13,7 @@ const T = {
     lang: "Jezik", title: "Provjera eRačuna",
     lead: "Provjerava eRačune prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Račun ostaje u vašem pregledniku.",
     pasteLabel: "Zalijepite XML računa", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na računu s greškama",
+    rulesLabel: "Pravila", rulesHr: "Hrvatski eRačun (EN 16931 + HR CIUS)", rulesAuto: "Prema CustomizationID-u računa",
     privacy: "Račun se ne šalje na server. Nema kolačića.",
     license: "licenca", privacyLink: "Privatnost", loading: "Učitavam pravila…", running: "Provjeravam…",
     empty: "Zalijepite XML ili odaberite datoteku.",
@@ -31,6 +32,7 @@ const T = {
     lang: "Jezik", title: "Provjera e-fakture",
     lead: "Provjerava e-fakture prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Faktura ostaje u vašem pregledniku.",
     pasteLabel: "Zalijepite XML fakture", validate: "Provjeri", chooseFile: "ili odaberite datoteku", sample: "Isprobaj na fakturi s greškama",
+    rulesLabel: "Pravila", rulesHr: "Hrvatski eRačun (EN 16931 + HR CIUS)", rulesAuto: "Prema CustomizationID-u fakture",
     privacy: "Faktura se ne šalje na server. Nema kolačića.",
     license: "licenca", privacyLink: "Privatnost", loading: "Učitavam pravila…", running: "Provjeravam…",
     empty: "Zalijepite XML ili odaberite datoteku.",
@@ -49,6 +51,7 @@ const T = {
     lang: "Jezik", title: "Provera e-fakture",
     lead: "Proverava e-fakture prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Faktura ostaje u vašem pregledaču.",
     pasteLabel: "Nalepite XML fakture", validate: "Proveri", chooseFile: "ili izaberite datoteku", sample: "Isprobaj na fakturi sa greškama",
+    rulesLabel: "Pravila", rulesHr: "Hrvatski eRačun (EN 16931 + HR CIUS)", rulesAuto: "Prema CustomizationID-u fakture",
     privacy: "Faktura se ne šalje na server. Nema kolačića.",
     license: "licenca", privacyLink: "Privatnost", loading: "Učitavam pravila…", running: "Proveravam…",
     empty: "Nalepite XML ili izaberite datoteku.",
@@ -67,6 +70,7 @@ const T = {
     lang: "Language", title: "E-invoice check",
     lead: "Checks e-invoices against EN 16931 (UBL and CII) and the Croatian CIUS. The invoice stays in your browser.",
     pasteLabel: "Paste the invoice XML", validate: "Check", chooseFile: "or choose a file", sample: "Try an invoice with errors",
+    rulesLabel: "Rules", rulesHr: "Croatian eRačun (EN 16931 + HR CIUS)", rulesAuto: "By the invoice CustomizationID",
     privacy: "The invoice is never uploaded. No cookies.",
     license: "licence", privacyLink: "Privacy", loading: "Loading rules…", running: "Checking…",
     empty: "Paste XML or choose a file.",
@@ -312,6 +316,19 @@ function setStatus(text, isError = false) {
   n.classList.toggle("error", isError);
 }
 
+/**
+ * HR pravila se inače biraju po CustomizationID-u, pa bi račun s pogrešnim ID-om
+ * prošao samo na EN 16931, a Porezna bi ga odbila. HR schematron postoji samo za UBL.
+ */
+function requestedProfiles(xml) {
+  if ($("rules").value !== "hr") return undefined;
+  try {
+    return detectSyntax(parseXml(xml.replace(/^\uFEFF/, ""))).syntax === "ubl" ? ["hr"] : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 let runId = 0;
 let lastInput = null;
 
@@ -336,7 +353,7 @@ async function check(event, input) {
     lastInput = xml;
     setStatus(sefCache.size ? T[lang].running : T[lang].loading);
     await meta;
-    const report = await runValidation(xml, { lang }, runtime);
+    const report = await runValidation(xml, { lang, profiles: requestedProfiles(xml) }, runtime);
     if (id !== runId) return;
     render(report);
     setStatus("");
@@ -382,6 +399,8 @@ $("lang").addEventListener("change", () => {
   history.replaceState(null, "", url);
   if (lastInput) check(undefined, lastInput);
 });
+
+$("rules").addEventListener("change", () => { if (lastInput) check(undefined, lastInput); });
 
 for (const type of ["dragover", "drop"]) {
   document.addEventListener(type, (e) => {

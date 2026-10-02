@@ -58,6 +58,7 @@ const CASES = [
   { name: "HR eRačun bez klasifikacije", xml: hrInvoice.replace(/<cac:CommodityClassification>[\s\S]*?<\/cac:CommodityClassification>/, "") },
   { name: "CII (CEN primjer 8)", xml: fixture("vendor/cen/cii/examples/CII_example8.xml") },
   { name: "neprijateljski cbc:ID", xml: valid.replace(/<cbc:ID>[^<]*<\/cbc:ID>/, `<cbc:ID>${HOSTILE_ID.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</cbc:ID>`) },
+  { name: "UBL bez greške, pravila automatski", xml: valid, rules: "auto" },
 ];
 
 // --- statični server, kao što bi ga dao hosting ------------------------------
@@ -147,9 +148,14 @@ try {
   await until("document.readyState === 'complete' && !!window.SaxonJS");
   await ev("document.getElementById('lang').value = 'hr'; document.getElementById('lang').dispatchEvent(new Event('change'))");
 
+  // Zadano je "hr": UBL račun s pogrešnim CustomizationID-om mora pasti
+  // na HR pravilima kao kod Porezne, a ne proći samo na EN 16931.
+  if ((await ev("document.getElementById('rules').value")) !== "hr") fail("pravila na hrvatskom nisu zadano 'hr'");
   for (const c of CASES) {
-    const expected = await validate(c.xml, { lang: "hr" });
-    await ev(`document.getElementById('result').hidden = true; document.getElementById('xml').value = ${JSON.stringify(c.xml)}; document.getElementById('run').click()`);
+    const rules = c.rules ?? "hr";
+    const ubl = /<(\w+:)?(Invoice|CreditNote)\b/.test(c.xml);
+    const expected = await validate(c.xml, { lang: "hr", ...(rules === "hr" && ubl ? { profiles: ["hr"] } : {}) });
+    await ev(`document.getElementById('rules').value = ${JSON.stringify(rules)}; document.getElementById('result').hidden = true; document.getElementById('xml').value = ${JSON.stringify(c.xml)}; document.getElementById('run').click()`);
     await until("!document.getElementById('result').hidden || document.getElementById('status').classList.contains('error')");
     const got = await ev(`({
       error: document.getElementById('status').classList.contains('error') ? document.getElementById('status').textContent : null,
@@ -165,7 +171,7 @@ try {
     if (got.error) fail(`${c.name}: greška na stranici: ${got.error}`);
     else if (got.valid !== expected.valid) fail(`${c.name}: valid ${got.valid}, Node ${expected.valid}`);
     else if (JSON.stringify(exp) !== JSON.stringify(act)) fail(`${c.name}: nalazi se razlikuju\n  Node:       ${exp.join("\n              ")}\n  preglednik: ${act.join("\n              ")}`);
-    else console.log(`ok   ${c.name} (${got.issues.length} nalaza, valid=${got.valid})`);
+    else console.log(`ok   ${c.name} [${rules}] (${got.issues.length} nalaza, valid=${got.valid})`);
     if (c.xml.includes("onerror")) {
       if (got.xss || got.imgs) fail(`${c.name}: sadržaj dokumenta izvršen kao HTML`);
       else if (!got.doc.includes(HOSTILE_ID)) fail(`${c.name}: broj računa nije ispisan doslovno`);
