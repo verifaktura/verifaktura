@@ -1,0 +1,188 @@
+#!/usr/bin/env node
+/**
+ * Provjera izgrađenog web/dist u pravom pregledniku (headless Chrome, CDP).
+ *
+ * Za svaki dokument poredi nalaze sa stranice s Node `validate()`; uz to
+ * provjerava da se sadržaj dokumenta ispisuje kao tekst, da CSP ništa ne
+ * blokira i da se ISO-8859-2 datoteka dekodira.
+ *
+ *   CHROME=/putanja/do/chrome node web/scripts/check.mjs
+ */
+import { spawn } from "node:child_process";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { createServer } from "node:http";
+import { tmpdir } from "node:os";
+import { extname, join, normalize, sep, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { buildUbl } from "@verifaktura/build";
+import { validate } from "verifaktura";
+import { HR_CUSTOMIZATION_ID } from "@verifaktura/cius-hr";
+import { hrSeller, hrBuyer, HR_IBAN } from "../../scripts/lib/parties.mjs";
+
+const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT = join(WEB, "..");
+const DIST = join(WEB, "dist");
+
+const CHROME =
+  process.env.CHROME ??
+  ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "/usr/bin/google-chrome", "/usr/bin/chromium"]
+    .find((p) => existsSync(p));
+if (!CHROME) throw new Error("Chrome nije pronađen; postavi CHROME=...");
+if (!existsSync(join(DIST, "index.html"))) throw new Error("Nema web/dist; pokreni `npm run build:web`.");
+
+const HOSTILE_ID = `<img src=x onerror="window.__xss=1">"'&`;
+const hrInvoice = buildUbl({
+  customizationId: HR_CUSTOMIZATION_ID,
+  profileId: "P1",
+  id: "2026-001",
+  issueDate: "2026-07-29",
+  issueTime: "10:15:00",
+  dueDate: "2026-08-28",
+  currency: "EUR",
+  seller: hrSeller,
+  buyer: hrBuyer,
+  paymentMeans: { code: "30", accountId: HR_IBAN },
+  lines: [{
+    name: "Usluga razvoja softvera", quantity: "10", unitPrice: "80.00",
+    vatCategory: "S", vatRate: "25", unitCode: "HUR", vatCategoryName: "HR:PDV25",
+    classification: { value: "62.10.11", scheme: "CG" },
+  }],
+});
+const fixture = (p) => readFileSync(join(ROOT, p), "utf-8");
+const valid = fixture("packages/core/test/fixtures/invoice-valid.xml");
+
+const CASES = [
+  { name: "UBL bez greške", xml: valid },
+  { name: "UBL bez broja i datuma", xml: fixture("packages/core/test/fixtures/invoice-missing-id-date.xml") },
+  { name: "HR eRačun", xml: hrInvoice },
+  { name: "HR eRačun bez klasifikacije", xml: hrInvoice.replace(/<cac:CommodityClassification>[\s\S]*?<\/cac:CommodityClassification>/, "") },
+  { name: "CII (CEN primjer 8)", xml: fixture("vendor/cen/cii/examples/CII_example8.xml") },
+  { name: "neprijateljski cbc:ID", xml: valid.replace(/<cbc:ID>[^<]*<\/cbc:ID>/, `<cbc:ID>${HOSTILE_ID.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</cbc:ID>`) },
+];
+
+// --- statični server, kao što bi ga dao hosting ------------------------------
+const TYPES = { ".svg": "image/svg+xml", ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".json": "application/json", ".css": "text/css", ".txt": "text/plain; charset=utf-8" };
+const server = createServer((req, res) => {
+  const path = decodeURIComponent(new URL(req.url, "http://x").pathname);
+  const file = normalize(join(DIST, path.endsWith("/") ? path + "index.html" : path));
+  if (!file.startsWith(DIST + sep) || !existsSync(file)) {
+    res.writeHead(404).end();
+    return;
+  }
+  res.writeHead(200, { "content-type": TYPES[extname(file)] ?? "application/octet-stream" });
+  res.end(readFileSync(file));
+});
+await new Promise((r) => server.listen(0, "127.0.0.1", r));
+const base = `http://127.0.0.1:${server.address().port}/`;
+
+// --- Chrome + CDP -------------------------------------------------------------
+const profile = mkdtempSync(join(tmpdir(), "vf-chrome-"));
+const chrome = spawn(CHROME, ["--headless=new", "--remote-debugging-port=0", `--user-data-dir=${profile}`, "--no-first-run", "--no-sandbox", "about:blank"], { stdio: ["ignore", "ignore", "pipe"] });
+const wsUrl = await new Promise((resolve, reject) => {
+  let buf = "";
+  chrome.stderr.on("data", (d) => {
+    buf += d;
+    const m = /DevTools listening on (ws:\/\/\S+)/.exec(buf);
+    if (m) resolve(m[1]);
+  });
+  chrome.on("exit", (c) => reject(new Error(`Chrome izašao (${c})`)));
+});
+const port = new URL(wsUrl).port;
+const page = (await (await fetch(`http://127.0.0.1:${port}/json/list`)).json()).find((t) => t.type === "page");
+const ws = new WebSocket(page.webSocketDebuggerUrl);
+await new Promise((r) => ws.addEventListener("open", r, { once: true }));
+let seq = 0;
+const pending = new Map();
+const problems = [];
+ws.addEventListener("message", (ev) => {
+  const m = JSON.parse(ev.data);
+  if (m.id) return pending.get(m.id)?.(m), pending.delete(m.id);
+  if (m.method === "Log.entryAdded" && m.params.entry.level === "error") problems.push(m.params.entry.text);
+  if (m.method === "Runtime.exceptionThrown") problems.push(m.params.exceptionDetails.exception?.description ?? m.params.exceptionDetails.text);
+});
+const send = (method, params = {}) => new Promise((r) => { const id = ++seq; pending.set(id, r); ws.send(JSON.stringify({ id, method, params })); });
+const ev = async (expression) => {
+  const r = await send("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true });
+  if (r.result?.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description);
+  return r.result?.result?.value;
+};
+const until = async (expr, ms = 120_000) => {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    if (await ev(expr)) return;
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  throw new Error(`isteklo: ${expr}`);
+};
+
+let failed = 0;
+const fail = (msg) => { failed++; console.log(`FAIL ${msg}`); };
+
+try {
+  await send("Page.enable");
+  await send("Runtime.enable");
+  await send("Log.enable");
+  await send("Page.navigate", { url: base });
+  await until("document.readyState === 'complete' && !!window.SaxonJS");
+  await ev("document.getElementById('lang').value = 'hr'; document.getElementById('lang').dispatchEvent(new Event('change'))");
+
+  for (const c of CASES) {
+    const expected = await validate(c.xml, { lang: "hr" });
+    await ev(`document.getElementById('result').hidden = true; document.getElementById('xml').value = ${JSON.stringify(c.xml)}; document.getElementById('run').click()`);
+    await until("!document.getElementById('result').hidden || document.getElementById('status').classList.contains('error')");
+    const got = await ev(`({
+      error: document.getElementById('status').classList.contains('error') ? document.getElementById('status').textContent : null,
+      valid: document.getElementById('verdict').classList.contains('ok'),
+      issues: [...document.querySelectorAll('#issues .issue')].map((li) => [li.querySelector('.rule').textContent, li.classList[1], li.querySelector('.msg').textContent]),
+      doc: [...document.querySelectorAll('#doc dd')].map((n) => n.textContent),
+      imgs: document.querySelectorAll('main img').length,
+      xss: window.__xss === 1,
+    })`);
+    const key = (i) => `${i[0]}|${i[1]}|${i[2]}`;
+    const exp = expected.issues.map((i) => [i.ruleId, i.severity, i.message]).map(key).sort();
+    const act = got.issues.map(key).sort();
+    if (got.error) fail(`${c.name}: greška na stranici: ${got.error}`);
+    else if (got.valid !== expected.valid) fail(`${c.name}: valid ${got.valid}, Node ${expected.valid}`);
+    else if (JSON.stringify(exp) !== JSON.stringify(act)) fail(`${c.name}: nalazi se razlikuju\n  Node:       ${exp.join("\n              ")}\n  preglednik: ${act.join("\n              ")}`);
+    else console.log(`ok   ${c.name} (${got.issues.length} nalaza, valid=${got.valid})`);
+    if (c.xml.includes("onerror")) {
+      if (got.xss || got.imgs) fail(`${c.name}: sadržaj dokumenta izvršen kao HTML`);
+      else if (!got.doc.includes(HOSTILE_ID)) fail(`${c.name}: broj računa nije ispisan doslovno`);
+      else console.log(`ok   ${c.name}: ispisan kao tekst`);
+    }
+  }
+
+  // Datoteka u ISO-8859-2: "Šđčćž" mora stići neoštećeno, ne kao mojibake.
+  const latin2 = valid
+    .replace('encoding="UTF-8"', 'encoding="ISO-8859-2"')
+    .replace(/<cbc:Note>[^<]*<\/cbc:Note>|(<cbc:IssueDate>)/, (m, d) => (d ? `<cbc:Note>Šđčćž</cbc:Note>${d}` : "<cbc:Note>Šđčćž</cbc:Note>"));
+  const bytes = Array.from(latin2, (ch) => ({ Š: 0xa9, đ: 0xf0, č: 0xe8, ć: 0xe6, ž: 0xbe })[ch] ?? ch.charCodeAt(0));
+  const decoded = await ev(`(async () => {
+    const dt = new DataTransfer();
+    dt.items.add(new File([new Uint8Array(${JSON.stringify(bytes)})], "latin2.xml", { type: "application/xml" }));
+    const input = document.getElementById('file');
+    document.getElementById('result').hidden = true;
+    input.files = dt.files;
+    input.dispatchEvent(new Event('change'));
+    return true;
+  })()`);
+  await until("!document.getElementById('result').hidden || document.getElementById('status').classList.contains('error')");
+  const latinErr = await ev("document.getElementById('status').classList.contains('error') && document.getElementById('status').textContent");
+  if (!decoded || latinErr) fail(`ISO-8859-2 datoteka: ${latinErr}`);
+  else console.log("ok   ISO-8859-2 datoteka dekodirana");
+
+  if (problems.length) fail(`greške u konzoli (CSP, izuzeci):\n  ${problems.join("\n  ")}`);
+} finally {
+  ws.close();
+  const exited = new Promise((r) => chrome.once("exit", r));
+  chrome.kill();
+  await exited;
+  server.close();
+  rmSync(profile, { recursive: true, force: true, maxRetries: 5 });
+}
+
+if (failed) {
+  console.log(`\n${failed} provjera nije prošlo`);
+  process.exit(1);
+}
+console.log("\nweb/dist radi u pregledniku kao u Nodeu");
