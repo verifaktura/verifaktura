@@ -178,7 +178,10 @@ try {
   chrome.kill();
   await exited;
   server.close();
-  rmSync(profile, { recursive: true, force: true, maxRetries: 5 });
+  // Podprocesi Chromea pišu u profil i nakon izlaza glavnog; tmp folder nije bitan.
+  try {
+    rmSync(profile, { recursive: true, force: true, maxRetries: 5 });
+  } catch { /* ostaje u tmpdir */ }
 }
 
 if (failed) {
