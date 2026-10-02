@@ -43,12 +43,7 @@ CATEGORIES = {
 VAT_TPL = {
     "hr": {
         "01": 'Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom "{c}" mora u rekapitulaciji PDV-a (BG-23) imati barem jednu kategoriju (BT-118) "{c}".',
-        "02": 'Račun sa stavkom (BG-25) u PDV kategoriji "{c}" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).',
-        "03": 'Račun s popustom (BG-20) u PDV kategoriji "{c}" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).',
-        "04": 'Račun s troškom (BG-21) u PDV kategoriji "{c}" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).',
-        "02-NE": 'Račun sa stavkom (BG-25) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).',
-        "03-NE": 'Račun s popustom (BG-20) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).',
-        "04-NE": 'Račun s troškom (BG-21) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).',
+        "01-ONE": 'Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom "{c}" mora u rekapitulaciji PDV-a (BG-23) imati točno jednu kategoriju (BT-118) "{c}".',
         "05": 'U stavci (BG-25) s PDV kategorijom "{c}" stopa PDV-a (BT-152) mora biti veća od nule.',
         "06": 'U popustu (BG-20) s PDV kategorijom "{c}" stopa PDV-a (BT-96) mora biti veća od nule.',
         "07": 'U trošku (BG-21) s PDV kategorijom "{c}" stopa PDV-a (BT-103) mora biti veća od nule.',
@@ -61,12 +56,7 @@ VAT_TPL = {
     },
     "bs": {
         "01": 'Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom "{c}" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) "{c}".',
-        "02": 'Faktura sa stavkom (BG-25) u PDV kategoriji "{c}" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).',
-        "03": 'Faktura s popustom (BG-20) u PDV kategoriji "{c}" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).',
-        "04": 'Faktura s troškom (BG-21) u PDV kategoriji "{c}" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).',
-        "02-NE": 'Faktura sa stavkom (BG-25) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).',
-        "03-NE": 'Faktura s popustom (BG-20) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).',
-        "04-NE": 'Faktura s troškom (BG-21) u PDV kategoriji "{c}" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).',
+        "01-ONE": 'Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom "{c}" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) "{c}".',
         "05": 'U stavci (BG-25) s PDV kategorijom "{c}" stopa PDV-a (BT-152) mora biti veća od nule.',
         "06": 'U popustu (BG-20) s PDV kategorijom "{c}" stopa PDV-a (BT-96) mora biti veća od nule.',
         "07": 'U trošku (BG-21) s PDV kategorijom "{c}" stopa PDV-a (BT-103) mora biti veća od nule.',
@@ -78,8 +68,40 @@ VAT_TPL = {
         "10-HAS":  'Rekapitulacija PDV-a (BG-23) s kategorijom "{c}" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120).',
     },
 }
-VAT_TPL["sr"] = {k: v.replace("mora biti", "mora da bude").replace("mora sadržavati", "mora da sadrži")
-                 for k, v in VAT_TPL["bs"].items()}
+# Sufiksi 02-04: isti uvod (stavka, popust, trošak), a uslov zavisi od kategorije.
+# Izvornik traži različite identifikatore: AE i kupca, IC i G bez poreznog broja,
+# O ih zabranjuje.
+VAT_SUBJECT = {
+    "hr": {"02": 'Račun sa stavkom (BG-25)', "03": 'Račun s popustom (BG-20)', "04": 'Račun s troškom (BG-21)'},
+    "bs": {"02": 'Faktura sa stavkom (BG-25)', "03": 'Faktura s popustom (BG-20)', "04": 'Faktura s troškom (BG-21)'},
+}
+VAT_IDS = {
+    "hr": {
+        "seller": 'mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).',
+        "seller-vat": 'mora sadržavati PDV ID prodavatelja (BT-31) ili PDV ID poreznog zastupnika (BT-63).',
+        "seller-buyer": 'mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48) i/ili registracijski broj kupca (BT-47).',
+        "seller-vat-buyer": 'mora sadržavati PDV ID prodavatelja (BT-31) ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48).',
+        "none": 'NE SMIJE sadržavati PDV ID prodavatelja (BT-31), PDV ID poreznog zastupnika (BT-63) ni PDV ID kupca (BT-48).',
+    },
+    "bs": {
+        "seller": 'mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).',
+        "seller-vat": 'mora sadržavati PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63).',
+        "seller-buyer": 'mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47).',
+        "seller-vat-buyer": 'mora sadržavati PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48).',
+        "none": 'NE SMIJE sadržavati PDV broj prodavca (BT-31), PDV broj poreskog zastupnika (BT-63) ni PDV broj kupca (BT-48).',
+    },
+}
+VAT_IDS_BY_CATEGORY = {"AE": "seller-buyer", "IC": "seller-vat-buyer", "G": "seller-vat", "O": "none"}
+for lang in ("hr", "bs"):
+    for suffix, subject in VAT_SUBJECT[lang].items():
+        for kind, req in VAT_IDS[lang].items():
+            VAT_TPL[lang][f"{suffix}-{kind}"] = f'{subject} u PDV kategoriji "{{c}}" {req}'
+
+def _sr(text: str) -> str:
+    return (text.replace("mora biti", "mora da bude").replace("mora sadržavati", "mora da sadrži")
+            .replace("NE SMIJE sadržavati", "NE SME da sadrži").replace("ne smije imati", "ne sme da ima"))
+
+VAT_TPL["sr"] = {k: _sr(v) for k, v in VAT_TPL["bs"].items()}
 
 # Sufiksi 09 i 10 NEMAJU isto značenje za sve kategorije: kod oporezivih (S, Z, AF, AG)
 # PDV se računa i razlog oslobođenja je zabranjen; kod oslobođenih (E, AE, G, IC, O)
@@ -88,14 +110,12 @@ VAT_VARIANT = {
     "S":  {"09": "09-CALC", "10": "10-NO"},
     "AF": {"09": "09-CALC", "10": "10-NO"},
     "AG": {"09": "09-CALC", "10": "10-NO"},
-    "Z":  {"09": "09-SUM",  "10": "10-NO"},
-    "E":  {"09": "09-SUM",  "10": "10-HAS"},
-    "AE": {"09": "09-ZERO", "10": "10-HAS"},
-    "G":  {"09": "09-ZERO", "10": "10-HAS"},
-    "IC": {"09": "09-ZERO", "10": "10-HAS"},
-    # Kategorija "O" invertira i 02/03/04: kod ostalih je porezni identifikator
-    # OBAVEZAN, kod nje je ZABRANJEN. Isti obrazac kao kod 09 i 10.
-    "O":  {"02": "02-NE", "03": "03-NE", "04": "04-NE", "09": "09-ZERO", "10": "10-HAS"},
+    "Z":  {"01": "01-ONE", "09": "09-SUM",  "10": "10-NO"},
+    "E":  {"01": "01-ONE", "09": "09-SUM",  "10": "10-HAS"},
+    "AE": {"01": "01-ONE", "09": "09-ZERO", "10": "10-HAS"},
+    "G":  {"01": "01-ONE", "09": "09-ZERO", "10": "10-HAS"},
+    "IC": {"01": "01-ONE", "09": "09-ZERO", "10": "10-HAS"},
+    "O":  {"01": "01-ONE", "09": "09-ZERO", "10": "10-HAS"},
     "B":  {"09": "09-CALC", "10": "10-NO"},
 }
 
@@ -136,6 +156,8 @@ def localize(rid: str, en: str) -> dict:
     if m and m.group(1) in CATEGORIES:
         cat, suffix = m.group(1), m.group(2)
         key = VAT_VARIANT.get(cat, {}).get(suffix, suffix)
+        if suffix in ("02", "03", "04"):
+            key = f"{suffix}-{VAT_IDS_BY_CATEGORY.get(cat, 'seller')}"
         if key in VAT_TPL["hr"]:
             return {lang: VAT_TPL[lang][key].format(c=CATEGORIES[cat][lang])
                     for lang in ("hr", "bs", "sr")}

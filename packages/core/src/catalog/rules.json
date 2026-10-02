@@ -348,28 +348,28 @@
   "sr": "Klasifikacioni identifikator artikla (BT-158) mora da ima identifikator šeme."
  },
  "BR-AE-01": {
-  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"prijenos porezne obaveze\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"prijenos porezne obaveze\".",
+  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"prijenos porezne obaveze\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"prijenos porezne obaveze\".",
   "en": "An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is \"Reverse charge\" shall contain in the VAT Breakdown (BG-23) exactly one VAT category code (BT-118) equal with \"VAT reverse charge\".",
-  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"prijenos porezne obveze\" mora u rekapitulaciji PDV-a (BG-23) imati barem jednu kategoriju (BT-118) \"prijenos porezne obveze\".",
-  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"prenos poreske obaveze\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"prenos poreske obaveze\"."
+  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"prijenos porezne obveze\" mora u rekapitulaciji PDV-a (BG-23) imati točno jednu kategoriju (BT-118) \"prijenos porezne obveze\".",
+  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"prenos poreske obaveze\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"prenos poreske obaveze\"."
  },
  "BR-AE-02": {
-  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"prijenos porezne obaveze\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"prijenos porezne obaveze\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
   "en": "An Invoice that contains an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Reverse charge\" shall contain the Seller VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) and/or the Buyer legal registration identifier (BT-47).",
-  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"prijenos porezne obveze\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"prijenos porezne obveze\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
+  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47)."
  },
  "BR-AE-03": {
-  "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"prijenos porezne obaveze\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"prijenos porezne obaveze\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
   "en": "An Invoice that contains a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Reverse charge\" shall contain the Seller VAT Identifier (BT-31), the Seller tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) and/or the Buyer legal registration identifier (BT-47).",
-  "hr": "Račun s popustom (BG-20) u PDV kategoriji \"prijenos porezne obveze\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun s popustom (BG-20) u PDV kategoriji \"prijenos porezne obveze\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
+  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47)."
  },
  "BR-AE-04": {
-  "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"prijenos porezne obaveze\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"prijenos porezne obaveze\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
   "en": "An Invoice that contains a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Reverse charge\" shall contain the Seller VAT Identifier (BT-31), the Seller tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) and/or the Buyer legal registration identifier (BT-47).",
-  "hr": "Račun s troškom (BG-21) u PDV kategoriji \"prijenos porezne obveze\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun s troškom (BG-21) u PDV kategoriji \"prijenos porezne obveze\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48) i/ili registracijski broj kupca (BT-47).",
+  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"prenos poreske obaveze\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48) i/ili registracijski broj kupca (BT-47)."
  },
  "BR-AE-05": {
   "bs": "U stavci (BG-25) s PDV kategorijom \"prijenos porezne obaveze\" stopa PDV-a (BT-152) mora biti veća od nule.",
@@ -465,7 +465,7 @@
   "bs": "Rekapitulacija PDV-a (BG-23) s kategorijom \"IGIC (Kanarska ostrva)\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).",
   "en": "A VAT breakdown (BG-23) with VAT Category code (BT-118) \"IGIC\" shall not have a VAT exemption reason code (BT-121) or VAT exemption reason text (BT-120).",
   "hr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"IGIC (Kanarski otoci)\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).",
-  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"IGIC (Kanarska ostrva)\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121)."
+  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"IGIC (Kanarska ostrva)\" ne sme da ima razlog oslobođenja (ni BT-120 ni BT-121)."
  },
  "BR-AG-01": {
   "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"IPSI (Ceuta i Melilla)\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"IPSI (Ceuta i Melilla)\".",
@@ -525,19 +525,19 @@
   "bs": "Rekapitulacija PDV-a (BG-23) s kategorijom \"IPSI (Ceuta i Melilla)\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).",
   "en": "A VAT breakdown (BG-23) with VAT Category code (BT-118) \"IPSI\" shall not have a VAT exemption reason code (BT-121) or VAT exemption reason text (BT-120).",
   "hr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"IPSI (Ceuta i Melilla)\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).",
-  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"IPSI (Seuta i Melilja)\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121)."
+  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"IPSI (Seuta i Melilja)\" ne sme da ima razlog oslobođenja (ni BT-120 ni BT-121)."
  },
  "BR-B-01": {
-  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"podijeljeno plaćanje\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"podijeljeno plaćanje\".",
+  "bs": "Faktura s PDV kategorijom (BT-151, BT-95 ili BT-102) \"podijeljeno plaćanje\" mora biti domaća italijanska faktura.",
   "en": "An Invoice where the VAT category code (BT-151, BT-95 or BT-102) is “Split payment” shall be a domestic Italian invoice.",
-  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"podijeljeno plaćanje\" mora u rekapitulaciji PDV-a (BG-23) imati barem jednu kategoriju (BT-118) \"podijeljeno plaćanje\".",
-  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"podeljeno plaćanje\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"podeljeno plaćanje\"."
+  "hr": "Račun s PDV kategorijom (BT-151, BT-95 ili BT-102) \"podijeljeno plaćanje\" mora biti domaći talijanski račun.",
+  "sr": "Faktura sa PDV kategorijom (BT-151, BT-95 ili BT-102) \"podeljeno plaćanje\" mora da bude domaća italijanska faktura."
  },
  "BR-B-02": {
-  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"podijeljeno plaćanje\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podijeljeno plaćanje\" ne smije imati stavku, popust ni trošak u kategoriji \"standardna stopa\".",
   "en": "An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95, BT-118 or BT-102) is “Split payment\" shall not contain an invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95, BT-118 or BT-102) is “Standard rated”.",
-  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"podijeljeno plaćanje\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"podeljeno plaćanje\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podijeljeno plaćanje\" ne smije imati stavku, popust ni trošak u kategoriji \"standardna stopa\".",
+  "sr": "Faktura sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podeljeno plaćanje\" ne sme da ima stavku, popust ni trošak u kategoriji \"standardna stopa\"."
  },
  "BR-CL-01": {
   "bs": "Šifra vrste dokumenta mora biti iz UNTDID 1001 liste za fakture i odobrenja.",
@@ -942,10 +942,10 @@
   "sr": "Najveći dozvoljeni broj decimala za osnovicu troška na stavci (BT-142) je 2."
  },
  "BR-E-01": {
-  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"oslobođeno PDV-a\".",
+  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"oslobođeno PDV-a\".",
   "en": "An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is \"Exempt from VAT\" shall contain exactly one VAT breakdown (BG-23) with the VAT category code (BT-118) equal to \"Exempt from VAT\".",
-  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" mora u rekapitulaciji PDV-a (BG-23) imati barem jednu kategoriju (BT-118) \"oslobođeno PDV-a\".",
-  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"oslobođeno PDV-a\"."
+  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" mora u rekapitulaciji PDV-a (BG-23) imati točno jednu kategoriju (BT-118) \"oslobođeno PDV-a\".",
+  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"oslobođeno PDV-a\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"oslobođeno PDV-a\"."
  },
  "BR-E-02": {
   "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"oslobođeno PDV-a\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
@@ -1002,28 +1002,28 @@
   "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"oslobođeno PDV-a\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
  },
  "BR-G-01": {
-  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"izvoz izvan EU\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"izvoz izvan EU\".",
+  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"izvoz izvan EU\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"izvoz izvan EU\".",
   "en": "An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is \"Export outside the EU\" shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with \"Export outside the EU\".",
-  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"izvoz izvan EU\" mora u rekapitulaciji PDV-a (BG-23) imati barem jednu kategoriju (BT-118) \"izvoz izvan EU\".",
-  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"izvoz izvan EU\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"izvoz izvan EU\"."
+  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"izvoz izvan EU\" mora u rekapitulaciji PDV-a (BG-23) imati točno jednu kategoriju (BT-118) \"izvoz izvan EU\".",
+  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"izvoz izvan EU\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"izvoz izvan EU\"."
  },
  "BR-G-02": {
-  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63).",
   "en": "An Invoice that contains an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Export outside the EU\" shall contain the Seller VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).",
-  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"izvoz izvan EU\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV ID prodavatelja (BT-31) ili PDV ID poreznog zastupnika (BT-63).",
+  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"izvoz izvan EU\" mora da sadrži PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-G-03": {
-  "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63).",
   "en": "An Invoice that contains a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Export outside the EU\" shall contain the Seller VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).",
-  "hr": "Račun s popustom (BG-20) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"izvoz izvan EU\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun s popustom (BG-20) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV ID prodavatelja (BT-31) ili PDV ID poreznog zastupnika (BT-63).",
+  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"izvoz izvan EU\" mora da sadrži PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-G-04": {
-  "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63).",
   "en": "An Invoice that contains a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Export outside the EU\" shall contain the Seller VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).",
-  "hr": "Račun s troškom (BG-21) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"izvoz izvan EU\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun s troškom (BG-21) u PDV kategoriji \"izvoz izvan EU\" mora sadržavati PDV ID prodavatelja (BT-31) ili PDV ID poreznog zastupnika (BT-63).",
+  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"izvoz izvan EU\" mora da sadrži PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63)."
  },
  "BR-G-05": {
   "bs": "U stavci (BG-25) s PDV kategorijom \"izvoz izvan EU\" stopa PDV-a (BT-152) mora biti veća od nule.",
@@ -1062,28 +1062,28 @@
   "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"izvoz izvan EU\" mora imati šifru razloga oslobođenja (BT-121) ili tekst razloga (BT-120)."
  },
  "BR-IC-01": {
-  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"isporuka unutar EU\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"isporuka unutar EU\".",
+  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"isporuka unutar EU\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"isporuka unutar EU\".",
   "en": "An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is \"Intra-community supply\" shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with \"Intra-community supply\".",
-  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"isporuka unutar EU\" mora u rekapitulaciji PDV-a (BG-23) imati barem jednu kategoriju (BT-118) \"isporuka unutar EU\".",
-  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"isporuka unutar EU\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"isporuka unutar EU\"."
+  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"isporuka unutar EU\" mora u rekapitulaciji PDV-a (BG-23) imati točno jednu kategoriju (BT-118) \"isporuka unutar EU\".",
+  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"isporuka unutar EU\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"isporuka unutar EU\"."
  },
  "BR-IC-02": {
-  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48).",
   "en": "An Invoice that contains an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Intra-community supply\" shall contain the Seller VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48).",
-  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"isporuka unutar EU\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV ID prodavatelja (BT-31) ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48).",
+  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"isporuka unutar EU\" mora da sadrži PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48)."
  },
  "BR-IC-03": {
-  "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48).",
   "en": "An Invoice that contains a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Intra-community supply\" shall contain the Seller VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48).",
-  "hr": "Račun s popustom (BG-20) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"isporuka unutar EU\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun s popustom (BG-20) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV ID prodavatelja (BT-31) ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48).",
+  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"isporuka unutar EU\" mora da sadrži PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48)."
  },
  "BR-IC-04": {
-  "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48).",
   "en": "An Invoice that contains a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Intra-community supply\" shall contain the Seller VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48).",
-  "hr": "Račun s troškom (BG-21) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) i/ili PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"isporuka unutar EU\" mora da sadrži PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun s troškom (BG-21) u PDV kategoriji \"isporuka unutar EU\" mora sadržavati PDV ID prodavatelja (BT-31) ili PDV ID poreznog zastupnika (BT-63), te PDV ID kupca (BT-48).",
+  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"isporuka unutar EU\" mora da sadrži PDV broj prodavca (BT-31) ili PDV broj poreskog zastupnika (BT-63), te PDV broj kupca (BT-48)."
  },
  "BR-IC-05": {
   "bs": "U stavci (BG-25) s PDV kategorijom \"isporuka unutar EU\" stopa PDV-a (BT-152) mora biti veća od nule.",
@@ -1134,28 +1134,28 @@
   "sr": "Ako rekapitulacija PDV-a (BG-23) ima kategoriju „isporuka unutar EU“, mora da bude popunjena oznaka države isporuke (BT-80)."
  },
  "BR-O-01": {
-  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"nije predmet oporezivanja PDV-om\".",
+  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"nije predmet oporezivanja PDV-om\".",
   "en": "An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is \"Not subject to VAT\" shall contain exactly one VAT breakdown group (BG-23) with the VAT category code (BT-118) equal to \"Not subject to VAT\".",
-  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" mora u rekapitulaciji PDV-a (BG-23) imati barem jednu kategoriju (BT-118) \"nije predmet oporezivanja PDV-om\".",
-  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"nije predmet oporezivanja PDV-om\"."
+  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" mora u rekapitulaciji PDV-a (BG-23) imati točno jednu kategoriju (BT-118) \"nije predmet oporezivanja PDV-om\".",
+  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"nije predmet oporezivanja PDV-om\"."
  },
  "BR-O-02": {
-  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), PDV broj poreskog zastupnika (BT-63) ni PDV broj kupca (BT-48).",
   "en": "An Invoice that contains an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is \"Not subject to VAT\" shall not contain the Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer VAT identifier (BT-48).",
-  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), PDV ID poreznog zastupnika (BT-63) ni PDV ID kupca (BT-48).",
+  "sr": "Faktura sa stavkom (BG-25) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SME da sadrži PDV broj prodavca (BT-31), PDV broj poreskog zastupnika (BT-63) ni PDV broj kupca (BT-48)."
  },
  "BR-O-03": {
-  "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), PDV broj poreskog zastupnika (BT-63) ni PDV broj kupca (BT-48).",
   "en": "An Invoice that contains a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is \"Not subject to VAT\" shall not contain the Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer VAT identifier (BT-48).",
-  "hr": "Račun s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), PDV ID poreznog zastupnika (BT-63) ni PDV ID kupca (BT-48).",
+  "sr": "Faktura s popustom (BG-20) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SME da sadrži PDV broj prodavca (BT-31), PDV broj poreskog zastupnika (BT-63) ni PDV broj kupca (BT-48)."
  },
  "BR-O-04": {
-  "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63).",
+  "bs": "Faktura s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), PDV broj poreskog zastupnika (BT-63) ni PDV broj kupca (BT-48).",
   "en": "An Invoice that contains a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is \"Not subject to VAT\" shall not contain the Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer VAT identifier (BT-48).",
-  "hr": "Račun s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), porezni broj (BT-32) ni PDV ID poreznog zastupnika (BT-63).",
-  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) ni PDV broj poreskog zastupnika (BT-63)."
+  "hr": "Račun s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SMIJE sadržavati PDV ID prodavatelja (BT-31), PDV ID poreznog zastupnika (BT-63) ni PDV ID kupca (BT-48).",
+  "sr": "Faktura s troškom (BG-21) u PDV kategoriji \"nije predmet oporezivanja PDV-om\" NE SME da sadrži PDV broj prodavca (BT-31), PDV broj poreskog zastupnika (BT-63) ni PDV broj kupca (BT-48)."
  },
  "BR-O-05": {
   "bs": "U stavci (BG-25) s PDV kategorijom \"nije predmet oporezivanja PDV-om\" stopa PDV-a (BT-152) mora biti veća od nule.",
@@ -1275,13 +1275,13 @@
   "bs": "Rekapitulacija PDV-a (BG-23) s kategorijom \"standardna stopa\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).",
   "en": "A VAT breakdown (BG-23) with VAT Category code (BT-118) \"Standard rate\" shall not have a VAT exemption reason code (BT-121) or VAT exemption reason text (BT-120).",
   "hr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"standardna stopa\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).",
-  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"standardna stopa\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121)."
+  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"standardna stopa\" ne sme da ima razlog oslobođenja (ni BT-120 ni BT-121)."
  },
  "BR-Z-01": {
-  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nulta stopa\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"nulta stopa\".",
+  "bs": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nulta stopa\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"nulta stopa\".",
   "en": "An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is \"Zero rated\" shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with \"Zero rated\".",
-  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nulta stopa\" mora u rekapitulaciji PDV-a (BG-23) imati barem jednu kategoriju (BT-118) \"nulta stopa\".",
-  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nulta stopa\" mora u rekapitulaciji PDV-a (BG-23) imati najmanje jednu kategoriju (BT-118) \"nulta stopa\"."
+  "hr": "Račun koji sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nulta stopa\" mora u rekapitulaciji PDV-a (BG-23) imati točno jednu kategoriju (BT-118) \"nulta stopa\".",
+  "sr": "Faktura koja sadrži stavku (BG-25), popust (BG-20) ili trošak (BG-21) s PDV kategorijom \"nulta stopa\" mora u rekapitulaciji PDV-a (BG-23) imati tačno jednu kategoriju (BT-118) \"nulta stopa\"."
  },
  "BR-Z-02": {
   "bs": "Faktura sa stavkom (BG-25) u PDV kategoriji \"nulta stopa\" mora sadržavati PDV broj prodavca (BT-31), poreski broj (BT-32) i/ili PDV broj poreskog zastupnika (BT-63).",
@@ -1335,7 +1335,7 @@
   "bs": "Rekapitulacija PDV-a (BG-23) s kategorijom \"nulta stopa\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).",
   "en": "A VAT breakdown (BG-23) with VAT Category code (BT-118) \"Zero rated\" shall not have a VAT exemption reason code (BT-121) or VAT exemption reason text (BT-120).",
   "hr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"nulta stopa\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121).",
-  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"nulta stopa\" ne smije imati razlog oslobođenja (ni BT-120 ni BT-121)."
+  "sr": "Rekapitulacija PDV-a (BG-23) s kategorijom \"nulta stopa\" ne sme da ima razlog oslobođenja (ni BT-120 ni BT-121)."
  },
  "CII-DT-001": {
   "en": "schemeName should not be present"
