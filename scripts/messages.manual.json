@@ -656,5 +656,15 @@
     "hr": "Račun s kategorijom „nije predmet oporezivanja PDV-om“ ne smije sadržavati troškove (BG-21) druge PDV kategorije (BT-102).",
     "bs": "Faktura s kategorijom „nije predmet oporezivanja PDV-om“ ne smije sadržavati troškove (BG-21) druge PDV kategorije (BT-102).",
     "sr": "Faktura sa kategorijom „nije predmet oporezivanja PDV-om“ ne sme da sadrži troškove (BG-21) druge PDV kategorije (BT-102)."
+  },
+  "BR-B-01": {
+    "hr": "Račun s PDV kategorijom (BT-151, BT-95 ili BT-102) \"podijeljeno plaćanje\" mora biti domaći talijanski račun.",
+    "bs": "Faktura s PDV kategorijom (BT-151, BT-95 ili BT-102) \"podijeljeno plaćanje\" mora biti domaća italijanska faktura.",
+    "sr": "Faktura sa PDV kategorijom (BT-151, BT-95 ili BT-102) \"podeljeno plaćanje\" mora da bude domaća italijanska faktura."
+  },
+  "BR-B-02": {
+    "hr": "Račun sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podijeljeno plaćanje\" ne smije imati stavku, popust ni trošak u kategoriji \"standardna stopa\".",
+    "bs": "Faktura sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podijeljeno plaćanje\" ne smije imati stavku, popust ni trošak u kategoriji \"standardna stopa\".",
+    "sr": "Faktura sa stavkom (BG-25), popustom (BG-20) ili troškom (BG-21) u PDV kategoriji \"podeljeno plaćanje\" ne sme da ima stavku, popust ni trošak u kategoriji \"standardna stopa\"."
   }
 }

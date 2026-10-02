@@ -86,3 +86,54 @@ describe("semantika PDV kategorija (regresija)", () => {
     expect(RULES["BR-S-09"].bs).not.toMatch(/mora biti 0/);
   });
 });
+
+/**
+ * Regresija: šablon za sufikse 02-04 je svim PDV kategorijama dao isti uslov
+ * (BT-31, BT-32 i/ili BT-63), a AE, IC, G, O i B traže druge podatke.
+ */
+describe("PDV kategorije 02-04 i BR-B: isti identifikatori stranaka kao izvornik", () => {
+  // Identifikatori prodavatelja, zastupnika i kupca: tu je značenje bilo krivo.
+  const PARTY = new Set(["BT-31", "BT-32", "BT-47", "BT-48", "BT-63"]);
+  const ids = (t: string) => [...new Set(t.match(/\bBT-\d+\b/g) ?? [])].filter((b) => PARTY.has(b)).sort();
+  const rules = Object.entries(RULES).filter(
+    ([k, v]) => v.hr && (/^BR-[A-Z]{1,2}-0[234]$/.test(k) || /^BR-B-/.test(k)),
+  );
+
+  it("ima pravila za provjeru", () => {
+    expect(rules.length).toBeGreaterThan(25);
+  });
+
+  for (const lang of ["hr", "bs", "sr"] as const) {
+    it(`${lang}: BT-31/32/47/48/63 odgovaraju engleskom tekstu`, () => {
+      const razlike = rules
+        .filter(([, v]) => ids(v[lang]!).join() !== ids(v.en).join())
+        .map(([k, v]) => `${k}: ${ids(v[lang]!).join(",")} != ${ids(v.en).join(",")}`);
+      expect(razlike).toEqual([]);
+    });
+  }
+});
+
+/** Regresija: sufiks 01 je svima rekao "barem jednu", a šest kategorija traži tačno jednu. */
+describe("PDV kategorije 01: tačno jedna naspram barem jedne", () => {
+  const ONE = { hr: "točno jednu", bs: "tačno jednu", sr: "tačno jednu" } as const;
+  const rules = Object.entries(RULES).filter(([k, v]) => /^BR-[A-Z]{1,2}-01$/.test(k) && /exactly one/i.test(v.en));
+
+  it("ima pravila za provjeru", () => {
+    expect(rules.length).toBeGreaterThan(4);
+  });
+
+  for (const lang of ["hr", "bs", "sr"] as const) {
+    it(`${lang}: "exactly one" je "${ONE[lang]}"`, () => {
+      expect(rules.filter(([, v]) => !v[lang]!.includes(ONE[lang])).map(([k]) => k)).toEqual([]);
+    });
+  }
+});
+
+describe("srpske poruke su ekavske", () => {
+  it("bez smije/mjesto/vrijednost u sr", () => {
+    const ijekavica = Object.entries(RULES)
+      .filter(([, v]) => v.sr && /\b(smije|mjest\w*|vrijednost\w*)\b/i.test(v.sr))
+      .map(([k]) => k);
+    expect(ijekavica).toEqual([]);
+  });
+});
