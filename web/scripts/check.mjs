@@ -99,6 +99,9 @@ ws.addEventListener("message", (ev) => {
   const m = JSON.parse(ev.data);
   if (m.id) return pending.get(m.id)?.(m), pending.delete(m.id);
   if (m.method === "Log.entryAdded" && m.params.entry.level === "error") problems.push(m.params.entry.text);
+  if (m.method === "Runtime.consoleAPICalled" && ["warning", "error"].includes(m.params.type)) {
+    problems.push(`console.${m.params.type}: ${m.params.args.map((a) => a.value ?? a.description).join(" ")}`);
+  }
   if (m.method === "Runtime.exceptionThrown") problems.push(m.params.exceptionDetails.exception?.description ?? m.params.exceptionDetails.text);
 });
 const send = (method, params = {}) =>
@@ -189,6 +192,42 @@ try {
   else if (!latin.doc.includes(LATIN2_ID)) fail(`ISO-8859-2 datoteka: broj računa ${JSON.stringify(latin.doc)}, očekivan ${LATIN2_ID}`);
   else console.log("ok   ISO-8859-2 datoteka dekodirana");
 
+  const sources = await ev("document.getElementById('sources').textContent");
+  if (sources.includes("unknown")) fail(`verzija pravila nije učitana: ${sources}`);
+  else console.log("ok   verzija pravila u footeru");
+
+  // Promjena jezika ponavlja provjeru: poruke moraju biti na novom jeziku.
+  const missing = CASES[1].xml;
+  const enMsg = (await validate(missing, { lang: "en" })).issues.find((i) => i.ruleId === "BR-02").message;
+  await ev(`(() => {
+    const x = document.getElementById('xml');
+    x.value = ${JSON.stringify(missing)};
+    x.dispatchEvent(new Event('input'));
+    document.getElementById('result').hidden = true;
+    document.getElementById('run').click();
+  })()`);
+  await until("!document.getElementById('result').hidden");
+  await ev("document.getElementById('lang').value = 'en'; document.getElementById('lang').dispatchEvent(new Event('change'))");
+  try {
+    await until(`[...document.querySelectorAll('#issues .msg')].some((n) => n.textContent === ${JSON.stringify(enMsg)})`, 30_000);
+    console.log("ok   promjena jezika ponavlja provjeru");
+  } catch {
+    fail("promjena jezika: poruke nisu prevedene");
+  }
+
+  // Dva brza pokretanja: prikazuje se samo drugo.
+  await ev(`(() => {
+    const x = document.getElementById('xml'), b = document.getElementById('run');
+    document.getElementById('result').hidden = true;
+    x.value = ${JSON.stringify(missing)}; b.disabled = false; b.click();
+    x.value = ${JSON.stringify(valid)}; b.disabled = false; b.click();
+  })()`);
+  await until("!document.getElementById('run').disabled && !document.getElementById('result').hidden");
+  await new Promise((r) => setTimeout(r, 1500));
+  if (!(await ev("document.getElementById('verdict').classList.contains('ok')"))) fail("utrka: prikazan je rezultat starijeg pokretanja");
+  else console.log("ok   prikazuje se samo posljednje pokretanje");
+
+  await ev("document.getElementById('lang').value = 'hr'; document.getElementById('lang').dispatchEvent(new Event('change'))");
   await ev("document.getElementById('result').hidden = true; document.getElementById('sample').click()");
   await until("!document.getElementById('result').hidden || document.getElementById('status').classList.contains('error')");
   const sample = await ev("[...document.querySelectorAll('#issues .rule')].map((n) => n.textContent)");

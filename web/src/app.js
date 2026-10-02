@@ -295,22 +295,21 @@ function setStatus(text, isError = false) {
   n.classList.toggle("error", isError);
 }
 
-let lastInput = null;
 let runId = 0;
 
 /** Samo posljednje pokretanje smije prikazati rezultat; ranija koja kasne se odbacuju. */
-async function check(event, input) {
+async function check(event) {
   event?.preventDefault();
   const id = ++runId;
   const button = $("run");
   button.disabled = true;
   try {
-    const xml = input ?? (await readInput());
+    const xml = await readInput();
+    if (id !== runId) return;
     if (!xml.trim()) {
       setStatus(T[lang].empty, true);
       return;
     }
-    lastInput = xml;
     setStatus(sefCache.size ? T[lang].running : T[lang].loading);
     await meta;
     const report = await runValidation(xml, { lang }, runtime);
@@ -351,8 +350,8 @@ $("lang").addEventListener("change", () => {
   lang = $("lang").value;
   try { localStorage.setItem("vf-lang", lang); } catch { /* privatni prozor */ }
   applyLang();
-  // Poruke u izvještaju su već na starom jeziku, pa se provjera ponavlja.
-  if (!$("result").hidden && lastInput) check(undefined, lastInput);
+  // Poruke izvještaja nose jezik iz pokretanja, pa se provjera ponavlja.
+  if (runId > 0) check();
 });
 
 for (const type of ["dragover", "drop"]) {
