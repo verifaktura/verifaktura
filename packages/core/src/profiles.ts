@@ -18,7 +18,7 @@ export interface ProfileDefinition {
   syntax: Syntax[];
   /** Vraća true ako se profil primjenjuje na dati cbc:CustomizationID. */
   matches(customizationId: string | undefined): boolean;
-  /** Apsolutna putanja do prekompajliranog SEF fajla. */
+  /** Lokator prekompajliranog SEF-a: putanja u Nodeu, URL u pregledniku. */
   sefPath: string;
   /**
    * ID-evi osnovnih EN 16931 pravila koja ovaj profil namjerno krši.

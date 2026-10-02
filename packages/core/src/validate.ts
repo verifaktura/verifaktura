@@ -2,17 +2,8 @@ import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
-import { detectSyntax, summarizeUbl } from "./detect.js";
-import { parseSvrl } from "./svrl.js";
-import { overrideHint } from "./messages.js";
-import { resolveProfiles, type ProfileDefinition } from "./profiles.js";
-import type {
-  Issue,
-  ProfileInfo,
-  Syntax,
-  ValidateOptions,
-  ValidationReport,
-} from "./types.js";
+import { runValidation, type EngineRuntime } from "./engine.js";
+import type { Syntax, ValidateOptions, ValidationReport } from "./types.js";
 
 const require = createRequire(import.meta.url);
 
@@ -58,17 +49,6 @@ const BASE_SEF: Record<Syntax, string> = {
 };
 
 /**
- * Uklanja UTF-8 BOM.
- *
- * Datoteke spremljene iz Windows alata ga redovno nose, a XML parser na njemu
- * puca prije nego što dođe do sadržaja - dokument bi bio odbijen s nejasnom
- * greškom umjesto da se validira.
- */
-function stripBom(xml: string): string {
-  return xml.charCodeAt(0) === 0xfeff ? xml.slice(1) : xml;
-}
-
-/**
  * Učitani SEF-ovi, po putanji.
  *
  * Saxon-JS ne kešira `stylesheetFileName`, pa je svaki poziv iznova čitao i
@@ -92,25 +72,35 @@ export function clearSefCache(): void {
 }
 
 /**
- * Pokreće jedan SEF nad dokumentom i vraća SVRL kao string.
- *
- * `destination: "document"` bi uštedio jedno parsiranje, ali Saxon tada vraća
- * vlastitu DOM implementaciju bez `getElementsByTagNameNS`, pa bi parser SVRL-a
- * morao raditi s dva različita DOM-a. Ušteda ne vrijedi te cijene — glavni
- * trošak je ionako bio učitavanje SEF-a, koje sada ide iz keša.
+ * Saxon vraća SVRL kao string, ne kao dokument: `destination: "document"` bi
+ * uštedio jedno parsiranje, ali Saxon tada vraća vlastitu DOM implementaciju
+ * bez `getElementsByTagNameNS`, pa bi parser SVRL-a morao raditi s dva
+ * različita DOM-a. Glavni trošak je ionako učitavanje SEF-a, koje ide iz keša.
  */
-async function runSef(sefPath: string, xml: string): Promise<string> {
-  const SaxonJS = require("saxon-js");
-  const result = await SaxonJS.transform(
-    {
-      stylesheetInternal: loadSef(sefPath),
-      sourceText: xml,
-      destination: "serialized",
-    },
-    "async",
-  );
-  return result.principalResult as string;
-}
+const NODE_RUNTIME: EngineRuntime = {
+  engineVersion: ENGINE_VERSION,
+  artefacts: ARTEFACTS,
+  baseSef: BASE_SEF,
+  loadSef: async (sefPath) => loadSef(sefPath),
+  async transform(sef, xml) {
+    const SaxonJS = require("saxon-js");
+    const result = await SaxonJS.transform(
+      { stylesheetInternal: sef, sourceText: xml, destination: "serialized" },
+      "async",
+    );
+    return result.principalResult as string;
+  },
+  parseXml(text) {
+    const { DOMParser } = require("@xmldom/xmldom");
+    const doc = new DOMParser({
+      onError: (level: string, msg: string) => {
+        if (level === "error" || level === "fatalError") throw new Error(msg);
+      },
+    }).parseFromString(text, "text/xml") as unknown as Document;
+    if (!doc?.documentElement) throw new Error("dokument nema korijenski element");
+    return doc;
+  },
+};
 
 /**
  * Validira e-fakturu prema EN 16931 i, opcionalno, nacionalnim CIUS profilima.
@@ -130,114 +120,7 @@ export async function validate(
   xml: string,
   opts: ValidateOptions = {},
 ): Promise<ValidationReport> {
-  const started = Date.now();
-  const lang = opts.lang ?? "en";
-  const { DOMParser } = require("@xmldom/xmldom");
-
-  /**
-   * xmldom na neispravnom XML-u baca ParseError bez konteksta. Bez ovoga
-   * korisnik dobije poruku iz utrobe parsera umjesto podatka šta je krivo -
-   * a najčešći uzrok je BOM ili pogrešno kodiranje, ne sadržaj dokumenta.
-   */
-  const parse = (s: string, what: string): Document => {
-    try {
-      const doc = new DOMParser({
-        onError: (level: string, msg: string) => {
-          if (level === "error" || level === "fatalError") throw new Error(msg);
-        },
-      }).parseFromString(s, "text/xml") as unknown as Document;
-      if (!doc?.documentElement) throw new Error("dokument nema korijenski element");
-      return doc;
-    } catch (e) {
-      const detail = e instanceof Error ? e.message : String(e);
-      throw new Error(`Nije moguće parsirati ${what}: ${detail}`);
-    }
-  };
-
-  const source = stripBom(xml);
-  const doc = parse(source, "XML dokument");
-  const { syntax, type } = detectSyntax(doc);
-  const summary = syntax === "ubl" ? summarizeUbl(doc) : {};
-
-  const profilesUsed: ProfileInfo[] = [
-    { id: "en16931", version: ARTEFACTS.version, source: ARTEFACTS.source },
-  ];
-  const issues: Issue[] = [];
-  let rulesFired = 0;
-
-  const base = parseSvrl(
-    parse(await runSef(BASE_SEF[syntax], source), "SVRL izvještaj"),
-    "en16931",
-    lang,
-  );
-  issues.push(...base.issues);
-  rulesFired += base.rulesFired;
-
-  // Nacionalni profili se izvršavaju NAKON osnovne validacije: njihova pravila
-  // pretpostavljaju da je dokument već prošao EN 16931 strukturu.
-  const extra: ProfileDefinition[] = resolveProfiles(
-    summary.customizationId,
-    syntax,
-    opts.profiles,
-  );
-  for (const p of extra) {
-    const res = parseSvrl(
-      parse(await runSef(p.sefPath, source), `SVRL izvještaj profila "${p.id}"`),
-      p.id,
-      lang,
-    );
-    issues.push(...res.issues);
-    rulesFired += res.rulesFired;
-    profilesUsed.push({ id: p.id, version: p.version, source: p.source });
-  }
-
-  // Pravila koja aktivni nacionalni profili namjerno nadjačavaju spuštamo na
-  // `info` umjesto da ih brišemo - korisnik i dalje vidi da je pravilo palo,
-  // ali ga to ne alarmira niti obara dokument.
-  const overridden = new Map<string, string>();
-  for (const p of extra) {
-    for (const ruleId of p.overrides ?? []) overridden.set(ruleId, p.id);
-  }
-  if (overridden.size > 0) {
-    for (const issue of issues) {
-      const by = overridden.get(issue.ruleId);
-      if (by && issue.profile === "en16931") {
-        issue.severity = "info";
-        issue.hint = overrideHint(by, lang);
-      }
-    }
-  }
-
-  // Sažetak i verdikt se računaju iz SVIH nalaza, ne iz skraćenog popisa.
-  // Ranije je `maxIssues` odsijecao i brojeve, pa je fatalni nalaz iza granice
-  // pretvarao dokument u valid:true - tiho, i to baš kod velikih dokumenata
-  // gdje se limit i koristi.
-  const count = (s: string): number => issues.filter((i) => i.severity === s).length;
-
-  // 0 je valjan limit (samo sažetak, bez nalaza); ranije se tretirao kao "bez limita".
-  const limited =
-    opts.maxIssues !== undefined && opts.maxIssues >= 0
-      ? issues.slice(0, opts.maxIssues)
-      : issues;
-  const truncated = limited.length < issues.length;
-
-  return {
-    reportVersion: "1.0",
-    engine: `verifaktura/${ENGINE_VERSION}`,
-    validatedAt: new Date().toISOString(),
-    valid: count("fatal") === 0,
-    document: { syntax, type, ...summary },
-    profiles: profilesUsed,
-    summary: {
-      fatal: count("fatal"),
-      warning: count("warning"),
-      info: count("info"),
-      rulesFired,
-      durationMs: Date.now() - started,
-    },
-    ...(truncated ? { truncated: true as const } : {}),
-    issues: limited,
-  };
+  return runValidation(xml, opts, NODE_RUNTIME);
 }
 
 /**
