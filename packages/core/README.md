@@ -108,6 +108,23 @@ About 1.3 s for the first document in a process (loading the stylesheet) and
 about 200–270 ms for each one after, since compiled stylesheets are cached in
 process. Measured on a small UBL invoice; larger invoices take longer.
 
+## Outside Node
+
+`verifaktura/portable` has no Node imports. It exports `runValidation(xml,
+opts, runtime)`, which takes an `EngineRuntime`: how to load a SEF, how to
+run Saxon-JS, and how to parse XML. `validate()` is the same pipeline with
+the Node runtime filled in, so both produce the same report.
+
+`@verifaktura/cius-hr/profile` exports `hrProfileBase`: the Croatian profile
+without a SEF location. Register it with your own URL:
+
+```ts
+import { registerProfile } from "verifaktura/portable";
+import { hrProfileBase } from "@verifaktura/cius-hr/profile";
+
+registerProfile({ ...hrProfileBase, sefPath: "/sef/hr-cius-ext-ubl.sef.json" });
+```
+
 ## Licence
 
 The code is Apache-2.0.

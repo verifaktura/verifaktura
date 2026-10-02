@@ -13,6 +13,9 @@
     "paths": {
       "verifaktura": [
         "packages/core/src/index.ts"
+      ],
+      "verifaktura/portable": [
+        "packages/core/src/portable.ts"
       ]
     }
   },
