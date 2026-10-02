@@ -12,7 +12,7 @@
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="./">verifaktura</a>
+  <a class="brand" href="/">verifaktura</a>
   <label class="lang">
     <span data-t="lang">Jezik</span>
     <select id="lang">
@@ -26,7 +26,7 @@
 
 <main>
   <h1 data-t="title">Provjera eRačuna</h1>
-  <p class="lead" data-t="lead">EN 16931 (UBL i CII) i hrvatski CIUS za Fiskalizaciju 2.0. Provjera se izvodi u vašem pregledniku: račun se nikamo ne šalje.</p>
+  <p class="lead" data-t="lead">Provjerava eRačune prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Račun ostaje u vašem pregledniku.</p>
 
   <form id="form" novalidate>
     <label class="field" for="xml" data-t="pasteLabel">Zalijepite XML računa</label>
@@ -37,6 +37,7 @@
         <input type="file" id="file" accept=".xml,application/xml,text/xml">
         <span data-t="chooseFile">ili odaberite datoteku</span>
       </label>
+      <button type="button" class="link" id="sample" data-t="sample">Isprobaj na primjeru</button>
     </div>
   </form>
 
@@ -50,10 +51,10 @@
 </main>
 
 <footer class="foot">
-  <p data-t="privacy">Sadržaj računa obrađuje se samo u ovom pregledniku i ne šalje se na server. Nema kolačića.</p>
+  <p data-t="privacy">Račun se ne šalje na server. Nema kolačića.</p>
   <p id="sources" class="muted"></p>
   <p class="muted">
-    <a href="https://github.com/verifaktura/verifaktura">verifaktura</a> · Apache-2.0 ·
+    <a href="https://github.com/verifaktura/verifaktura">GitHub</a> · Apache-2.0 ·
     SaxonJS © Saxonica Ltd, <a href="vendor/SaxonJS-LICENSE.txt" data-t="license">licenca</a>
   </p>
 </footer>

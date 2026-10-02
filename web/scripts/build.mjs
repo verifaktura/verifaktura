@@ -28,6 +28,7 @@ const REQUIRED = [
   "packages/core/sef/artefacts.json",
   "packages/cius-hr/dist/profile.js",
   "packages/cius-hr/sef/hr-cius-ext-ubl.sef.json",
+  "packages/core/test/fixtures/invoice-missing-id-date.xml",
 ];
 
 async function saxonZip() {
@@ -57,6 +58,7 @@ rmSync(DIST, { recursive: true, force: true });
 mkdirSync(join(DIST, "sef"), { recursive: true });
 
 cpSync(join(WEB, "src"), DIST, { recursive: true });
+cpSync(join(ROOT, "packages/core/test/fixtures/invoice-missing-id-date.xml"), join(DIST, "sample-invoice.xml"));
 cpSync(join(ROOT, "packages/core/dist"), join(DIST, "lib/core"), {
   recursive: true,
   // index.js i validate.js vuku node: module; stranica koristi samo portable.js.
