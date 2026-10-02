@@ -92,3 +92,16 @@ everything else requires bumping `reportVersion`.
 
 `main` accepts changes only through a pull request approved by a code owner
 (`.github/CODEOWNERS`). Force pushes and branch deletion are blocked.
+
+## Sign-off (DCO)
+
+Every commit in a pull request needs a `Signed-off-by` line, which certifies the
+[Developer Certificate of Origin](https://developercertificate.org/): you wrote
+the change or have the right to submit it under the project's licence.
+
+```bash
+git commit -s -m "…"          # new commit
+git rebase --signoff main     # commits already on the branch
+```
+
+The `DCO` check fails a pull request with an unsigned commit.
