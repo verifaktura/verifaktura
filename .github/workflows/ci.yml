@@ -119,21 +119,3 @@ jobs:
 
       - name: Paketi se ucitavaju i builder radi
         run: node scripts/smoke.mjs
-
-  artefacts:
-    name: Provjera novih artefakata
-    runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Ima li noviji CEN release od pinovanog
-        run: |
-          PINNED=$(grep -oE 'validation-[0-9.]+' scripts/build-sef.mjs | head -1)
-          LATEST=$(git ls-remote --tags --refs \
-            https://github.com/ConnectingEurope/eInvoicing-EN16931.git \
-            | awk -F/ '{print $NF}' | grep '^validation-' | sort -V | tail -1)
-          echo "pinovano: $PINNED | zadnje: $LATEST"
-          if [ "$PINNED" != "$LATEST" ]; then
-            echo "::warning title=Novi CEN release::$LATEST (pinovano $PINNED) - treba update i regresijski test."
-          fi
