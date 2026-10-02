@@ -30,13 +30,20 @@
   <p class="lead" data-t="lead">Provjerava eRačune prema EN 16931 (UBL i CII) i hrvatskom CIUS-u. Račun ostaje u vašem pregledniku.</p>
 
   <form id="form" novalidate>
+    <label class="field" for="rules" data-t="rulesLabel">Pravila</label>
+    <div class="rules">
+      <select id="rules">
+        <option value="hr" data-t="rulesHr">Hrvatski eRačun (EN 16931 + HR CIUS)</option>
+        <option value="auto" data-t="rulesAuto">Prema CustomizationID-u računa</option>
+      </select>
+    </div>
     <label class="field" for="xml" data-t="pasteLabel">Zalijepite XML računa</label>
     <textarea id="xml" spellcheck="false" autocomplete="off" rows="12" placeholder="&lt;Invoice xmlns=&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2&quot;&gt;…"></textarea>
     <div class="actions">
       <button type="submit" id="run" data-t="validate">Provjeri</button>
       <label class="file">
         <input type="file" id="file" accept=".xml,application/xml,text/xml">
-        <span data-t="chooseFile">ili odaberite datoteku</span>
+        <span data-t="chooseFile">ili odaberite XML datoteku</span>
       </label>
       <button type="button" class="link" id="sample" data-t="sample">Isprobaj na računu s greškama</button>
     </div>

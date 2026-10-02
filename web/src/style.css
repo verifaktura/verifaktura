@@ -57,6 +57,16 @@ h1 { font-size: 28px; line-height: 1.2; letter-spacing: -0.015em; margin: 24px 0
 .lead { color: var(--muted); margin: 0 0 24px; max-width: 60ch; }
 
 .field { display: block; font-weight: 600; margin-bottom: 8px; }
+.rules { position: relative; max-width: 420px; margin-bottom: 16px; }
+.rules select {
+  appearance: none; -webkit-appearance: none; cursor: pointer; width: 100%; min-height: 44px; padding: 0 34px 0 12px;
+  font: inherit; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+}
+.rules select:hover { border-color: var(--muted); }
+.rules::after {
+  content: ""; position: absolute; right: 14px; top: 50%; width: 6px; height: 6px; margin-top: -5px;
+  border: solid var(--muted); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); pointer-events: none;
+}
 textarea {
   width: 100%; min-height: 220px; resize: vertical;
   background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
